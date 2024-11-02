@@ -19,6 +19,7 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsMainWindow function;
+        public Point MousePos;
 
         public MainWindow()
         {
@@ -71,10 +72,10 @@ namespace WpfLaba3Grafs
         }
         public void OnMouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
         {
-            Point mousePosition = e.GetPosition(DrawingCanvas);
+            MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                CreateVertex(mousePosition);
+                CreateVertex(MousePos);
                 newVertex = false;
             }
             
@@ -84,9 +85,9 @@ namespace WpfLaba3Grafs
         {
              if (newEdge)
              {
-                Point mousePosition = e.GetPosition(DrawingCanvas);
+                //Point mousePosition = e.GetPosition(DrawingCanvas);
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
-                CreateEdge(mousePosition, secondMousePos);
+                CreateEdge(MousePos, secondMousePos);
                 newEdge = false;
              }
         }
