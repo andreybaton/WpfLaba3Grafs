@@ -17,6 +17,8 @@ namespace WpfLaba3Grafs
             this.id = id;
             Position = position;
         }
+        public Node() { }
+        public override string ToString() { return $"{id}, {Position.ToString()} "; }
     }
 
     public class Edge
@@ -36,6 +38,7 @@ namespace WpfLaba3Grafs
             to = vertex2;
             this.weight = weight;
         }
+        public override string ToString() { return $"{from.ToString()}, {to.ToString()}"; }
     }
     public class Graph
     {
@@ -56,10 +59,14 @@ namespace WpfLaba3Grafs
                     return false;
             return true;
         }
-        public void AddNode(Node node)
+        public bool AddNode(Node node)
         {
-            if (!Nodes.Contains(node))
+            if (ContainsNode(node))
+            {
                 Nodes.Add(node);
+                return true;
+            }
+            return false;
         }
         public void RemoveNode(Node node)
         {
@@ -69,15 +76,18 @@ namespace WpfLaba3Grafs
                 Edges.RemoveAll(edge => edge.from == node || edge.to == node);
             }
         }
-        public void AddEdge(Node vertex1, Node vertex2)
+        public bool AddEdge(Node vertex1, Node vertex2)
         {
             if (Nodes.Contains(vertex1) && Nodes.Contains(vertex2))
             {
                 Edge newEdge = new Edge(vertex1, vertex2);
-                if (!Edges.Contains(newEdge))
+                if (ContainsEdge(newEdge))
+                {
                     Edges.Add(newEdge);
+                    return true;
+                }
             }
-
+            return false;
         }
         public void RemoveEdge(Edge edge)
         {

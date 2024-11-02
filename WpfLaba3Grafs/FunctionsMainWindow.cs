@@ -53,5 +53,13 @@ namespace WpfLaba3Grafs
             mainWindow.DrawingCanvas.Children.Add(edge);
             newEdge = false;
         }
+
+        public bool ArePointsClose(Point point1, Point point2, double radius)
+        {
+            double radiusSquared = radius * radius;
+            double distanceSquared = (point1.X - point2.X) * (point1.X - point2.X) +
+                                     (point1.Y - point2.Y) * (point1.Y - point2.Y);
+            return distanceSquared <= radiusSquared;
+        }
     }
 }

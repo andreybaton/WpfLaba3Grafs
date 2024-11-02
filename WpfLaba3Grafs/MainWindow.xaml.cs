@@ -20,12 +20,14 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsMainWindow function;
+        private Graph graph;
         private Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
         public MainWindow()
         {
             function = new FunctionsMainWindow(this);
+            graph = new Graph();
             InitializeComponent();
         }
         public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
@@ -41,7 +43,9 @@ namespace WpfLaba3Grafs
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                function.CreateVertex(MousePos);
+                Node newNode = new Node(graph.Nodes.Count, MousePos);
+                if (graph.AddNode(newNode))
+                    function.CreateVertex(MousePos);
                 newVertex = false;
             }
         }
@@ -51,8 +55,17 @@ namespace WpfLaba3Grafs
              if (newEdge)
              {
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
-                function.CreateEdge(MousePos, secondMousePos);
                 newEdge = false;
+
+                Node from = new Node(); Node to = new Node();
+                for (int i = 0; i < graph.Nodes.Count; i++) {
+                    if (function.ArePointsClose(MousePos, graph.Nodes[i].Position, 5))
+                        from = graph.Nodes[i];
+                    else if (function.ArePointsClose(secondMousePos, graph.Nodes[i].Position, 5))
+                        to = graph.Nodes[i];
+                }
+                if (graph.AddEdge(from, to))
+                    function.CreateEdge(MousePos, secondMousePos);
              }
         }
 
