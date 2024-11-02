@@ -34,6 +34,30 @@
                     </Button>
                     <TextBlock Margin="10">удалить элемент</TextBlock>
                 </DockPanel>
+                <StackPanel>
+                    <DockPanel Height="60">
+                        <Button Width="50" Margin="10,10,5,10"> Заливка </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel>
+                                <Button Width="30" Margin="5"> ^ </Button>
+                                <Button Width="30" Margin="5">меньше</Button>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Margin="5">Изменение веса</TextBlock>
+                                <TextBox Margin="5"></TextBox>
+                                
+                            </StackPanel>
+                        </StackPanel>
+                    </DockPanel>
+                    <DockPanel Height="30">
+                        <ToggleButton Width="29" Margin="2" Background="Red"/>
+                        <ToggleButton Width="29" Margin="2" Background="Orange"/>
+                        <ToggleButton Width="29" Margin="2" Background="Yellow"/>
+                        <ToggleButton Width="29" Margin="2" Background="Green"/>
+                        <ToggleButton Width="29" Margin="2" Background="CadetBlue"/>
+                        <ToggleButton Width="29" Margin="2" Background="Blue"/>
+                    </DockPanel>
+                </StackPanel>
             </StackPanel>
             <DockPanel Height="434" Width="400">
                 <Canvas Height="434" Width="400" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" Background="Aquamarine"></Canvas>
