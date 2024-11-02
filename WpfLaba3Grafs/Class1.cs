@@ -48,20 +48,20 @@ namespace WpfLaba3Grafs
         public bool ContainsNode(Node node)
         {
             for (int i = 0; i < Nodes.Count; i++)
-                if (Nodes[i].id == node.id)
-                    return false;
-            return true;
+                if (AreNodesClose(Nodes[i].Position, node.Position, 5))
+                    return true;
+            return false;
         }
         public bool ContainsEdge(Edge edge)
         {
             for (int i = 0; i < Edges.Count; i++)
                 if ((Edges[i].from == edge.from && Edges[i].to == edge.to) || (Edges[i].from == edge.to && Edges[i].to == edge.from))
-                    return false;
-            return true;
+                    return true;
+            return false;
         }
         public bool AddNode(Node node)
         {
-            if (ContainsNode(node))
+            if (!ContainsNode(node))
             {
                 Nodes.Add(node);
                 return true;
@@ -81,7 +81,7 @@ namespace WpfLaba3Grafs
             if (Nodes.Contains(vertex1) && Nodes.Contains(vertex2))
             {
                 Edge newEdge = new Edge(vertex1, vertex2);
-                if (ContainsEdge(newEdge))
+                if (!ContainsEdge(newEdge))
                 {
                     Edges.Add(newEdge);
                     return true;
@@ -96,6 +96,13 @@ namespace WpfLaba3Grafs
                 Edges.Remove(edge);
                 Nodes.RemoveAll(node => edge.from == node || edge.to == node);
             }
+        }
+        public bool AreNodesClose(Point point1, Point point2, double radius)
+        {
+            double radiusSquared = radius * radius;
+            double distanceSquared = (point1.X - point2.X) * (point1.X - point2.X) +
+                                     (point1.Y - point2.Y) * (point1.Y - point2.Y);
+            return distanceSquared <= radiusSquared;
         }
     }
 

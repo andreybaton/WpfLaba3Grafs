@@ -30,6 +30,10 @@ namespace WpfLaba3Grafs
             graph = new Graph();
             InitializeComponent();
         }
+        public void BtnClick_DeleteElements (object sender, RoutedEventArgs e)
+        {
+
+        }
         public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
         {
             newVertex = true;
@@ -59,13 +63,25 @@ namespace WpfLaba3Grafs
 
                 Node from = new Node(); Node to = new Node();
                 for (int i = 0; i < graph.Nodes.Count; i++) {
-                    if (function.ArePointsClose(MousePos, graph.Nodes[i].Position, 5))
+                    if (graph.AreNodesClose(MousePos, graph.Nodes[i].Position, 5))
                         from = graph.Nodes[i];
-                    else if (function.ArePointsClose(secondMousePos, graph.Nodes[i].Position, 5))
+                    else if (graph.AreNodesClose(secondMousePos, graph.Nodes[i].Position, 5))
                         to = graph.Nodes[i];
                 }
                 if (graph.AddEdge(from, to))
+                {
                     function.CreateEdge(MousePos, secondMousePos);
+                    TextBox textBox = new TextBox
+                    {
+                        Width = 14,
+                        Height = 18
+                    };
+                    Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X)/2);
+                    Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
+                    textBox.Text = graph.Edges[graph.Edges.Count-1].weight.ToString();
+                    DrawingCanvas.Children.Add(textBox);
+                    
+                }
              }
         }
 
