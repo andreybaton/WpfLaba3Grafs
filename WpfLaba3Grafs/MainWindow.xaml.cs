@@ -72,7 +72,7 @@ namespace WpfLaba3Grafs
         {
 
         }
-        private Brush GetSelectedColor()
+        public Brush GetSelectedColor()
         {
             if (BlackButton.IsChecked==true)
                 return Brushes.Black;

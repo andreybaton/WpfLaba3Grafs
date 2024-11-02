@@ -28,7 +28,7 @@ namespace WpfLaba3Grafs
             {
                 Width = 10,
                 Height = 10,
-                Stroke = Brushes.Black,
+                Stroke = mainWindow.GetSelectedColor(),
                 StrokeThickness = 2
             };
             double posX = position.X - vertex.Width / 2;
@@ -47,7 +47,7 @@ namespace WpfLaba3Grafs
                 Y1 = pos1.Y,
                 X2 = pos2.X,
                 Y2 = pos2.Y,
-                Stroke = Brushes.Black,
+                Stroke = mainWindow.GetSelectedColor(),
                 StrokeThickness = 2
             };
             mainWindow.DrawingCanvas.Children.Add(edge);
