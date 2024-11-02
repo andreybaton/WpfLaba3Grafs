@@ -35,7 +35,9 @@
                     <TextBlock Margin="10">удалить элемент</TextBlock>
                 </DockPanel>
             </StackPanel>
-            <DockPanel Height="434" Width="400"></DockPanel>
+            <DockPanel Height="434" Width="400">
+                <Canvas x:Name="Canvas" MouseMove="Canvas_MouseMove" MouseDown="Canvas_MouseDown"></Canvas>
+            </DockPanel>
             <StackPanel Height="434" Width="200">
                 <Canvas x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph">
                     <TextBox Width="93" Height="73">матрица</TextBox>
