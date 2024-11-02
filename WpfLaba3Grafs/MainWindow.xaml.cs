@@ -52,16 +52,15 @@ namespace WpfLaba3Grafs
             double posX = position.X - vertex.Width / 2;          
             double posY = position.Y - vertex.Height / 2;
 
-            Canvas.SetTop(vertex, posX);
-            Canvas.SetLeft(vertex, posY);
+            Canvas.SetTop(vertex, posY);
+            Canvas.SetLeft(vertex, posX);
             DrawingCanvas.Children.Add(vertex);
         }
 
-        private void CreateEdge(Point pos1)
+        private void CreateEdge(Point pos1, Point pos2)
         {
             if (newEdge)
             {
-                Point pos2 = e.GetPosition(DrawingCanvas);
                 Line edge = new Line()
                 {
                     X1 = pos1.X,
