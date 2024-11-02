@@ -52,23 +52,28 @@ namespace WpfLaba3Grafs
             double posX = position.X - vertex.Width / 2;          
             double posY = position.Y - vertex.Height / 2;
 
-            Canvas.SetTop(vertex, posY);
-            Canvas.SetLeft(vertex, posX);
+            Canvas.SetTop(vertex, posX);
+            Canvas.SetLeft(vertex, posY);
             DrawingCanvas.Children.Add(vertex);
         }
 
-        private void CreateEdge(Point pos1, Point pos2)
+        private void CreateEdge(Point pos1)
         {
-            Line edge = new Line()
+            if (newEdge)
             {
-                X1 = pos1.X,
-                Y1 = pos1.Y,
-                X2 = pos2.X,
-                Y2 = pos2.Y,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-            DrawingCanvas.Children.Add(edge);
+                Point pos2 = e.GetPosition(DrawingCanvas);
+                Line edge = new Line()
+                {
+                    X1 = pos1.X,
+                    Y1 = pos1.Y,
+                    X2 = pos2.X,
+                    Y2 = pos2.Y,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 2
+                };
+                DrawingCanvas.Children.Add(edge);
+                newEdge = false;
+            }
         }
         public void OnMouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
         {
