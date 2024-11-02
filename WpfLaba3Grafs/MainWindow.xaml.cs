@@ -19,10 +19,12 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsMainWindow function;
-        public Point MousePos;
-
+        private Point MousePos;
+        private bool newVertex = false;
+        private bool newEdge = false;
         public MainWindow()
         {
+            function = new FunctionsMainWindow(this);
             InitializeComponent();
         }
         public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
@@ -35,63 +37,20 @@ namespace WpfLaba3Grafs
         }
         public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
         {
-            OnMouseLeftBtnDown_DrawingGraph(sender, e);
-        }
-        public bool newVertex = false;
-        public bool newEdge = false;
-
-        private void CreateVertex(Point position)
-        {
-            Ellipse vertex = new Ellipse()
-            {
-                Width = 10,
-                Height = 10,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-            double posX = position.X - vertex.Width / 2;          
-            double posY = position.Y - vertex.Height / 2;
-
-            Canvas.SetTop(vertex, posY);
-            Canvas.SetLeft(vertex, posX);
-            DrawingCanvas.Children.Add(vertex);
-        }
-
-        private void CreateEdge(Point pos1, Point pos2)
-        {
-            if (newEdge)
-            {
-                Line edge = new Line()
-                {
-                    X1 = pos1.X,
-                    Y1 = pos1.Y,
-                    X2 = pos2.X,
-                    Y2 = pos2.Y,
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 2
-                };
-                DrawingCanvas.Children.Add(edge);
-                newEdge = false;
-            }
-        }
-        public void OnMouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
-        {
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                CreateVertex(MousePos);
+                function.CreateVertex(MousePos);
                 newVertex = false;
             }
-            
         }
-
+      
         private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e)
         {
              if (newEdge)
              {
-                //Point mousePosition = e.GetPosition(DrawingCanvas);
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
-                CreateEdge(MousePos, secondMousePos);
+                function.CreateEdge(MousePos, secondMousePos);
                 newEdge = false;
              }
         }
