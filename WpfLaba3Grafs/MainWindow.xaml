@@ -50,12 +50,13 @@
                         </StackPanel>
                     </DockPanel>
                     <DockPanel Height="30">
-                        <ToggleButton Width="29" Margin="2" Background="Red"/>
-                        <ToggleButton Width="29" Margin="2" Background="Orange"/>
-                        <ToggleButton Width="29" Margin="2" Background="Yellow"/>
-                        <ToggleButton Width="29" Margin="2" Background="Green"/>
-                        <ToggleButton Width="29" Margin="2" Background="CadetBlue"/>
-                        <ToggleButton Width="29" Margin="2" Background="Blue"/>
+                        <ToggleButton x:Name="BlackButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Black"/>
+                        <ToggleButton x:Name="RedButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Red"/>
+                        <ToggleButton x:Name="OrangeButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Orange"/>
+                        <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Yellow"/>
+                        <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Green"/>
+                        <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="CadetBlue"/>
+                        
                     </DockPanel>
                 </StackPanel>
             </StackPanel>

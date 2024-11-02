@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -53,6 +54,39 @@ namespace WpfLaba3Grafs
                 function.CreateEdge(MousePos, secondMousePos);
                 newEdge = false;
              }
+        }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkedButton = sender as ToggleButton;
+            foreach(var child in (checkedButton.Parent as Panel).Children)
+            {
+                if (child is ToggleButton button && button != checkedButton)
+                {
+                    button.IsChecked = false;
+                }
+            }
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private Brush GetSelectedColor()
+        {
+            if (BlackButton.IsChecked==true)
+                return Brushes.Black;
+            if (RedButton.IsChecked == true)
+                return Brushes.Red;
+            if (OrangeButton.IsChecked == true)
+                return Brushes.Orange;
+            if (YellowButton.IsChecked == true)
+                return Brushes.Yellow;
+            if (GreenButton.IsChecked == true)
+                return Brushes.Green;
+            if (CadetBlueButton.IsChecked == true)
+                return Brushes.CadetBlue;
+            return Brushes.Black;
         }
     }
 }
