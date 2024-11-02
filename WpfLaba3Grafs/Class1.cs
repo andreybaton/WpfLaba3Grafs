@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Shapes; // для фигур
+
 
 namespace WpfLaba3Grafs
 {
     public class Node
     {
         public int id { get; set; }
-        public Point Position { get; set; } //пара координат в двумерном пространстве
+        public Point Position { get; set; } 
         public Node(int id, Point position)
         {
             this.id = id;
@@ -23,11 +23,18 @@ namespace WpfLaba3Grafs
     {
         public Node from { get; set; }
         public Node to { get; set; }
-
+        public int weight { get; set; }
         public Edge(Node vertex1, Node vertex2)
         {
             from = vertex1;
             to = vertex2;
+            weight = 0;
+        }
+        public Edge(Node vertex1, Node vertex2, int weight)
+        {
+            from = vertex1;
+            to = vertex2;
+            this.weight = weight;
         }
     }
     public class Graph
