@@ -7,6 +7,46 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <StackPanel Orientation="Horizontal">
+
+            <StackPanel Height="434" Width="200" >
+                <DockPanel>
+                    <Button  Height="50" Width="50" Margin="10"></Button>
+                    <TextBlock>выделить элемент</TextBlock>
+                </DockPanel>
+                <DockPanel>
+                    <Button  Height="50" Width="50" Margin="10"></Button>
+                    <TextBlock>выделить элемент</TextBlock>
+                </DockPanel>
+                <DockPanel>
+                    <Button  Height="50" Width="50" Margin="10"></Button>
+                    <TextBlock>выделить элемент</TextBlock>
+                </DockPanel>
+                <DockPanel>
+                    <Button  Height="50" Width="50" Margin="10"></Button>
+                    <TextBlock>выделить элемент</TextBlock>
+                </DockPanel>
+            </StackPanel>
+            <DockPanel Height="434" Width="400"></DockPanel>
+            <StackPanel Height="434" Width="200">
+                <DockPanel>
+                    <TextBox>матрица</TextBox>
+                    <TextBox>матрица</TextBox>
+                </DockPanel>
+                <DockPanel>
+                    <StackPanel Height="300">
+                        <TextBlock>поиск</TextBlock>
+                    
+                        <TextBlock>поиск</TextBlock>
+                        <TextBlock>поиск</TextBlock>
+                    </StackPanel>
+                </DockPanel>
+                
+                    <TextBlock>сохранить</TextBlock>
+                
+                    <TextBlock>сохранить</TextBlock>
+                
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
