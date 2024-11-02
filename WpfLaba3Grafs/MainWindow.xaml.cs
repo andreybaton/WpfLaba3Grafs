@@ -48,8 +48,8 @@ namespace WpfLaba3Grafs
                 Stroke = Brushes.Black,
                 StrokeThickness = 2
             };
-            double posX = position.Y - vertex.Width / 2;          
-            double posY = position.X - vertex.Height / 2;
+            double posX = position.X - vertex.Width / 2;          
+            double posY = position.Y - vertex.Height / 2;
 
             Canvas.SetTop(vertex, posY);
             Canvas.SetLeft(vertex, posX);
@@ -75,15 +75,20 @@ namespace WpfLaba3Grafs
             if (newVertex)
             {
                 CreateVertex(mousePosition);
-
                 newVertex = false;
             }
-            else if (newEdge)
-            {
+            
+        }
+
+        private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e)
+        {
+             if (newEdge)
+             {
+                Point mousePosition = e.GetPosition(DrawingCanvas);
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
                 CreateEdge(mousePosition, secondMousePos);
                 newEdge = false;
-            }
+             }
         }
     }
 }
