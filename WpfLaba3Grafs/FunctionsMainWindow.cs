@@ -9,45 +9,44 @@ using System.Windows.Input;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Collections;
 
 namespace WpfLaba3Grafs
 {
     public class FunctionsMainWindow : MainWindow
     {
-        private bool newVertex = false;
-        private bool newEdge = false;
-        public FunctionsMainWindow()
-        {
-            //MainWindow mainWindow = MainWindow;
-        }
-        public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
-        {
-             newVertex = true;
-        }
+        public bool newVertex = false;
+        public bool newEdge = false;
+        
         private void CreateVertex(Point position)
         {
-            Ellipse node = new Ellipse()
+            Ellipse vertex = new Ellipse()
             {
                 Width = 20,
                 Height = 20,
                 Stroke = Brushes.Black,
                 StrokeThickness = 2
             };
-            Canvas.SetLeft(node, position.X - node.Width / 2);
-            Canvas.SetTop(node, position.Y - node.Height / 2);
+            Canvas.SetLeft(vertex, position.X - vertex.Width / 2);
+            Canvas.SetTop(vertex, position.Y - vertex.Height / 2);
 
-            // Добавляем круг на Canvas
-            DrawingCanvas.Children.Add(node);
+            DrawingCanvas.Children.Add(vertex);
         }
-        public void BtnClick_CreateEdge(object sender, RoutedEventArgs e)
+        
+        private void CreateEdge(Point pos1, Point pos2) 
         {
-            newEdge = true;
+            Line edge = new Line()
+            {
+                X1 = pos1.X,
+                Y1 = pos1.Y,
+                X2 = pos2.X,
+                Y2 = pos2.Y,
+                Stroke = Brushes.Black,
+                StrokeThickness = 2
+            };
+            DrawingCanvas.Children.Add(edge);
         }
-        private void CreateEdge(Point position) 
-        {
-            
-        }
-        public void MouseLeftBtnDown_DrawingGraph (object sender, MouseButtonEventArgs e)
+        public void OnMouseLeftBtnDown_DrawingGraph (object sender, MouseButtonEventArgs e)
         {
             Point mousePosition = e.GetPosition(DrawingCanvas);
             if (newVertex)
@@ -57,7 +56,8 @@ namespace WpfLaba3Grafs
             }
             else if (newEdge)
             {
-                CreateEdge(mousePosition);
+                Point secondMousePos = e.GetPosition(DrawingCanvas);
+                CreateEdge(mousePosition, secondMousePos);
                 newEdge = false;
             }
         }

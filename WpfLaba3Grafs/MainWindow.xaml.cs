@@ -15,11 +15,30 @@ using System.Windows.Shapes;
 
 namespace WpfLaba3Grafs
 {
+
     public partial class MainWindow : Window
     {
+        private FunctionsMainWindow function;
+
         public MainWindow()
         {
             InitializeComponent();
+            
+        }
+        public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
+        {
+            function = new FunctionsMainWindow();
+            function.newVertex = true;
+        }
+        public void BtnClick_CreateEdge(object sender, RoutedEventArgs e)
+        {
+            function = new FunctionsMainWindow();
+            function.newEdge = true;
+        }
+        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
+        {
+            function = new FunctionsMainWindow();
+            function.OnMouseLeftBtnDown_DrawingGraph(sender, e);
         }
     }
 }
