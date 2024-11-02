@@ -49,6 +49,8 @@ namespace WpfLaba3Grafs
         public void OnMouseLeftBtnDown_DrawingGraph (object sender, MouseButtonEventArgs e)
         {
             Point mousePosition = e.GetPosition(DrawingCanvas);
+            MessageBox.Show(mousePosition.ToString());
+            MessageBox.Show(newVertex.ToString());
             if (newVertex)
             {
                 CreateVertex(mousePosition);
