@@ -11,20 +11,28 @@
 
             <StackPanel Height="434" Width="200" >
                 <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10"></Button>
-                    <TextBlock>выделить элемент</TextBlock>
+                    <Button  Height="50" Width="50" Margin="10">
+                        <Image Source="/Pointer.png" Height="32" Width="32"></Image>
+                    </Button>
+                    <TextBlock Margin="10">выделить элемент</TextBlock>
+                </DockPanel>
+                <DockPanel >
+                    <Button  Height="50" Width="50" Margin="10">
+                        <Image Source="/Verticle.png" Height="32" Width="32"></Image>
+                    </Button>
+                    <TextBlock Margin="10">создать вершину</TextBlock>
                 </DockPanel>
                 <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10"></Button>
-                    <TextBlock>выделить элемент</TextBlock>
+                    <Button  Height="50" Width="50" Margin="10">
+                        <Image Source="/Edge.png" Height="32" Width="32"></Image>
+                    </Button>
+                    <TextBlock Margin="10">создать ребро</TextBlock>
                 </DockPanel>
                 <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10"></Button>
-                    <TextBlock>выделить элемент</TextBlock>
-                </DockPanel>
-                <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10"></Button>
-                    <TextBlock>выделить элемент</TextBlock>
+                    <Button  Height="50" Width="50" Margin="10">
+                        <Image Source="/Crest.png" Height="32" Width="32"></Image>
+                    </Button>
+                    <TextBlock Margin="10">удалить элемент</TextBlock>
                 </DockPanel>
             </StackPanel>
             <DockPanel Height="434" Width="400"></DockPanel>
@@ -36,16 +44,13 @@
                 <DockPanel>
                     <StackPanel Height="300">
                         <TextBlock>поиск</TextBlock>
-                    
+
                         <TextBlock>поиск</TextBlock>
                         <TextBlock>поиск</TextBlock>
                     </StackPanel>
                 </DockPanel>
-                
-                    <TextBlock>сохранить</TextBlock>
-                
-                    <TextBlock>сохранить</TextBlock>
-                
+                <TextBlock>сохранить</TextBlock>
+                <TextBlock>сохранить</TextBlock>
             </StackPanel>
         </StackPanel>
     </Grid>

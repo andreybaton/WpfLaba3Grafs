@@ -95,5 +95,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Verticle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pointer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Edge.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Crest.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
