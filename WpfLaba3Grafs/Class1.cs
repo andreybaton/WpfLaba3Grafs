@@ -82,19 +82,17 @@ namespace WpfLaba3Grafs
         }
         public bool AddEdge(Node vertex1, Node vertex2)
         {
-            //if (Nodes.Contains(vertex1) && Nodes.Contains(vertex2))
-            //{
+            if (Nodes.Contains(vertex1) && Nodes.Contains(vertex2))
+            {
                 Graph graph = new Graph();
                 Edge newEdge = new Edge(vertex1, vertex2);
-                //if (!ContainsEdge(newEdge))
-                //{
+                if (!ContainsEdge(newEdge))
+                {
                     Edges.Add(newEdge);
-                    
                     return true;
-                    
-            //    }
-            //}
-            //return false;
+                }
+            }
+            return false;
         }
         public void RemoveEdge(Edge edge)
         {
@@ -111,7 +109,7 @@ namespace WpfLaba3Grafs
                                      (point1.Y - point2.Y) * (point1.Y - point2.Y);
             return distanceSquared <= radiusSquared;
         }
-        private const double MergeDistance = 10.0;
+        private const double MergeDistance = 5.0;//10.0;
         public void Merge(Graph graph)
         {
             for (int i = 0; i < graph.Nodes.Count; i++)
@@ -120,7 +118,7 @@ namespace WpfLaba3Grafs
                 for (int j = i+1;j < graph.Nodes.Count; j++)
                 {
                     var node2 = graph.Nodes[j];
-                    if(GetDistance(node1.Position, node2.Position) < MergeDistance)
+                    if (AreNodesClose(node1.Position, node2.Position, MergeDistance))//(GetDistance(node1.Position, node2.Position) < MergeDistance)
                     {
                         Point mergedPosition = GetMergedPosition(node1.Position, node2.Position);
                         node1.Position = mergedPosition;
@@ -129,47 +127,24 @@ namespace WpfLaba3Grafs
                 }
                 foreach(var edge in graph.Edges)
                 {
-                    if(GetDistance(node1.Position,edge.from.Position) < MergeDistance)
-                    {
+                    if(AreNodesClose(node1.Position, edge.from.Position, MergeDistance))
                         edge.from.Position = node1.Position;
-                    }
-                    if (GetDistance(node1.Position, edge.to.Position) < MergeDistance)
-                    {
+                    if (AreNodesClose(node1.Position, edge.to.Position, MergeDistance))
                         edge.to.Position = node1.Position;
-                    }
                 }
             }
         }
-        private double GetDistance(Point p1, Point p2)
-        {
-            double dx = p1.X - p2.X;
-            double dy = p1.Y - p2.Y;
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
+        //private double GetDistance(Point p1, Point p2)
+        //{
+        //    double dx = p1.X - p2.X;
+        //    double dy = p1.Y - p2.Y;
+        //    return Math.Sqrt(dx * dx + dy * dy);
+        //}
         private Point GetMergedPosition(Point p1, Point p2)
         {
             double centerX = (p1.X + p2.X) / 2;
             double centerY = (p1.Y + p2.Y) / 2;
             return new Point(centerX, centerY);
-        }
-        public void ReDrawGraph(Graph graph)
-        {
-            try
-            {
-                //MnWw.DrawingCanvas.Children.Clear();
-                foreach (var edge in graph.Edges)
-                {
-                    Point p1 = edge.from.Position;
-                    Point p2 = edge.to.Position;
-                    fnmw.CreateEdge( p1,  p2);
-                }
-                foreach (var node in graph.Nodes)
-                {
-                    Point p = node.Position;
-                    fnmw.CreateVertex(p);
-                }
-            }
-            catch { }
         }
     }
 

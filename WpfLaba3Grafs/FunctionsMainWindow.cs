@@ -53,7 +53,25 @@ namespace WpfLaba3Grafs
             mainWindow.DrawingCanvas.Children.Add(edge);
             newEdge = false;
         }
+        public void ReDrawGraph(Graph graph)
+        {
+            try
+            {
+                //MnWw.DrawingCanvas.Children.Clear();
+                foreach (var edge in graph.Edges)
+                {
+                    Point p1 = edge.from.Position;
+                    Point p2 = edge.to.Position;
+                    CreateEdge(p1, p2);
+                }
+                foreach (var node in graph.Nodes)
+                {
+                    Point p = node.Position;
+                    CreateVertex(p);
+                }
+            }
+            catch { MessageBox.Show("error redraw graph"); }
+        }
 
-        
     }
 }

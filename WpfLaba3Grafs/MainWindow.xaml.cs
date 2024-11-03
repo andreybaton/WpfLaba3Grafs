@@ -85,7 +85,7 @@ namespace WpfLaba3Grafs
                     {
                         graph.Merge(graph);
                         DrawingCanvas.Children.Clear();
-                        graph.ReDrawGraph(graph);
+                        function.ReDrawGraph(graph);
                     }
                 }
              }
