@@ -44,8 +44,6 @@ namespace WpfLaba3Grafs
     }
     public class Graph
     {
-        private MainWindow MnWw;
-        private FunctionsMainWindow fnmw;
         public List<Node> Nodes { get; set; } = new List<Node>();
         public List<Edge> Edges { get; set; } = new List<Edge>();
 

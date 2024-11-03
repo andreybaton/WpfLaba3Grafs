@@ -1,0 +1,20 @@
+﻿<Window x:Class="WpfLaba3Grafs.WindowAddEdge"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfLaba3Grafs"
+        mc:Ignorable="d"
+        Title="WindowAddEdge" Height="450" Width="800">
+    <Grid>
+        <DockPanel Margin="82,170,117,234">
+            <TextBlock Margin="5">Вес ребра</TextBlock>
+            <TextBox Margin="5" Width="513" Text="Ненагруженный" Name="weightEdge" Height="21">
+            </TextBox>
+        </DockPanel>
+        <DockPanel Margin="82,205,117,116">
+            <Button Click="BtnClick_AddOrientedEdge" Margin="5" Content="Добавить ориентированное ребро" Height="59" Width="281"></Button>
+            <Button Click="BtnClick_AddUndirectedEdge" Margin="5" Content="Добавить неориентированное ребро" Height="59" Width="281"></Button>
+        </DockPanel>
+    </Grid>
+</Window>

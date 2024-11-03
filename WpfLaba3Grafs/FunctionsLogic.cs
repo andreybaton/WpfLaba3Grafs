@@ -13,12 +13,12 @@ using System.Collections;
 
 namespace WpfLaba3Grafs
 {
-    public class FunctionsMainWindow 
+    public class FunctionsLogic 
     {
         public bool newVertex = false;
         public bool newEdge = false;
         private MainWindow mainWindow;
-        public FunctionsMainWindow(MainWindow mainWindow)
+        public FunctionsLogic(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
         }
@@ -51,6 +51,7 @@ namespace WpfLaba3Grafs
                 StrokeThickness = 2
             };
             mainWindow.DrawingCanvas.Children.Add(edge);
+
             newEdge = false;
         }
         public void ReDrawGraph(Graph graph)
@@ -72,6 +73,26 @@ namespace WpfLaba3Grafs
             }
             catch { MessageBox.Show("error redraw graph"); }
         }
+        public Polygon DrawArrow(Point pos1, Point pos2)
+        {
+            double arrowLength = 10; // Длина стрелки
+            double angle = Math.Atan2(pos2.Y - pos1.Y, pos2.X - pos1.X); // Угол в радианах
 
+            // Создаем стрелку
+            Polygon arrowHead = new Polygon
+            {
+                Fill = Brushes.Black,
+                Points = new PointCollection
+                {
+                    new Point(pos2.X, pos2.Y), // Конечная точка линии
+                    new Point(pos2.X - arrowLength * Math.Cos(angle - Math.PI / 6),
+                    pos2.Y - arrowLength * Math.Sin(angle - Math.PI / 6)), // Левый угол стрелки
+
+                    new Point(pos2.X - arrowLength * Math.Cos(angle + Math.PI / 6),
+                    pos2.Y - arrowLength * Math.Sin(angle + Math.PI / 6))  // Правый угол стрелки
+                }
+            };
+            return arrowHead;
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace WpfLaba3Grafs
 
     public partial class MainWindow : Window
     {
-        private FunctionsMainWindow function;
+        private FunctionsLogic function;
         
         private Graph graph;
         private Point MousePos;
@@ -27,7 +27,7 @@ namespace WpfLaba3Grafs
         private bool newEdge = false;
         public MainWindow()
         {
-            function = new FunctionsMainWindow(this);
+            function = new FunctionsLogic(this);
             graph = new Graph();
             InitializeComponent();
         }
@@ -43,7 +43,7 @@ namespace WpfLaba3Grafs
         {
             newEdge = true;
         }
-        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
+        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) //for add vertex
         {
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
@@ -55,7 +55,7 @@ namespace WpfLaba3Grafs
             }
         }
       
-        private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e)
+        private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e) //for add edge
         {
              if (newEdge)
              {
@@ -71,22 +71,37 @@ namespace WpfLaba3Grafs
                 }
                 if (graph.AddEdge(from, to))
                 {
-                    function.CreateEdge(MousePos, secondMousePos);
-                    TextBox textBox = new TextBox
+                    var winAddEdge = new WindowAddEdge(this);
+
+                    if (winAddEdge.ShowDialog() == true)
                     {
-                        Width = 14,
-                        Height = 18
-                    };
-                    Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X)/2);
-                    Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
-                    textBox.Text = graph.Edges[graph.Edges.Count-1].weight.ToString();
-                    DrawingCanvas.Children.Add(textBox);
+                        if (winAddEdge.weightExist)
+                        {
+                            TextBox textBox = new TextBox
+                            {
+                                Width = 14,
+                                Height = 18
+                            };
+                            Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
+                            Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
+                            textBox.Text = graph.Edges[graph.Edges.Count - 1].weight.ToString();
+                            DrawingCanvas.Children.Add(textBox);
+                        }
+                        function.CreateEdge(MousePos, secondMousePos);
+                        if (winAddEdge.typeEdge == true)
+                        {
+                            Polygon arrow = function.DrawArrow(MousePos, secondMousePos);
+                            DrawingCanvas.Children.Add(arrow);
+                        }
+                    }
                     if (graph.Edges.Count > 1)
                     {
                         graph.Merge(graph);
                         DrawingCanvas.Children.Clear();
                         function.ReDrawGraph(graph);
                     }
+
+
                 }
              }
         }
