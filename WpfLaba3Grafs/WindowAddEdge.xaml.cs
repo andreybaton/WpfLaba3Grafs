@@ -33,6 +33,10 @@ namespace WpfLaba3Grafs
         private void BtnClick_AddOrientedEdge(object sender, RoutedEventArgs e)
         {
             typeEdge = true;
+            if (weightEdge.Text == "Ненагруженный")
+            { }
+            else
+                weightExist = true;
             this.DialogResult = true;
             this.Close();
         }

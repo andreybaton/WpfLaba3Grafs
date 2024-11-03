@@ -7,10 +7,9 @@
         mc:Ignorable="d"
         Title="WindowAddEdge" Height="450" Width="800">
     <Grid>
-        <DockPanel Margin="82,170,117,234">
+        <DockPanel Margin="82,170,117,229">
             <TextBlock Margin="5">Вес ребра</TextBlock>
-            <TextBox Margin="5" Width="513" Text="Ненагруженный" Name="weightEdge" Height="21">
-            </TextBox>
+            <TextBox Margin="5" Width="513" Text="Ненагруженный" Name="weightEdge" Height="21"/>
         </DockPanel>
         <DockPanel Margin="82,205,117,116">
             <Button Click="BtnClick_AddOrientedEdge" Margin="5" Content="Добавить ориентированное ребро" Height="59" Width="281"></Button>

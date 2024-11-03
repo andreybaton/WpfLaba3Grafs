@@ -75,24 +75,30 @@ namespace WpfLaba3Grafs
 
                     if (winAddEdge.ShowDialog() == true)
                     {
-                        if (winAddEdge.weightExist)
-                        {
-                            TextBox textBox = new TextBox
-                            {
-                                Width = 14,
-                                Height = 18
-                            };
-                            Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
-                            Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
-                            textBox.Text = graph.Edges[graph.Edges.Count - 1].weight.ToString();
-                            DrawingCanvas.Children.Add(textBox);
-                        }
                         function.CreateEdge(MousePos, secondMousePos);
                         if (winAddEdge.typeEdge == true)
                         {
                             Polygon arrow = function.DrawArrow(MousePos, secondMousePos);
                             DrawingCanvas.Children.Add(arrow);
                         }
+
+                        if (winAddEdge.weightExist)
+                        {
+                            graph.Edges[graph.Edges.Count - 1].weight = Convert.ToInt32(winAddEdge.weightEdge.Text);
+                            TextBox textBox = new TextBox
+                            {
+                                Width = 14,
+                                Height = 18
+                            };
+                            textBox.Text = graph.Edges[graph.Edges.Count - 1].weight.ToString();
+                            //MessageBox.Show(textBox.Text);
+                            Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
+                            Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
+                            
+                            DrawingCanvas.Children.Add(textBox);
+                        }
+                        
+                        
                     }
                     if (graph.Edges.Count > 1)
                     {
