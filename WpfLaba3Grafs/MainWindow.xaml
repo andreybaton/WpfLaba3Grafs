@@ -36,14 +36,16 @@
                 </DockPanel>
                 <StackPanel>
                     <DockPanel Height="60">
-                        <Button Width="50" Margin="10,10,5,10"> Заливка </Button>
+                        <Button Width="50" Margin="10,10,5,10">
+                            <Image Source="/Bucket.png" Height="32" Width="32"></Image>
+                        </Button>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel>
-                                <Button Width="30" Margin="5"> ^ </Button>
-                                <Button Width="30" Margin="5">меньше</Button>
+                                <Button Width="25" Margin="5,10,5,5"> ^ </Button>
+                                <Button Width="25" Margin="5,0,5,0">˅</Button>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Margin="5">Изменение веса</TextBlock>
+                                <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
                                 <TextBox Margin="5"></TextBox>
                                 
                             </StackPanel>
