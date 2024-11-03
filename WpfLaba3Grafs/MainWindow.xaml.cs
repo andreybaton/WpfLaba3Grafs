@@ -20,6 +20,7 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsMainWindow function;
+        
         private Graph graph;
         private Point MousePos;
         private bool newVertex = false;
@@ -30,7 +31,7 @@ namespace WpfLaba3Grafs
             graph = new Graph();
             InitializeComponent();
         }
-        public void BtnClick_DeleteElements (object sender, RoutedEventArgs e)
+        public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
         {
 
         }
@@ -80,7 +81,12 @@ namespace WpfLaba3Grafs
                     Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
                     textBox.Text = graph.Edges[graph.Edges.Count-1].weight.ToString();
                     DrawingCanvas.Children.Add(textBox);
-                    
+                    if (graph.Edges.Count > 1)
+                    {
+                        graph.Merge(graph);
+                        DrawingCanvas.Children.Clear();
+                        graph.ReDrawGraph(graph);
+                    }
                 }
              }
         }
