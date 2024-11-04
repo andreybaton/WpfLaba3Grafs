@@ -30,6 +30,8 @@ namespace WpfLaba3Grafs
             function = new FunctionsLogic(this);
             graph = new Graph();
             InitializeComponent();
+            List<(int,int,int)> graphData = new List<(int, int, int)>();
+            Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
         }
         public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
         {

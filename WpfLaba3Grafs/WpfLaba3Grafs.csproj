@@ -70,6 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Class2.cs" />
     <Compile Include="WindowAddEdge.xaml.cs">
       <DependentUpon>WindowAddEdge.xaml</DependentUpon>
     </Compile>
