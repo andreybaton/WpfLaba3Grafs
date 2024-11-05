@@ -41,7 +41,34 @@ namespace WpfLaba3Grafs
             Canvas.SetLeft(vertex, posX);
             mainWindow.DrawingCanvas.Children.Add(vertex);
         }
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int,Node2> graph2, List <(int,int,int)> graphData, int weight)
+        {
+                Node2 from2 = new Node2(); Node2 to2 = new Node2();
+                for (int i = 0; i < graph2.Count; i++)
+                {
+                    if (from2.AreNodesClose(pos1, graph2.ElementAt(i).Value.position, 5))
+                        from2 = graph2.ElementAt(i).Value;
+                    else if (to2.AreNodesClose(pos2, graph2.ElementAt(i).Value.position, 5))
+                        to2 = graph2.ElementAt(i).Value;
+                }
+                Edge2 edge2 = new Edge2();
+                if (from2.ContainsNode(from2.position, graph2) && to2.ContainsNode(to2.position, graph2))
+                    if (edge2.AddEdge(graphData, from2, to2, weight))
+                        CreateEdge(from2.position, to2.position);
+                if (weight != 0)
+                {
+                    TextBox textBox = new TextBox
+                    {
+                        Width = 14,
+                        Height = 18
+                    };
+                    textBox.Text = weight.ToString();
+                    Canvas.SetLeft(textBox, (pos1.X + pos2.X) / 2);
+                    Canvas.SetTop(textBox, (pos1.Y + pos2.Y) / 2);
 
+                    mainWindow.DrawingCanvas.Children.Add(textBox);
+                }
+            }
         public void CreateEdge(Point pos1, Point pos2)
         {
             string selectedColorName = mainWindow.GetSelectedColor();

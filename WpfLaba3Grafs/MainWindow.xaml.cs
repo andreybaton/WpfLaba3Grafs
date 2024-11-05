@@ -27,8 +27,8 @@ namespace WpfLaba3Grafs
         private bool newVertex = false;
         private bool newEdge = false;
         public bool typeEdge;
-        List<(int, int, int)> graphData = new List<(int, int, int)>();
-        Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
+        public List<(int, int, int)> graphData = new List<(int, int, int)>();
+        public Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
         public MainWindow()
         {
             function = new FunctionsLogic(this);
@@ -53,12 +53,7 @@ namespace WpfLaba3Grafs
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                //Node newNode = new Node(graph.Nodes.Count, MousePos);
-                //if (graph.AddNode(newNode))
-                //    function.CreateVertex(MousePos);
-
                 newVertex = false;
-
                 Node2 node2 = new Node2();
                 if (!node2.ContainsNode(MousePos, graph2))
                 {
@@ -76,79 +71,7 @@ namespace WpfLaba3Grafs
              {
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
                 newEdge = false;
-
-                Node2 from2 = new Node2(); Node2 to2 = new Node2();
-                for (int i = 0; i < graph2.Count; i++)
-                {
-                    if (graph.AreNodesClose(MousePos, graph2.ElementAt(i).Value.position, 5))
-                        from2 = graph2.ElementAt(i).Value;
-                    else if (graph.AreNodesClose(secondMousePos, graph2.ElementAt(i).Value.position, 5))
-                        to2 = graph2.ElementAt(i).Value;
-                }
-                Edge2 edge2 = new Edge2();
-                if (from2.ContainsNode(from2.position, graph2) && to2.ContainsNode(to2.position, graph2))
-                    if(edge2.AddEdge(graphData, from2, to2, Convert.ToInt32(tbWeight.Text)))
-                        function.CreateEdge(from2.position, to2.position);
-                if (tbWeight.Text != "0")
-                {
-                    TextBox textBox = new TextBox
-                    {
-                        Width = 14,
-                        Height = 18
-                    };
-                    textBox.Text = tbWeight.Text;
-                    Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
-                    Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
-
-                    DrawingCanvas.Children.Add(textBox);
-                }
-                //Node from = new Node(); Node to = new Node();
-                //for (int i = 0; i < graph.Nodes.Count; i++) {
-                //    if (graph.AreNodesClose(MousePos, graph.Nodes[i].Position, 5))
-                //        from = graph.Nodes[i];
-                //    else if (graph.AreNodesClose(secondMousePos, graph.Nodes[i].Position, 5))
-                //        to = graph.Nodes[i];
-                //}
-                //if (graph.AddEdge(from, to))
-                //{
-                //    var winAddEdge = new WindowAddEdge(this);
-
-                //    if (winAddEdge.ShowDialog() == true)
-                //    {
-                //        function.CreateEdge(MousePos, secondMousePos);
-                //        if (winAddEdge.typeEdge == true)
-                //        {
-                //            Polygon arrow = function.DrawArrow(MousePos, secondMousePos);
-                //            DrawingCanvas.Children.Add(arrow);
-                //        }
-
-                //        if (winAddEdge.weightExist)
-                //        {
-                //            graph.Edges[graph.Edges.Count - 1].weight = Convert.ToInt32(winAddEdge.weightEdge.Text);
-                //            TextBox textBox = new TextBox
-                //            {
-                //                Width = 14,
-                //                Height = 18
-                //            };
-                //            textBox.Text = graph.Edges[graph.Edges.Count - 1].weight.ToString();
-                //            //MessageBox.Show(textBox.Text);
-                //            Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
-                //            Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
-
-                //            DrawingCanvas.Children.Add(textBox);
-                //        }
-
-
-                //    }
-                //    if (graph.Edges.Count > 1)
-                //    {
-                //        graph.Merge(graph);
-                //        DrawingCanvas.Children.Clear();
-                //        function.ReDrawGraph(graph);
-                //    }
-
-
-                //}
+                function.AddEdge(MousePos, secondMousePos, graph2, graphData, Convert.ToInt32(tbWeight.Text));
             }
         }
 
