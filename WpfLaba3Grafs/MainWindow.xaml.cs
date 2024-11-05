@@ -132,23 +132,34 @@ namespace WpfLaba3Grafs
         {
 
         }
-        public Brush GetSelectedColor()
+        public string GetSelectedColor()
         {
-            if (BlackButton.IsChecked==true)
-                return Brushes.Black;
+            if (BlackButton.IsChecked == true)
+                return "Black";
             if (RedButton.IsChecked == true)
-                return Brushes.Red;
+                return "Red";
             if (OrangeButton.IsChecked == true)
-                return Brushes.Orange;
+                return "Orange";
             if (YellowButton.IsChecked == true)
-                return Brushes.Yellow;
+                return "Yellow";
             if (GreenButton.IsChecked == true)
-                return Brushes.Green;
+                return "Green";
             if (CadetBlueButton.IsChecked == true)
-                return Brushes.CadetBlue;
-            return Brushes.Black;
+                return "CadetBlue";
+            return "Black";
         }
-
+        public Brush ConvertStringToBrush(string colorName)
+        {
+            var property = typeof(Brushes).GetProperty(colorName);
+            if (property != null)
+            {
+                return (Brush)property.GetValue(null);
+            }
+            else
+            {
+                return Brushes.Black;
+            }
+        }
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton pressed = (RadioButton)sender;
@@ -162,5 +173,21 @@ namespace WpfLaba3Grafs
                 WwAe.typeEdge = false;
             }
         }
+        //public Brush GetSelectedColor()
+        //{
+        //    if (BlackButton.IsChecked==true)
+        //        return Brushes.Black;
+        //    if (RedButton.IsChecked == true)
+        //        return Brushes.Red;
+        //    if (OrangeButton.IsChecked == true)
+        //        return Brushes.Orange;
+        //    if (YellowButton.IsChecked == true)
+        //        return Brushes.Yellow;
+        //    if (GreenButton.IsChecked == true)
+        //        return Brushes.Green;
+        //    if (CadetBlueButton.IsChecked == true)
+        //        return Brushes.CadetBlue;
+        //    return Brushes.Black;
+        //}
     }
 }

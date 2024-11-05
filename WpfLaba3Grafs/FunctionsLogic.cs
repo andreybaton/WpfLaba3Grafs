@@ -21,14 +21,17 @@ namespace WpfLaba3Grafs
         public FunctionsLogic(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
+            
         }
         public void CreateVertex(Point position)
         {
+            string selectedColorName = mainWindow.GetSelectedColor();
+            Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
             Ellipse vertex = new Ellipse()
             {
                 Width = 10,
                 Height = 10,
-                Stroke = mainWindow.GetSelectedColor(),
+                Stroke = strokeBrush,
                 StrokeThickness = 2
             };
             double posX = position.X - vertex.Width / 2;
@@ -41,13 +44,15 @@ namespace WpfLaba3Grafs
 
         public void CreateEdge(Point pos1, Point pos2)
         {
+            string selectedColorName = mainWindow.GetSelectedColor();
+            Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
             Line edge = new Line()
             {
                 X1 = pos1.X,
                 Y1 = pos1.Y,
                 X2 = pos2.X,
                 Y2 = pos2.Y,
-                Stroke = mainWindow.GetSelectedColor(),
+                Stroke = strokeBrush,
                 StrokeThickness = 2
             };
             mainWindow.DrawingCanvas.Children.Add(edge);

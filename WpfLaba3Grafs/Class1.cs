@@ -13,6 +13,7 @@ namespace WpfLaba3Grafs
     public class Node
     {
         public int id { get; set; }
+        public string nodeColor { get; set; }
         public Point Position { get; set; } 
         public Node(int id, Point position)
         {
@@ -28,6 +29,7 @@ namespace WpfLaba3Grafs
         public Node from { get; set; }
         public Node to { get; set; }
         public int weight { get; set; }
+        public string edgeColor {  get; set; }
         public Edge(Node vertex1, Node vertex2)
         {
             from = vertex1;
