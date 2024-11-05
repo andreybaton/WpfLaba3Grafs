@@ -19,6 +19,8 @@ namespace WpfLaba3Grafs
 
     public partial class MainWindow : Window
     {
+        WindowAddEdge WwAe;
+
         private FunctionsLogic function;
         
         private Graph graph;
@@ -99,8 +101,8 @@ namespace WpfLaba3Grafs
                             
                             DrawingCanvas.Children.Add(textBox);
                         }
-                        
-                        
+
+
                     }
                     if (graph.Edges.Count > 1)
                     {
@@ -145,6 +147,20 @@ namespace WpfLaba3Grafs
             if (CadetBlueButton.IsChecked == true)
                 return Brushes.CadetBlue;
             return Brushes.Black;
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton pressed = (RadioButton)sender;
+
+            if (pressed.Content.ToString() == "Ориентированный")
+            {
+                WwAe.typeEdge = true;
+            }
+            else
+            {
+                WwAe.typeEdge = false;
+            }
         }
     }
 }

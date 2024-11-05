@@ -23,10 +23,14 @@
                     <TextBlock Margin="10">создать вершину</TextBlock>
                 </DockPanel>
                 <DockPanel>
-                    <Button Click="BtnClick_CreateEdge" Height="50" Width="50" Margin="10">
+                    <Button Click="BtnClick_CreateEdge" Height="50" Width="50" Margin="10,10,0,10">
                         <Image Source="/Edge.png" Height="32" Width="32"></Image>
                     </Button>
-                    <TextBlock Margin="10">создать ребро</TextBlock>
+                    <StackPanel>
+                        <TextBlock Margin="2,10,0,0">создать ребро</TextBlock>
+                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
+                        <RadioButton Margin="2" GroupName="GrafType">Неориентированный</RadioButton>
+                    </StackPanel>
                 </DockPanel>
                 <DockPanel>
                     <Button Click="BtnClick_DeleteElement" Height="50" Width="50" Margin="10">
