@@ -56,7 +56,8 @@ namespace WpfLaba3Grafs
                 StrokeThickness = 2
             };
             mainWindow.DrawingCanvas.Children.Add(edge);
-
+            if (mainWindow.typeEdge == true)
+                DrawArrow(pos1, pos2);
             newEdge = false;
         }
         public void ReDrawGraph(Graph graph)

@@ -19,13 +19,14 @@ namespace WpfLaba3Grafs
 
     public partial class MainWindow : Window
     {
-        WindowAddEdge WwAe;
+        //WindowAddEdge WwAe;
 
         private FunctionsLogic function;
         private Graph graph;
         private Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
+        public bool typeEdge;
         List<(int, int, int)> graphData = new List<(int, int, int)>();
         Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
         public MainWindow()
@@ -86,9 +87,21 @@ namespace WpfLaba3Grafs
                 }
                 Edge2 edge2 = new Edge2();
                 if (from2.ContainsNode(from2.position, graph2) && to2.ContainsNode(to2.position, graph2))
-                    if(edge2.AddEdge(graphData, from2, to2, 0))
+                    if(edge2.AddEdge(graphData, from2, to2, Convert.ToInt32(tbWeight.Text)))
                         function.CreateEdge(from2.position, to2.position);
+                if (tbWeight.Text != "0")
+                {
+                    TextBox textBox = new TextBox
+                    {
+                        Width = 14,
+                        Height = 18
+                    };
+                    textBox.Text = tbWeight.Text;
+                    Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
+                    Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
 
+                    DrawingCanvas.Children.Add(textBox);
+                }
                 //Node from = new Node(); Node to = new Node();
                 //for (int i = 0; i < graph.Nodes.Count; i++) {
                 //    if (graph.AreNodesClose(MousePos, graph.Nodes[i].Position, 5))
@@ -121,7 +134,7 @@ namespace WpfLaba3Grafs
                 //            //MessageBox.Show(textBox.Text);
                 //            Canvas.SetLeft(textBox, (MousePos.X + secondMousePos.X) / 2);
                 //            Canvas.SetTop(textBox, (MousePos.Y + secondMousePos.Y) / 2);
-                            
+
                 //            DrawingCanvas.Children.Add(textBox);
                 //        }
 
@@ -136,7 +149,7 @@ namespace WpfLaba3Grafs
 
 
                 //}
-             }
+            }
         }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -189,11 +202,11 @@ namespace WpfLaba3Grafs
 
             if (pressed.Content.ToString() == "Ориентированный")
             {
-                WwAe.typeEdge = true;
+                typeEdge = true;
             }
             else
             {
-                WwAe.typeEdge = false;
+                typeEdge = false;
             }
         }
         //public Brush GetSelectedColor()

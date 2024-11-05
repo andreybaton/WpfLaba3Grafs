@@ -30,6 +30,11 @@
                         <TextBlock Margin="2,10,0,0">создать ребро</TextBlock>
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
                         <RadioButton Margin="2" GroupName="GrafType">Неориентированный</RadioButton>
+                        <DockPanel>
+                            <TextBlock Margin="5">Вес нового ребра</TextBlock>
+                            <TextBox x:Name="tbWeight" Margin="5" Text="0"></TextBox>
+                        </DockPanel>
+                        
                     </StackPanel>
                 </DockPanel>
                 <DockPanel>
