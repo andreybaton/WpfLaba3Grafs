@@ -19,8 +19,6 @@ namespace WpfLaba3Grafs
 
     public partial class MainWindow : Window
     {
-        //WindowAddEdge WwAe;
-
         private FunctionsLogic function;
         private Graph graph;
         private Point MousePos;
@@ -35,7 +33,6 @@ namespace WpfLaba3Grafs
             function = new FunctionsLogic(this);
             graph = new Graph();
             InitializeComponent();
-            
         }
         public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
         {
@@ -91,9 +88,8 @@ namespace WpfLaba3Grafs
                 tempLine.Y2 = secondMousePos.Y;
                 tempLine = null;
                 newEdge = false;
-                
-                //DrawingCanvas.MouseMove -= DrawingCanvas_MouseMove;
-                //DrawingCanvas.MouseUp -= MouseLeftButtonUp_DrawingGraph;
+                if (string.IsNullOrEmpty(tbWeight.Text))
+                    tbWeight.Text = "0";
                 function.AddEdge(MousePos, secondMousePos, graph2, graphData, Convert.ToInt32(tbWeight.Text));
                 
             }
