@@ -31,8 +31,8 @@
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
                         <RadioButton Margin="2" GroupName="GrafType">Неориентированный</RadioButton>
                         <DockPanel>
-                            <TextBlock Margin="5">Вес нового ребра</TextBlock>
-                            <TextBox x:Name="tbWeight" Margin="5" Text="0"></TextBox>
+                            <TextBlock Margin="2">Вес нового ребра</TextBlock>
+                            <TextBox x:Name="tbWeight" Margin="2" Text="0"></TextBox>
                         </DockPanel>
                         
                     </StackPanel>
@@ -72,7 +72,7 @@
                 </StackPanel>
             </StackPanel>
             <DockPanel Height="434" Width="400">
-                <Canvas Height="434" Width="400" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" Background="Aquamarine"></Canvas>
+                <Canvas Height="434" Width="400" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" MouseMove="DrawingCanvas_MouseMove" Background="Aquamarine"></Canvas>
             </DockPanel>
             <StackPanel Height="434" Width="200">
                 <DockPanel>

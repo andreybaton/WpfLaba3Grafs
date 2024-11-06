@@ -29,6 +29,7 @@ namespace WpfLaba3Grafs
         public bool typeEdge;
         public List<(int, int, int)> graphData = new List<(int, int, int)>();
         public Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
+        private Line tempLine;
         public MainWindow()
         {
             function = new FunctionsLogic(this);
@@ -63,18 +64,49 @@ namespace WpfLaba3Grafs
                     graphData.Add((node2.value, -1, graph2.Count));
                 }
             }
+            if (newEdge)
+            {
+                tempLine = new Line
+                {
+                    X1 = MousePos.X,
+                    Y1 = MousePos.Y,
+                    X2 = MousePos.X,
+                    Y2 = MousePos.Y,
+                    Stroke = ConvertStringToBrush(GetSelectedColor()),
+                    StrokeThickness = 2,                  
+                };
+                DrawingCanvas.Children.Add(tempLine);
+                //DrawingCanvas.MouseMove += DrawingCanvas_MouseMove;
+                //DrawingCanvas.MouseUp += MouseLeftButtonUp_DrawingGraph;
+            }
         }
       
         private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e) //for add edge
         {
-             if (newEdge)
+             if (newEdge && tempLine!=null)
              {
+                DrawingCanvas.Children.Remove(tempLine);
                 Point secondMousePos = e.GetPosition(DrawingCanvas);
+                tempLine.X2= secondMousePos.X;
+                tempLine.Y2 = secondMousePos.Y;
+                tempLine = null;
                 newEdge = false;
+                
+                //DrawingCanvas.MouseMove -= DrawingCanvas_MouseMove;
+                //DrawingCanvas.MouseUp -= MouseLeftButtonUp_DrawingGraph;
                 function.AddEdge(MousePos, secondMousePos, graph2, graphData, Convert.ToInt32(tbWeight.Text));
+                
             }
         }
-
+        private void DrawingCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (tempLine != null)
+            {
+                Point currentPoint = e.GetPosition(DrawingCanvas);
+                tempLine.X2 = currentPoint.X;
+                tempLine.Y2 = currentPoint.Y;
+            }
+        }
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var checkedButton = sender as ToggleButton;
@@ -90,6 +122,21 @@ namespace WpfLaba3Grafs
         private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
 
+        }
+        
+        
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton pressed = (RadioButton)sender;
+
+            if (pressed.Content.ToString() == "Ориентированный")
+            {
+                typeEdge = true;
+            }
+            else
+            {
+                typeEdge = false;
+            }
         }
         public string GetSelectedColor()
         {
@@ -119,19 +166,8 @@ namespace WpfLaba3Grafs
                 return Brushes.Black;
             }
         }
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-            RadioButton pressed = (RadioButton)sender;
 
-            if (pressed.Content.ToString() == "Ориентированный")
-            {
-                typeEdge = true;
-            }
-            else
-            {
-                typeEdge = false;
-            }
-        }
+        
         //public Brush GetSelectedColor()
         //{
         //    if (BlackButton.IsChecked==true)
