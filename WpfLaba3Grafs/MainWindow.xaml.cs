@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -20,19 +22,24 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsLogic function;
-        private Graph graph;
+        //private Graph graph;
         private Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
         public bool typeEdge;
         public List<(int, int, int)> graphData = new List<(int, int, int)>();
-        public Dictionary<int, Node2> graph2 = new Dictionary<int, Node2>();
+        public Dictionary<int, Node> graph = new Dictionary<int, Node>();
         private Line tempLine;
+        List<(int, int, int)> tuples = new List<(int, int, int)>();
         public MainWindow()
         {
             function = new FunctionsLogic(this);
-            graph = new Graph();
+            //graph = new Graph();
             InitializeComponent();
+            
+
+
+
         }
         public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
         {
@@ -52,13 +59,14 @@ namespace WpfLaba3Grafs
             if (newVertex)
             {
                 newVertex = false;
-                Node2 node2 = new Node2();
-                if (!node2.ContainsNode(MousePos, graph2))
+                Node node = new Node();
+                if (!node.ContainsNode(MousePos, graph))
                 {
-                    node2 = node2.AddOrGetNode(graph2, graph2.Count);
-                    node2.position = MousePos;
+                    node = node.AddOrGetNode(graph, graph.Count);
+                    node.position = MousePos;
                     function.CreateVertex(MousePos);
-                    graphData.Add((node2.value, -1, graph2.Count));
+                    graphData.Add((node.value, -1, graph.Count)); 
+
                 }
             }
             if (newEdge)
@@ -90,7 +98,7 @@ namespace WpfLaba3Grafs
                 newEdge = false;
                 if (string.IsNullOrEmpty(tbWeight.Text))
                     tbWeight.Text = "0";
-                function.AddEdge(MousePos, secondMousePos, graph2, graphData, Convert.ToInt32(tbWeight.Text));
+                function.AddEdge(MousePos, secondMousePos, graph, graphData, Convert.ToInt32(tbWeight.Text));
                 
             }
         }
@@ -107,12 +115,8 @@ namespace WpfLaba3Grafs
         {
             var checkedButton = sender as ToggleButton;
             foreach(var child in (checkedButton.Parent as Panel).Children)
-            {
                 if (child is ToggleButton button && button != checkedButton)
-                {
                     button.IsChecked = false;
-                }
-            }
         }
 
         private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
@@ -126,13 +130,9 @@ namespace WpfLaba3Grafs
             RadioButton pressed = (RadioButton)sender;
 
             if (pressed.Content.ToString() == "Ориентированный")
-            {
                 typeEdge = true;
-            }
             else
-            {
                 typeEdge = false;
-            }
         }
         public string GetSelectedColor()
         {
@@ -154,16 +154,61 @@ namespace WpfLaba3Grafs
         {
             var property = typeof(Brushes).GetProperty(colorName);
             if (property != null)
-            {
                 return (Brush)property.GetValue(null);
-            }
             else
-            {
                 return Brushes.Black;
+        }
+       
+        public void GenerateAdjacencyMatrix(List<(int,int,int)> graphData, Dictionary<int, Node> graph)
+        {
+            int[,] matrix = new int[graph.Count+1, graph.Count + 1];
+            //List<(int,int)> matrix = new List<(int,int)>();
+            for (int i=0; i<graph.Count; i++)
+            {
+                matrix[i,0] = graph.ElementAt(i).Value.value;
+                matrix[0,i] = graph.ElementAt(i).Value.value;
             }
+            for (int i = 1; i < graph.Count; i++)
+                for (int j = 1; j < graph.Count; j++)
+                    matrix[i, j] = 0; 
+            foreach (var row in graphData)
+                matrix[row.Item1+1, row.Item2+1] = 1;
+
+            DataTable dataTable = new DataTable();
+
+            for (int column = 0; column < matrix.GetLength(1); column++)
+            {
+                //dataTable.Columns.Add(matrix[0, column].ToString());
+                string columnName = matrix[0, column].ToString();
+                string uniqueColumnName = columnName;
+
+                int count = 1;
+                while (dataTable.Columns.Contains(uniqueColumnName))
+                {
+                    uniqueColumnName = $"{columnName}_{count}";
+                    count++;
+                }
+
+                dataTable.Columns.Add(uniqueColumnName);
+            }
+                for (int row = 1; row < matrix.GetLength(0); row++)
+            {
+                DataRow dataRow = dataTable.NewRow();
+                for (int column = 0; column < matrix.GetLength(1); column++)
+                    dataRow[column] = matrix[row, column];
+                dataTable.Rows.Add(dataRow);
+            }
+            dg_AdjecencyMatrix.ItemsSource = dataTable.DefaultView;
+
+
+        }
+        public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
+        {
+            graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+            dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
+            GenerateAdjacencyMatrix(graphData, graph);
         }
 
-        
         //public Brush GetSelectedColor()
         //{
         //    if (BlackButton.IsChecked==true)

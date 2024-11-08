@@ -76,11 +76,15 @@
             </DockPanel>
             <StackPanel Height="434" Width="200">
                 <DockPanel>
-                    <TextBox Width="93" Height="73">матрица</TextBox>
+                    <DataGrid x:Name="dg_AdjecencyMatrix" Width="93" Height="73"></DataGrid>
                     <TextBox>матрица</TextBox>
                 </DockPanel>
                 <DockPanel>
                     <StackPanel Height="300">
+                        <Button Margin ="20" Click="BtnClick_GenerateAdjacencyMatrix" Content="Матрица смежности"></Button>
+                        <StackPanel Height="100">
+                            <DataGrid x:Name="dg_graph" AutoGenerateColumns="True"></DataGrid>
+                        </StackPanel>
                         <TextBlock>поиск</TextBlock>
 
                         <TextBlock>поиск</TextBlock>

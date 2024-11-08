@@ -41,20 +41,20 @@ namespace WpfLaba3Grafs
             Canvas.SetLeft(vertex, posX);
             mainWindow.DrawingCanvas.Children.Add(vertex);
         }
-        public void AddEdge(Point pos1, Point pos2, Dictionary<int,Node2> graph2, List <(int,int,int)> graphData, int weight)
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int,Node> graph, List <(int,int,int)> graphData, int weight)
         {
-                Node2 from2 = new Node2(); Node2 to2 = new Node2();
-                for (int i = 0; i < graph2.Count; i++)
+                Node from = new Node(); Node to = new Node();
+                for (int i = 0; i < graph.Count; i++)
                 {
-                    if (from2.AreNodesClose(pos1, graph2.ElementAt(i).Value.position, 5))
-                        from2 = graph2.ElementAt(i).Value;
-                    else if (to2.AreNodesClose(pos2, graph2.ElementAt(i).Value.position, 5))
-                        to2 = graph2.ElementAt(i).Value;
+                    if (from.AreNodesClose(pos1, graph.ElementAt(i).Value.position, 5))
+                        from = graph.ElementAt(i).Value;
+                    else if (to.AreNodesClose(pos2, graph.ElementAt(i).Value.position, 5))
+                        to = graph.ElementAt(i).Value;
                 }
-                Edge2 edge2 = new Edge2();
-                if (from2.ContainsNode(from2.position, graph2) && to2.ContainsNode(to2.position, graph2))
-                    if (edge2.AddEdge(graphData, from2, to2, weight))
-                        CreateEdge(from2.position, to2.position);
+                Edge edge2 = new Edge();
+                if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
+                    if (edge2.AddEdge(graphData, from, to, weight))
+                        CreateEdge(from.position, to.position);
                 if (weight != 0)
                 {
                     TextBox textBox = new TextBox
@@ -84,28 +84,28 @@ namespace WpfLaba3Grafs
             };
             mainWindow.DrawingCanvas.Children.Add(edge);
             if (mainWindow.typeEdge == true)
-                DrawArrow(pos1, pos2);
+                mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
             newEdge = false;
         }
-        public void ReDrawGraph(Graph graph)
-        {
-            try
-            {
-                //MnWw.DrawingCanvas.Children.Clear();
-                foreach (var edge in graph.Edges)
-                {
-                    Point p1 = edge.from.Position;
-                    Point p2 = edge.to.Position;
-                    CreateEdge(p1, p2);
-                }
-                foreach (var node in graph.Nodes)
-                {
-                    Point p = node.Position;
-                    CreateVertex(p);
-                }
-            }
-            catch { MessageBox.Show("error redraw graph"); }
-        }
+        //public void ReDrawGraph(Graph graph)
+        //{
+        //    try
+        //    {
+        //        //MnWw.DrawingCanvas.Children.Clear();
+        //        foreach (var edge in graph.Edges)
+        //        {
+        //            Point p1 = edge.from.Position;
+        //            Point p2 = edge.to.Position;
+        //            CreateEdge(p1, p2);
+        //        }
+        //        foreach (var node in graph.Nodes)
+        //        {
+        //            Point p = node.Position;
+        //            CreateVertex(p);
+        //        }
+        //    }
+        //    catch { MessageBox.Show("error redraw graph"); }
+        //}
         public Polygon DrawArrow(Point pos1, Point pos2)
         {
             double arrowLength = 10; // Длина стрелки
