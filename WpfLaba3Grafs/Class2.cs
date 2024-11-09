@@ -64,7 +64,7 @@ namespace WpfLaba3Grafs
         int weight;
         public Edge(Node adjacentNode, int weight) {  this.adjacentNode = adjacentNode; this.weight = weight; }
         public Edge() { }
-        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight)
+        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge)
         {
             Edge edge = new Edge(adjacentNode, weight);
 
@@ -73,10 +73,13 @@ namespace WpfLaba3Grafs
                 adjacentNode.parents.Add(node, edge);
                 node.edges.Add(edge);
             }
-            /*если граф неориентированный
-            if (SearchElement(graphData, adjacentNode, node, weight) {
-                node.parents.Add(adjacentNode,edge);
-                adjacentNode.edges.Add(edge); }*/
+            //если граф неориентированный
+            if (typeEdge == false)
+                if (AddSearchElement(graphData, adjacentNode, node, weight))
+                {
+                    node.parents.Add(adjacentNode, edge);
+                    adjacentNode.edges.Add(edge);
+                }
             return true;
         }
         public bool AddSearchElement(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight)

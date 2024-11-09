@@ -54,7 +54,7 @@ namespace WpfLaba3Grafs
                 }
                 Edge edge2 = new Edge();
                 if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
-                    if (edge2.AddEdge(graphData, from, to, weight))
+                    if (edge2.AddEdge(graphData, from, to, weight, mainWindow.typeEdge))
                         CreateEdge(from.position, to.position);
                 if (weight != 0)
                 {
