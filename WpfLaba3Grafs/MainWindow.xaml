@@ -29,7 +29,7 @@
                     <StackPanel>
                         <TextBlock Margin="2,10,0,0">создать ребро</TextBlock>
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
-                        <RadioButton Margin="2" GroupName="GrafType">Неориентированный</RadioButton>
+                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Неориентированный</RadioButton>
                         <DockPanel>
                             <TextBlock Margin="2">Вес нового ребра</TextBlock>
                             <TextBox x:Name="tbWeight" Margin="2" Text="0"></TextBox>
@@ -45,7 +45,7 @@
                 </DockPanel>
                 <StackPanel>
                     <DockPanel Height="60">
-                        <Button Width="50" Margin="10,10,5,10">
+                        <Button Width="50" Margin="10,10,5,10" MouseLeftButtonDown="Paint_MouseDown">
                             <Image Source="/Bucket.png" Height="32" Width="32"></Image>
                         </Button>
                         <StackPanel Orientation="Horizontal">

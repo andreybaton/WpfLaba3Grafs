@@ -80,6 +80,7 @@ namespace WpfLaba3Grafs
                     Stroke = ConvertStringToBrush(GetSelectedColor()),
                     StrokeThickness = 2,                  
                 };
+
                 DrawingCanvas.Children.Add(tempLine);
                 //DrawingCanvas.MouseMove += DrawingCanvas_MouseMove;
                 //DrawingCanvas.MouseUp += MouseLeftButtonUp_DrawingGraph;
@@ -98,6 +99,7 @@ namespace WpfLaba3Grafs
                 newEdge = false;
                 if (string.IsNullOrEmpty(tbWeight.Text))
                     tbWeight.Text = "0";
+
                 function.AddEdge(MousePos, secondMousePos, graph, graphData, Convert.ToInt32(tbWeight.Text));
                 
             }
@@ -111,6 +113,21 @@ namespace WpfLaba3Grafs
                 tempLine.Y2 = currentPoint.Y;
             }
         }
+
+        public void Paint_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is Line line)
+            {
+                string selectedColorName = GetSelectedColor();
+                line.Stroke = ConvertStringToBrush(selectedColorName);
+            }
+            else if(sender is Ellipse vertex)
+            {
+                string selectedColorName = GetSelectedColor();
+                vertex.Stroke = ConvertStringToBrush(selectedColorName);
+            }
+        }
+
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var checkedButton = sender as ToggleButton;
