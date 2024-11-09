@@ -36,12 +36,8 @@ namespace WpfLaba3Grafs
             function = new FunctionsLogic(this);
             //graph = new Graph();
             InitializeComponent();
-            
-
-
-
         }
-        public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
+        public void BtnClick_SelectItem(object sender, RoutedEventArgs e)
         {
 
         }
@@ -52,6 +48,10 @@ namespace WpfLaba3Grafs
         public void BtnClick_CreateEdge(object sender, RoutedEventArgs e)
         {
             newEdge = true;
+        }
+        public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
+        {
+
         }
         public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) //for add vertex
         {
@@ -135,12 +135,6 @@ namespace WpfLaba3Grafs
                 if (child is ToggleButton button && button != checkedButton)
                     button.IsChecked = false;
         }
-
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-
-        }
-        
         
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
@@ -151,31 +145,7 @@ namespace WpfLaba3Grafs
             else
                 typeEdge = false;
         }
-        public string GetSelectedColor()
-        {
-            if (BlackButton.IsChecked == true)
-                return "Black";
-            if (RedButton.IsChecked == true)
-                return "Red";
-            if (OrangeButton.IsChecked == true)
-                return "Orange";
-            if (YellowButton.IsChecked == true)
-                return "Yellow";
-            if (GreenButton.IsChecked == true)
-                return "Green";
-            if (CadetBlueButton.IsChecked == true)
-                return "CadetBlue";
-            return "Black";
-        }
-        public Brush ConvertStringToBrush(string colorName)
-        {
-            var property = typeof(Brushes).GetProperty(colorName);
-            if (property != null)
-                return (Brush)property.GetValue(null);
-            else
-                return Brushes.Black;
-        }
-       
+        
         public void GenerateAdjacencyMatrix(List<(int,int,int)> graphData, Dictionary<int, Node> graph)
         {
             int[,] matrix = new int[graph.Count+1, graph.Count];
@@ -212,21 +182,29 @@ namespace WpfLaba3Grafs
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
         }
-        //public Brush GetSelectedColor()
-        //{
-        //    if (BlackButton.IsChecked==true)
-        //        return Brushes.Black;
-        //    if (RedButton.IsChecked == true)
-        //        return Brushes.Red;
-        //    if (OrangeButton.IsChecked == true)
-        //        return Brushes.Orange;
-        //    if (YellowButton.IsChecked == true)
-        //        return Brushes.Yellow;
-        //    if (GreenButton.IsChecked == true)
-        //        return Brushes.Green;
-        //    if (CadetBlueButton.IsChecked == true)
-        //        return Brushes.CadetBlue;
-        //    return Brushes.Black;
-        //}
+        public string GetSelectedColor()
+        {
+            if (BlackButton.IsChecked == true)
+                return "Black";
+            if (RedButton.IsChecked == true)
+                return "Red";
+            if (OrangeButton.IsChecked == true)
+                return "Orange";
+            if (YellowButton.IsChecked == true)
+                return "Yellow";
+            if (GreenButton.IsChecked == true)
+                return "Green";
+            if (CadetBlueButton.IsChecked == true)
+                return "CadetBlue";
+            return "Black";
+        }
+        public Brush ConvertStringToBrush(string colorName)
+        {
+            var property = typeof(Brushes).GetProperty(colorName);
+            if (property != null)
+                return (Brush)property.GetValue(null);
+            else
+                return Brushes.Black;
+        }
     }
 }

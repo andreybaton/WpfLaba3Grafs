@@ -11,7 +11,7 @@
 
             <StackPanel Height="434" Width="200" >
                 <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10">
+                    <Button  Height="50" Width="50" Margin="10" Click="BtnClick_SelectItem">
                         <Image Source="/Pointer.png" Height="32" Width="32"></Image>
                     </Button>
                     <TextBlock Margin="10">выделить элемент</TextBlock>
@@ -61,12 +61,12 @@
                         </StackPanel>
                     </DockPanel>
                     <DockPanel Height="30">
-                        <ToggleButton x:Name="BlackButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Black"/>
-                        <ToggleButton x:Name="RedButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Red"/>
-                        <ToggleButton x:Name="OrangeButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Orange"/>
-                        <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Yellow"/>
-                        <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="Green"/>
-                        <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Width="29" Margin="2" Background="CadetBlue"/>
+                        <ToggleButton x:Name="BlackButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Black"/>
+                        <ToggleButton x:Name="RedButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Red"/>
+                        <ToggleButton x:Name="OrangeButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Orange"/>
+                        <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Yellow"/>
+                        <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Green"/>
+                        <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="CadetBlue"/>
 
                     </DockPanel>
                 </StackPanel>
