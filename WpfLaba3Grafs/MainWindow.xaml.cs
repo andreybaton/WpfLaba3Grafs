@@ -178,37 +178,24 @@ namespace WpfLaba3Grafs
        
         public void GenerateAdjacencyMatrix(List<(int,int,int)> graphData, Dictionary<int, Node> graph)
         {
-            int[,] matrix = new int[graph.Count+1, graph.Count + 1];
-            //List<(int,int)> matrix = new List<(int,int)>();
-            for (int i=0; i<graph.Count; i++)
+            int[,] matrix = new int[graph.Count+1, graph.Count];
+            for (int i = 0; i < graph.Count; i++)
             {
-                matrix[i,0] = graph.ElementAt(i).Value.value;
-                matrix[0,i] = graph.ElementAt(i).Value.value;
-            }
-            for (int i = 1; i < graph.Count; i++)
+                matrix[0, i] = graph.ElementAt(i).Value.value;
                 for (int j = 1; j < graph.Count; j++)
-                    matrix[i, j] = 0; 
+                    matrix[i, j] = 0;
+            }
             foreach (var row in graphData)
-                matrix[row.Item1+1, row.Item2+1] = 1;
-
+                if (row.Item2 != -1)
+                    matrix[row.Item1+1, row.Item2] = 1;
             DataTable dataTable = new DataTable();
 
             for (int column = 0; column < matrix.GetLength(1); column++)
             {
-                //dataTable.Columns.Add(matrix[0, column].ToString());
                 string columnName = matrix[0, column].ToString();
-                string uniqueColumnName = columnName;
-
-                int count = 1;
-                while (dataTable.Columns.Contains(uniqueColumnName))
-                {
-                    uniqueColumnName = $"{columnName}_{count}";
-                    count++;
-                }
-
-                dataTable.Columns.Add(uniqueColumnName);
+                dataTable.Columns.Add(columnName);
             }
-                for (int row = 1; row < matrix.GetLength(0); row++)
+            for (int row = 1; row < matrix.GetLength(0); row++)
             {
                 DataRow dataRow = dataTable.NewRow();
                 for (int column = 0; column < matrix.GetLength(1); column++)
@@ -216,16 +203,15 @@ namespace WpfLaba3Grafs
                 dataTable.Rows.Add(dataRow);
             }
             dg_AdjecencyMatrix.ItemsSource = dataTable.DefaultView;
-
-
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
-            graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
-            dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
             GenerateAdjacencyMatrix(graphData, graph);
         }
-
+        public void BtnClick_arrGraph(object sender, EventArgs e) {
+            graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+            dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
+        }
         //public Brush GetSelectedColor()
         //{
         //    if (BlackButton.IsChecked==true)
