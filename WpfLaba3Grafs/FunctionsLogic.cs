@@ -34,7 +34,7 @@ namespace WpfLaba3Grafs
                 Stroke = strokeBrush,
                 StrokeThickness = 2
             };
-            vertex.MouseDown += mainWindow.Paint_MouseDown;
+            vertex.MouseDown += mainWindow.BtnClick_Paint;
             double posX = position.X - vertex.Width / 2;
             double posY = position.Y - vertex.Height / 2;
 
@@ -83,7 +83,7 @@ namespace WpfLaba3Grafs
                 Stroke = strokeBrush,
                 StrokeThickness = 2
             };
-            edge.MouseDown += mainWindow.Paint_MouseDown;
+            edge.MouseDown += mainWindow.BtnClick_Paint;
             mainWindow.DrawingCanvas.Children.Add(edge);
             if (mainWindow.typeEdge == true)
                 mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));

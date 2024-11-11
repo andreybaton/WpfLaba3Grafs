@@ -55,6 +55,20 @@ namespace WpfLaba3Grafs
         {
 
         }
+        public void BtnClick_Paint(object sender, RoutedEventArgs e)
+        {
+            if (sender is Line line)
+            {
+                string selectedColorName = GetSelectedColor();
+                line.Stroke = ConvertStringToBrush(selectedColorName);
+            }
+            else if (sender is Ellipse vertex)
+            {
+                string selectedColorName = GetSelectedColor();
+                vertex.Stroke = ConvertStringToBrush(selectedColorName);
+            }
+        }
+
         public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) //for add vertex
         {
             MousePos = e.GetPosition(DrawingCanvas);
@@ -115,21 +129,7 @@ namespace WpfLaba3Grafs
                 tempLine.Y2 = currentPoint.Y;
             }
         }
-
-        public void Paint_MouseDown(object sender, RoutedEventArgs e)
-        {
-            if(sender is Line line)
-            {
-                string selectedColorName = GetSelectedColor();
-                line.Stroke = ConvertStringToBrush(selectedColorName);
-            }
-            else if(sender is Ellipse vertex)
-            {
-                string selectedColorName = GetSelectedColor();
-                vertex.Stroke = ConvertStringToBrush(selectedColorName);
-            }
-        }
-
+        
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var checkedButton = sender as ToggleButton;
@@ -152,36 +152,22 @@ namespace WpfLaba3Grafs
             ResetToggleButtons(DockPanel4, checkedButton);
             ResetToggleButtons(DockPanel5, checkedButton);
             if (checkedButton == Pointer)
-            {
                 BtnClick_SelectItem();
-                
-            }
             else if (checkedButton == Vertex)
-            {
-
                 BtnClick_CreateVertex();
-
-            }
             else if (checkedButton == Edge)
-            {
                 BtnClick_CreateEdge();
-            }
             else if (checkedButton == Crest)
-            {
                 BtnClick_DeleteElement();
-            }
             else if (checkedButton == Bucket)
-            {
-                Paint_MouseDown(sender, e);
-            }
+                BtnClick_Paint(sender, e);
         }
 
         public void ResetToggleButtons(Panel panel, ToggleButton checkedButton)
         {
             foreach (var child in panel.Children)
                 if (child is ToggleButton button && button != checkedButton)
-                    button.IsChecked = false;
-                   
+                    button.IsChecked = false; 
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
