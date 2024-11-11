@@ -43,12 +43,12 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_CreateVertex()
         {   
-            newEdge=false;
+            //newEdge=false;
             newVertex = true;
         }
         public void BtnClick_CreateEdge()
         {
-            newVertex= false;
+            //newVertex= false;
             newEdge = true;
         }
         public void BtnClick_DeleteElement()
@@ -98,7 +98,7 @@ namespace WpfLaba3Grafs
                 tempLine.X2= secondMousePos.X;
                 tempLine.Y2 = secondMousePos.Y;
                 tempLine = null;
-                newEdge = false;
+                //newEdge = false;
                 if (string.IsNullOrEmpty(tbWeight.Text))
                     tbWeight.Text = "0";
 
@@ -144,8 +144,6 @@ namespace WpfLaba3Grafs
 
             if (checkedButton == null)
             {
-                newEdge = false;
-                newVertex = false;
                 return;
             }
             ResetToggleButtons(DockPanel1,checkedButton);
@@ -182,11 +180,8 @@ namespace WpfLaba3Grafs
         {
             foreach (var child in panel.Children)
                 if (child is ToggleButton button && button != checkedButton)
-                {
                     button.IsChecked = false;
-                    newEdge=false;
-                    newVertex=false;
-                }
+                   
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
