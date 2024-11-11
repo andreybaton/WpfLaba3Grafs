@@ -26,6 +26,7 @@ namespace WpfLaba3Grafs
         private Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
+        private bool delete = false;
         public bool typeEdge;
         public List<(int, int, int)> graphData = new List<(int, int, int)>();
         public Dictionary<int, Node> graph = new Dictionary<int, Node>();
@@ -53,7 +54,7 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_DeleteElement()
         {
-
+            delete = true;
         }
         public void BtnClick_Paint(object sender, RoutedEventArgs e)
         {
@@ -85,7 +86,7 @@ namespace WpfLaba3Grafs
 
                 }
             }
-            if (newEdge)
+            else if (newEdge)
             {
                 tempLine = new Line
                 {
@@ -96,10 +97,17 @@ namespace WpfLaba3Grafs
                     Stroke = ConvertStringToBrush(GetSelectedColor()),
                     StrokeThickness = 2,                  
                 };
-
                 DrawingCanvas.Children.Add(tempLine);
                 //DrawingCanvas.MouseMove += DrawingCanvas_MouseMove;
                 //DrawingCanvas.MouseUp += MouseLeftButtonUp_DrawingGraph;
+            }
+            else if (delete)
+            {
+                
+                if(DrawingCanvas != null)
+                {
+                    DrawingCanvas.Children.Remove(this);
+                }
             }
         }
       
