@@ -10,22 +10,22 @@
         <StackPanel Orientation="Horizontal">
 
             <StackPanel Height="434" Width="200" >
-                <DockPanel>
-                    <Button  Height="50" Width="50" Margin="10" Click="BtnClick_SelectItem">
+                <DockPanel x:Name="DockPanel1">
+                    <ToggleButton x:Name="Pointer" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
                         <Image Source="/Pointer.png" Height="32" Width="32"></Image>
-                    </Button>
+                    </ToggleButton>
                     <TextBlock Margin="10">выделить элемент</TextBlock>
                 </DockPanel>
-                <DockPanel >
-                    <Button  Height="50" Width="50" Margin="10" Click="BtnClick_CreateVertex">
+                <DockPanel x:Name="DockPanel2">
+                    <ToggleButton x:Name="Vertex" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
                         <Image Source="/Vertex.png" Height="32" Width="32"></Image>
-                    </Button>
+                    </ToggleButton>
                     <TextBlock Margin="10">создать вершину</TextBlock>
                 </DockPanel>
-                <DockPanel>
-                    <Button Click="BtnClick_CreateEdge" Height="50" Width="50" Margin="10,10,0,10">
+                <DockPanel x:Name="DockPanel3">
+                    <ToggleButton x:Name="Edge" Height="50" Width="50" Margin="10,10,0,10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
                         <Image Source="/Edge.png" Height="32" Width="32"></Image>
-                    </Button>
+                    </ToggleButton>
                     <StackPanel>
                         <TextBlock Margin="2,10,0,0">создать ребро</TextBlock>
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
@@ -37,17 +37,17 @@
 
                     </StackPanel>
                 </DockPanel>
-                <DockPanel>
-                    <Button Click="BtnClick_DeleteElement" Height="50" Width="50" Margin="10">
+                <DockPanel x:Name="DockPanel4">
+                    <ToggleButton x:Name="Crest" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked">
                         <Image Source="/Crest.png" Height="32" Width="32"></Image>
-                    </Button>
+                    </ToggleButton>
                     <TextBlock Margin="10">удалить элемент</TextBlock>
                 </DockPanel>
                 <StackPanel>
-                    <DockPanel Height="60">
-                        <Button Width="50" Margin="10,10,5,10" MouseLeftButtonDown="Paint_MouseDown">
+                    <DockPanel Height="60" x:Name="DockPanel5">
+                        <ToggleButton x:Name="Bucket" Width="50" Margin="10,10,5,10" Checked="ControlToggleButton_Checked">
                             <Image Source="/Bucket.png" Height="32" Width="32"></Image>
-                        </Button>
+                        </ToggleButton>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel>
                                 <Button Width="25" Margin="5,10,5,5">^</Button>
@@ -56,7 +56,6 @@
                             <StackPanel>
                                 <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
                                 <TextBox Margin="5"></TextBox>
-
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>
@@ -67,7 +66,6 @@
                         <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Yellow"/>
                         <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Green"/>
                         <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="CadetBlue"/>
-
                     </DockPanel>
                 </StackPanel>
             </StackPanel>

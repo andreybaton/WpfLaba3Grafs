@@ -37,19 +37,21 @@ namespace WpfLaba3Grafs
             //graph = new Graph();
             InitializeComponent();
         }
-        public void BtnClick_SelectItem(object sender, RoutedEventArgs e)
+        public void BtnClick_SelectItem()
         {
 
         }
-        public void BtnClick_CreateVertex(object sender, RoutedEventArgs e)
-        {
+        public void BtnClick_CreateVertex()
+        {   
+            newEdge=false;
             newVertex = true;
         }
-        public void BtnClick_CreateEdge(object sender, RoutedEventArgs e)
+        public void BtnClick_CreateEdge()
         {
+            newVertex= false;
             newEdge = true;
         }
-        public void BtnClick_DeleteElement(object sender, RoutedEventArgs e)
+        public void BtnClick_DeleteElement()
         {
 
         }
@@ -58,7 +60,7 @@ namespace WpfLaba3Grafs
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                newVertex = false;
+                //newVertex = false;
                 Node node = new Node();
                 if (!node.ContainsNode(MousePos, graph))
                 {
@@ -114,7 +116,7 @@ namespace WpfLaba3Grafs
             }
         }
 
-        public void Paint_MouseDown(object sender, MouseButtonEventArgs e)
+        public void Paint_MouseDown(object sender, RoutedEventArgs e)
         {
             if(sender is Line line)
             {
@@ -135,7 +137,58 @@ namespace WpfLaba3Grafs
                 if (child is ToggleButton button && button != checkedButton)
                     button.IsChecked = false;
         }
-        
+
+        private void ControlToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkedButton = sender as ToggleButton;
+
+            if (checkedButton == null)
+            {
+                newEdge = false;
+                newVertex = false;
+                return;
+            }
+            ResetToggleButtons(DockPanel1,checkedButton);
+            ResetToggleButtons(DockPanel2, checkedButton);
+            ResetToggleButtons(DockPanel3, checkedButton);
+            ResetToggleButtons(DockPanel4, checkedButton);
+            ResetToggleButtons(DockPanel5, checkedButton);
+            if (checkedButton == Pointer)
+            {
+                BtnClick_SelectItem();
+                
+            }
+            else if (checkedButton == Vertex)
+            {
+
+                BtnClick_CreateVertex();
+
+            }
+            else if (checkedButton == Edge)
+            {
+                BtnClick_CreateEdge();
+            }
+            else if (checkedButton == Crest)
+            {
+                BtnClick_DeleteElement();
+            }
+            else if (checkedButton == Bucket)
+            {
+                Paint_MouseDown(sender, e);
+            }
+        }
+
+        public void ResetToggleButtons(Panel panel, ToggleButton checkedButton)
+        {
+            foreach (var child in panel.Children)
+                if (child is ToggleButton button && button != checkedButton)
+                {
+                    button.IsChecked = false;
+                    newEdge=false;
+                    newVertex=false;
+                }
+        }
+
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton pressed = (RadioButton)sender;
@@ -205,6 +258,12 @@ namespace WpfLaba3Grafs
                 return (Brush)property.GetValue(null);
             else
                 return Brushes.Black;
+        }
+
+        private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            newEdge=false;
+            newVertex=false;
         }
     }
 }
