@@ -58,6 +58,8 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_Paint(object sender, RoutedEventArgs e)
         {
+            bool kostul = Bucket.IsChecked ?? false;
+            if (kostul == true) { 
             if (sender is Line line)
             {
                 string selectedColorName = GetSelectedColor();
@@ -67,6 +69,7 @@ namespace WpfLaba3Grafs
             {
                 string selectedColorName = GetSelectedColor();
                 vertex.Stroke = ConvertStringToBrush(selectedColorName);
+            }
             }
         }
 
