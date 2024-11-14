@@ -35,26 +35,11 @@ namespace WpfLaba3Grafs
         public MainWindow()
         {
             function = new FunctionsLogic(this);
-            //graph = new Graph();
             InitializeComponent();
         }
         public void BtnClick_SelectItem()
         {
 
-        }
-        public void BtnClick_CreateVertex()
-        {   
-            //newEdge=false;
-            newVertex = true;
-        }
-        public void BtnClick_CreateEdge()
-        {
-            //newVertex= false;
-            newEdge = true;
-        }
-        public void BtnClick_DeleteElement()
-        {
-            delete = true;
         }
         public void BtnClick_Paint(object sender, RoutedEventArgs e)
         {
@@ -78,15 +63,16 @@ namespace WpfLaba3Grafs
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
             {
-                //newVertex = false;
                 Node node = new Node();
                 if (!node.ContainsNode(MousePos, graph))
                 {
                     node = node.AddOrGetNode(graph, graph.Count);
                     node.position = MousePos;
                     function.CreateVertex(MousePos);
-                    graphData.Add((node.value, -1, graph.Count)); 
+                    graphData.Add((node.value, -1, 0));
 
+                    NodePicture nodePic = new NodePicture("", "Black", node);
+                    function.nodePictures.Add(nodePic);
                 }
             }
             else if (newEdge)
@@ -101,15 +87,29 @@ namespace WpfLaba3Grafs
                     StrokeThickness = 2,                  
                 };
                 DrawingCanvas.Children.Add(tempLine);
-                //DrawingCanvas.MouseMove += DrawingCanvas_MouseMove;
-                //DrawingCanvas.MouseUp += MouseLeftButtonUp_DrawingGraph;
             }
             else if (delete)
             {
                 
                 if(DrawingCanvas != null)
                 {
-                    DrawingCanvas.Children.Remove(this);
+                    var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                    if (element != null)
+                        DrawingCanvas.Children.Remove(element);
+                    for (int i=0; i < graph.Count; i++)
+                    {
+                        if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, 5))
+                        {
+                            for (int j=0; j < graphData.Count; j++)
+                                if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                {
+                                    graphData.RemoveAt(j);
+                                    break;
+                                }
+
+                            graph.Remove(graph.ElementAt(i).Key);
+                        }
+                    }
                 }
             }
         }
@@ -123,12 +123,9 @@ namespace WpfLaba3Grafs
                 tempLine.X2= secondMousePos.X;
                 tempLine.Y2 = secondMousePos.Y;
                 tempLine = null;
-                //newEdge = false;
                 if (string.IsNullOrEmpty(tbWeight.Text))
                     tbWeight.Text = "0";
-
                 function.AddEdge(MousePos, secondMousePos, graph, graphData, Convert.ToInt32(tbWeight.Text));
-                
             }
         }
         private void DrawingCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -154,9 +151,7 @@ namespace WpfLaba3Grafs
             var checkedButton = sender as ToggleButton;
 
             if (checkedButton == null)
-            {
                 return;
-            }
             ResetToggleButtons(DockPanel1,checkedButton);
             ResetToggleButtons(DockPanel2, checkedButton);
             ResetToggleButtons(DockPanel3, checkedButton);
@@ -165,11 +160,11 @@ namespace WpfLaba3Grafs
             if (checkedButton == Pointer)
                 BtnClick_SelectItem();
             else if (checkedButton == Vertex)
-                BtnClick_CreateVertex();
+                newVertex = true;
             else if (checkedButton == Edge)
-                BtnClick_CreateEdge();
+                newEdge = true;
             else if (checkedButton == Crest)
-                BtnClick_DeleteElement();
+                delete = true;
             else if (checkedButton == Bucket)
                 BtnClick_Paint(sender, e);
         }
@@ -191,37 +186,13 @@ namespace WpfLaba3Grafs
                 typeEdge = false;
         }
         
-        public void GenerateAdjacencyMatrix(List<(int,int,int)> graphData, Dictionary<int, Node> graph)
+        public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)
         {
-            int[,] matrix = new int[graph.Count+1, graph.Count];
-            for (int i = 0; i < graph.Count; i++)
-            {
-                matrix[0, i] = graph.ElementAt(i).Value.value;
-                for (int j = 1; j < graph.Count; j++)
-                    matrix[i, j] = 0;
-            }
-            foreach (var row in graphData)
-                if (row.Item2 != -1)
-                    matrix[row.Item1+1, row.Item2] = 1;
-            DataTable dataTable = new DataTable();
-
-            for (int column = 0; column < matrix.GetLength(1); column++)
-            {
-                string columnName = matrix[0, column].ToString();
-                dataTable.Columns.Add(columnName);
-            }
-            for (int row = 1; row < matrix.GetLength(0); row++)
-            {
-                DataRow dataRow = dataTable.NewRow();
-                for (int column = 0; column < matrix.GetLength(1); column++)
-                    dataRow[column] = matrix[row, column];
-                dataTable.Rows.Add(dataRow);
-            }
-            dg_AdjecencyMatrix.ItemsSource = dataTable.DefaultView;
+            function.GenerateIncidenceMatrix(graphData, graph);
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
-            GenerateAdjacencyMatrix(graphData, graph);
+            function.GenerateAdjacencyMatrix(graphData, graph);
         }
         public void BtnClick_arrGraph(object sender, EventArgs e) {
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));

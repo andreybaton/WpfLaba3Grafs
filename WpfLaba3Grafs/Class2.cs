@@ -26,10 +26,10 @@ namespace WpfLaba3Grafs
             graph.Add(value, node);
             return node;
         }
-        public Dictionary<int,Node> CreateGraph( List<(int,int,int)> graphData)
+        public Dictionary<int, Node> CreateGraph(List<(int, int, int)> graphData)
         {
-            Dictionary<int,Node> graph = new Dictionary<int,Node>();
-            foreach ((int,int,int) row in graphData)
+            Dictionary<int, Node> graph = new Dictionary<int, Node>();
+            foreach ((int, int, int) row in graphData)
             {
                 Node node = AddOrGetNode(graph, row.Item1); //откуда
                 Node adjacentNode = AddOrGetNode(graph, row.Item2); //куда
@@ -38,14 +38,14 @@ namespace WpfLaba3Grafs
                 Edge edge = new Edge(adjacentNode, row.Item3);
                 node.edges.Add(edge);
                 adjacentNode.parents.Add(node, edge);
-                
+
             }
             return graph;
         }
         public bool ContainsNode(Point pos, Dictionary<int, Node> graph)
         {
             for (int i = 0; i < graph.Count; i++)
-                if (AreNodesClose(graph.ElementAt(i).Value.position, pos, 5))
+                if (AreNodesClose(graph.ElementAt(i).Value.position, pos, 10))
                     return true;
             return false;
         }
@@ -60,9 +60,9 @@ namespace WpfLaba3Grafs
 
     public class Edge
     {
-        Node adjacentNode; //узел, на который ведёт ребро
+        public Node adjacentNode; //узел, на который ведёт ребро
         int weight;
-        public Edge(Node adjacentNode, int weight) {  this.adjacentNode = adjacentNode; this.weight = weight; }
+        public Edge(Node adjacentNode, int weight) { this.adjacentNode = adjacentNode; this.weight = weight; }
         public Edge() { }
         public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge)
         {
@@ -101,6 +101,31 @@ namespace WpfLaba3Grafs
             else
                 graphData.Add((node.value, adjacentNode.value, weight));
             return true;
+        }
+    }
+    public class EdgePicture : Edge
+    {
+        public string tbEdge { get; set; }
+        public string colorEdge { get; set; }
+        public Edge edge { get; set; }
+
+        public EdgePicture(string tb, string color, Edge edge)
+        {
+            tbEdge = tb;
+            colorEdge = color;
+            this.edge = edge;
+        }
+    }
+    public class NodePicture : Node
+    {
+        public string tbNode { get; set; }
+        public string colorNode { get; set; }
+        public Node node { get; set; }
+        public NodePicture (string tb, string color, Node node)
+        {
+            tbNode = tb;
+            colorNode = color;
+            this.node = node;
         }
     }
 }
