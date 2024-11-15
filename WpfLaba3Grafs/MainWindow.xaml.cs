@@ -85,16 +85,15 @@ namespace WpfLaba3Grafs
                 {
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
 
-
                     if (element.GetType() == typeof(Ellipse))
                     {
-                        var el = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                        while (el != null && !(el is Grid))
-                            el = VisualTreeHelper.GetParent(el) as UIElement;
-                        if (el is Grid grid)
+                        var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                        while (temp != null && !(temp is Grid))
+                            temp = VisualTreeHelper.GetParent(temp) as UIElement;
+                        if (temp is Grid grid)
                             DrawingCanvas.Children.Remove(grid);
                         for (int i = 0; i < graph.Count; i++)
-                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, (function.size / 2)))
+                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size/2 + 3))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
@@ -110,20 +109,15 @@ namespace WpfLaba3Grafs
                                 graph.Remove(graph.ElementAt(i).Key);
                                 for (int k = 0; k < graph.Count; k++)
                                 {
-                                    if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
-                                        graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
-                                    for (int j = 0; j < delNode.edges.Count; j++)
+                                    if (delNode.parents.Count > 0)
+                                        if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
+                                            graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
+                                    else
+                                        for (int j = 0; j < delNode.edges.Count; j++)
                                         if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
                                             graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
                             }
-                        if (element != null)
-                        {
-                            while (element != null && !(element is Grid))
-                                element = VisualTreeHelper.GetParent(element) as UIElement;
-                            if (element is Grid grid)
-                                DrawingCanvas.Children.Remove(grid);
-                        }
                     }
                     if (element.GetType() == typeof(Line))
                     {
@@ -151,7 +145,10 @@ namespace WpfLaba3Grafs
                                     else if (graph.ElementAt(i).Value.position == begin)
                                         for (int k = 0; k < graph[i].edges.Count; k++) //для начала ребра
                                             if (graph.ElementAt(j).Value == graph[i].edges.ElementAt(k).adjacentNode)
+                                            {
+                                                MessageBox.Show("remove");
                                                 graph[j].edges.Remove(graph[i].edges.ElementAt(k));
+                                            }
                                 }
                             }
                     }
@@ -233,11 +230,11 @@ namespace WpfLaba3Grafs
         
         public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)
         {
-            function.GenerateIncidenceMatrix(graphData, graph);
+            function.Dg_BuildArr(function.GenerateIncidenceMatrix(graph), dg_IncidenceMatrix);
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
-            function.GenerateAdjacencyMatrix(graphData, graph);
+            function.Dg_BuildArr(function.GenerateAdjacencyMatrix(graph), dg_AdjecencyMatrix);
         }
         public void BtnClick_arrGraph(object sender, EventArgs e) {
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));

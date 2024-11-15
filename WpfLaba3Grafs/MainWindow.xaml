@@ -8,95 +8,109 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Viewbox>
-        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
 
-            <StackPanel Height="434" Width="200" >
-                <DockPanel x:Name="DockPanel1">
-                    <ToggleButton x:Name="Pointer" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
-                        <Image Source="/Pointer.png" Height="32" Width="32"></Image>
-                    </ToggleButton>
-                    <TextBlock Margin="10">выделить элемент</TextBlock>
-                </DockPanel>
-                <DockPanel x:Name="DockPanel2">
-                    <ToggleButton x:Name="Vertex" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
-                        <Image Source="/Vertex.png" Height="32" Width="32"></Image>
-                    </ToggleButton>
-                    <TextBlock Margin="10">создать вершину</TextBlock>
-                </DockPanel>
-                <DockPanel x:Name="DockPanel3">
-                    <ToggleButton x:Name="Edge" Height="50" Width="50" Margin="10,10,0,10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
-                        <Image Source="/Edge.png" Height="32" Width="32"></Image>
-                    </ToggleButton>
-                    <StackPanel>
-                        <TextBlock Margin="2,10,0,0">создать ребро</TextBlock>
+                <StackPanel Height="434" Width="164" >
+                    <DockPanel x:Name="DockPanel1" Width="164">
+                        <StackPanel Width="162">
+                            <ToggleButton x:Name="Pointer" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                                <Image Source="/Pointer.png" Height="32" Width="32"></Image>
+                            </ToggleButton>
+                            <!--<TextBlock Margin="10">выделить элемент</TextBlock>-->
+                            <ToggleButton x:Name="Vertex" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                                <Image Source="/Vertex.png" Height="32" Width="32"></Image>
+                            </ToggleButton>
+                            <!--<TextBlock Margin="10">создать вершину</TextBlock>-->
+                            <ToggleButton x:Name="Edge" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                                <Image Source="/Edge.png" Height="32" Width="32"></Image>
+                            </ToggleButton>
+                            <ToggleButton x:Name="Crest" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked">
+                                <Image Source="/Crest.png" Height="32" Width="32"></Image>
+                            </ToggleButton>
+                            <!--<TextBlock Margin="10">удалить элемент</TextBlock>-->
+                            <DockPanel Height="60" x:Name="DockPanel5">
+                                <ToggleButton x:Name="Bucket" Width="50" Margin="10,10,5,10" Checked="ControlToggleButton_Checked">
+                                    <Image Source="/Bucket.png" Height="32" Width="32"></Image>
+                                </ToggleButton>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel>
+                                        <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
+                                        <TextBox Margin="5"></TextBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Height="30" Width="105">
+                                <ToggleButton x:Name="BlackButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Black"/>
+                                <ToggleButton x:Name="RedButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Red"/>
+                                <ToggleButton x:Name="OrangeButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Orange"/>
+                            </DockPanel>
+                            <DockPanel Height="30" Width="105">
+                                <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Yellow"/>
+                                <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Green"/>
+                                <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="CadetBlue"/>
+                            </DockPanel>
+                        </StackPanel>
+
+                    </DockPanel>
+                    <DockPanel x:Name="DockPanel2">
+
+                    </DockPanel>
+                    <DockPanel x:Name="DockPanel3">
+
+
+                    </DockPanel>
+                    <StackPanel Width="145">
+                        <!--<TextBlock Margin="2,10,0,0">создать ребро</TextBlock>-->
+                        <TextBlock FontSize="15" Text="Граф:"></TextBlock>
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
                         <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Неориентированный</RadioButton>
-                        <DockPanel>
-                            <TextBlock Margin="2">Вес нового ребра</TextBlock>
-                            <TextBox x:Name="tbWeight" Margin="2" Text="0"></TextBox>
-                        </DockPanel>
+                        <TextBlock FontSize="15" Margin="2" Text="Вес нового ребра:"></TextBlock>
+                        <TextBox x:Name="tbWeight" Margin="2" Text="0"></TextBox>
 
                     </StackPanel>
+                    <DockPanel x:Name="DockPanel4">
+
+                    </DockPanel>
+                    <StackPanel>
+
+                    </StackPanel>
+                </StackPanel>
+                <DockPanel Height="434" Width="400">
+                    <Canvas Height="434" Width="397" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" MouseMove="DrawingCanvas_MouseMove" Background="Aquamarine" RenderTransformOrigin="0.5,0.5">
+                        <Canvas.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform AngleY="0.312"/>
+                                <RotateTransform/>
+                                <TranslateTransform Y="-1.09"/>
+                            </TransformGroup>
+                        </Canvas.RenderTransform>
+                    </Canvas>
                 </DockPanel>
-                <DockPanel x:Name="DockPanel4">
-                    <ToggleButton x:Name="Crest" Height="50" Width="50" Margin="10" Checked="ControlToggleButton_Checked">
-                        <Image Source="/Crest.png" Height="32" Width="32"></Image>
-                    </ToggleButton>
-                    <TextBlock Margin="10">удалить элемент</TextBlock>
-                </DockPanel>
-                <StackPanel>
-                    <DockPanel Height="60" x:Name="DockPanel5">
-                        <ToggleButton x:Name="Bucket" Width="50" Margin="10,10,5,10" Checked="ControlToggleButton_Checked">
-                            <Image Source="/Bucket.png" Height="32" Width="32"></Image>
-                        </ToggleButton>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel>
-                                <Button Width="25" Margin="5,10,5,5">^</Button>
-                                <Button Width="25" Margin="5,0,5,0">˅</Button>
+                <StackPanel Height="434" Width="234">
+                    <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
+                    <DockPanel>
+                        <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="101"></DataGrid>
+                    </DockPanel>
+                    <DockPanel Height="291">
+                        <StackPanel Height="300">
+                            <Button Margin="10" Click="BtnClick_GenerateIncidenceMatrix">Матрица инцидентности</Button>
+                            <StackPanel Height="101">
+                                <DataGrid x:Name="dg_IncidenceMatrix" AutoGenerateColumns="True" Height="101"></DataGrid>
                             </StackPanel>
-                            <StackPanel>
-                                <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
-                                <TextBox Margin="5"></TextBox>
+
+                            <Button Margin ="5" Click="BtnClick_GenerateAdjacencyMatrix" Content="Матрица смежности" Width="149"></Button>
+                            <StackPanel Height="101">
+                                <DataGrid x:Name="dg_AdjecencyMatrix" Height="101"></DataGrid>
                             </StackPanel>
+
+
                         </StackPanel>
                     </DockPanel>
-                    <DockPanel Height="30">
-                        <ToggleButton x:Name="BlackButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Black"/>
-                        <ToggleButton x:Name="RedButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Red"/>
-                        <ToggleButton x:Name="OrangeButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Orange"/>
-                        <ToggleButton x:Name="YellowButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Yellow"/>
-                        <ToggleButton x:Name="GreenButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="Green"/>
-                        <ToggleButton x:Name="CadetBlueButton" Checked="ToggleButton_Checked"  Width="29" Margin="2" Background="CadetBlue"/>
-                    </DockPanel>
+                    <TextBlock>сохранить</TextBlock>
+                    <TextBlock>сохранить</TextBlock>
                 </StackPanel>
             </StackPanel>
-            <DockPanel Height="434" Width="400">
-                <Canvas Height="434" Width="400" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" MouseMove="DrawingCanvas_MouseMove" Background="Aquamarine"></Canvas>
-            </DockPanel>
-            <StackPanel Height="434" Width="200">
-                <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
-                <DockPanel>
-                    <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="101"></DataGrid>
-                </DockPanel>
-                <DockPanel Height="291">
-                    <StackPanel Height="300">
-                        <Button Margin="10" Click="BtnClick_GenerateIncidenceMatrix">Матрица инцидентности</Button>
-                        <StackPanel Height="101">
-                            <DataGrid x:Name="dg_IncidenceMatrix" AutoGenerateColumns="True" Height="101"></DataGrid>
-                        </StackPanel>
-
-                        <Button Margin ="5" Click="BtnClick_GenerateAdjacencyMatrix" Content="Матрица смежности" Width="149"></Button>
-                        <StackPanel Height="101">
-                            <DataGrid x:Name="dg_AdjecencyMatrix" Height="101"></DataGrid>
-                        </StackPanel>
-
-
-                    </StackPanel>
-                </DockPanel>
-                <TextBlock>сохранить</TextBlock>
-                <TextBlock>сохранить</TextBlock>
-            </StackPanel>
-        </StackPanel>
         </Viewbox>
     </Grid>
 </Window>

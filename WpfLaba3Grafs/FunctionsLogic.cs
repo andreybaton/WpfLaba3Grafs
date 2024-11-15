@@ -34,14 +34,10 @@ namespace WpfLaba3Grafs
                 StrokeThickness = 2,
                 Fill = Brushes.White,
             };
-            
             vertex.MouseDown += mainWindow.BtnClick_Paint;
             double posX = position.X - vertex.Width / 2;
             double posY = position.Y - vertex.Height / 2;
 
-            //Canvas.SetTop(vertex, posY);
-            //Canvas.SetLeft(vertex, posX);
-            //mainWindow.DrawingCanvas.Children.Add(vertex);
             TextBlock label = new TextBlock
             {
                 Text = mainWindow.graph.Count().ToString(),
@@ -49,15 +45,12 @@ namespace WpfLaba3Grafs
                 VerticalAlignment = VerticalAlignment.Center,
                 FontWeight = FontWeights.Bold,
             };
-            //Canvas.SetTop(label, posY);
-            //Canvas.SetLeft(label, posX+5);
             var grid = new Grid();
             grid.Children.Add(vertex);
             grid.Children.Add(label);
             Canvas.SetTop(grid, posY);
             Canvas.SetLeft(grid, posX + 5);
             mainWindow.DrawingCanvas.Children.Add(grid);
-            //mainWindow.DrawingCanvas.Children.Add(label);
         }
         public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
         {
@@ -81,7 +74,7 @@ namespace WpfLaba3Grafs
                         Width = 60,
                         Height = 18
                     };
-                    string tb = "№ " + CalculateEdges(graphData).ToString();
+                    string tb = "№ " + CalculateEdges(graph).ToString();
                     if (weight != 0)
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
@@ -127,13 +120,12 @@ namespace WpfLaba3Grafs
             double arrowLength = 10; // Длина стрелки
             double angle = Math.Atan2(pos2.Y - pos1.Y, pos2.X - pos1.X); // Угол в радианах
 
-            // Создаем стрелку
             Polygon arrowHead = new Polygon
             {
                 Fill = Brushes.Black,
                 Points = new PointCollection
                 {
-                    new Point(pos2.X, pos2.Y), // Конечная точка линии
+                    new Point(pos2.X, pos2.Y), 
                     new Point(pos2.X - arrowLength * Math.Cos(angle - Math.PI / 6),
                     pos2.Y - arrowLength * Math.Sin(angle - Math.PI / 6)), // Левый угол стрелки
 
@@ -143,13 +135,13 @@ namespace WpfLaba3Grafs
             };
             return arrowHead;
         }
-        public int[,] GenerateIncidenceMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
+        public int[,] GenerateIncidenceMatrix(Dictionary<int, Node> graph)
         {
-            graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
-            int numEdges = CalculateEdges(graphData);
-            if (numEdges <= 0)
+            int numEdges = CalculateEdges(graph);
+            
+            if (numEdges < 1)
                 return null;
-            int[,] matrix = new int[graph.Count+1,numEdges];
+            int[,] matrix = new int[graph.Count+1, numEdges];
             for (int i = 0; i < numEdges; i++)
             {
                 matrix[0, i] = i+1;
@@ -172,39 +164,16 @@ namespace WpfLaba3Grafs
                         matrix[edge.adjacentNode.value + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
-
-            DataTable dataTable = new DataTable();
-            for (int column = 0; column < matrix.GetLength(1); column++)
-            {
-                string columnName = matrix[0, column].ToString();
-                dataTable.Columns.Add(columnName);
-            }
-            for (int row = 1; row < matrix.GetLength(0); row++)
-            {
-                DataRow dataRow = dataTable.NewRow();
-                for (int column = 0; column < matrix.GetLength(1); column++)
-                    dataRow[column] = matrix[row, column];
-                dataTable.Rows.Add(dataRow);
-            }
-            mainWindow.dg_IncidenceMatrix.ItemsSource = dataTable.DefaultView;
             return matrix;
         }
-        private int CalculateEdges(List<(int, int, int)> graphData)
+        private int CalculateEdges(Dictionary<int, Node> graph)
         {
-            int count = 0;
-            HashSet<(int,int)> edges = new HashSet<(int,int)> ();
-            foreach(var row in graphData)
-            {
-                if (row.Item2 != -1)
-                {
-                    var edge = row.Item1 < row.Item2 ? (row.Item1, row.Item2) : (row.Item2, row.Item1);
-                    if (edges.Add(edge))
-                        count++;
-                }
-            }
-            return count;
+            List<Edge> allEdges = new List<Edge>();
+            foreach (var node in graph.Values)
+                allEdges.AddRange(node.edges);
+            return allEdges.Count;
         }
-        public int[,] GenerateAdjacencyMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
+        public int[,] GenerateAdjacencyMatrix(Dictionary<int, Node> graph)
         {
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
@@ -227,22 +196,28 @@ namespace WpfLaba3Grafs
                         matrix[colIndex + 1, rowIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
-
-            DataTable dataTable = new DataTable();
-            for (int column = 0; column < matrix.GetLength(1); column++)
-            {
-                string columnName = matrix[0, column].ToString();
-                dataTable.Columns.Add(columnName);
-            }
-            for (int row = 1; row < matrix.GetLength(0); row++)
-            {
-                DataRow dataRow = dataTable.NewRow();
-                for (int column = 0; column < matrix.GetLength(1); column++)
-                    dataRow[column] = matrix[row, column];
-                dataTable.Rows.Add(dataRow);
-            }
-            mainWindow.dg_AdjecencyMatrix.ItemsSource = dataTable.DefaultView;
             return matrix;
+        }
+        public void Dg_BuildArr(int[,] matrix, DataGrid dgName)
+        {
+            
+            DataTable dataTable = new DataTable();
+            if (matrix != null)
+            {
+                for (int column = 0; column < matrix.GetLength(1); column++)
+                {
+                    string columnName = matrix[0, column].ToString();
+                    dataTable.Columns.Add(columnName);
+                }
+                for (int row = 1; row < matrix.GetLength(0); row++)
+                {
+                    DataRow dataRow = dataTable.NewRow();
+                    for (int column = 0; column < matrix.GetLength(1); column++)
+                        dataRow[column] = matrix[row, column];
+                    dataTable.Rows.Add(dataRow);
+                }
+            }
+            dgName.ItemsSource = dataTable.DefaultView;
         }
     }
 }
