@@ -84,17 +84,15 @@ namespace WpfLaba3Grafs
                 if (DrawingCanvas != null && DrawingCanvas.InputHitTest(MousePos) != null)
                 {
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                    var temp = element;
-                    if (element != null)
-                    {
-                        while (element != null && !(element is Grid))
-                            element = VisualTreeHelper.GetParent(element) as UIElement;
-                        if (element is Grid grid)
-                            DrawingCanvas.Children.Remove(grid);
-                    }
+
 
                     if (element.GetType() == typeof(Ellipse))
                     {
+                        var el = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                        while (el != null && !(el is Grid))
+                            el = VisualTreeHelper.GetParent(el) as UIElement;
+                        if (el is Grid grid)
+                            DrawingCanvas.Children.Remove(grid);
                         for (int i = 0; i < graph.Count; i++)
                             if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, (function.size / 2)))
                             {
@@ -103,7 +101,10 @@ namespace WpfLaba3Grafs
                                     if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                     if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    {
                                         graphData.RemoveAt(j);
+                                        break;
+                                    }
                                 }
                                 Node delNode = graph.ElementAt(i).Value;
                                 graph.Remove(graph.ElementAt(i).Key);
@@ -111,7 +112,6 @@ namespace WpfLaba3Grafs
                                 {
                                     if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
                                         graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
-
                                     for (int j = 0; j < delNode.edges.Count; j++)
                                         if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
                                             graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
@@ -120,6 +120,7 @@ namespace WpfLaba3Grafs
                     }
                     if (element.GetType() == typeof(Line))
                     {
+                        DrawingCanvas.Children.Remove(element);
                         Line line = (Line)element;
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
@@ -128,7 +129,10 @@ namespace WpfLaba3Grafs
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                     if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                    {
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
+                                        break;
+                                    }
 
                                 for (int j = 0; j < graph.Count; j++)
                                 {
@@ -144,7 +148,6 @@ namespace WpfLaba3Grafs
                                 }
                             }
                     }
-
                 }
             }
         }
