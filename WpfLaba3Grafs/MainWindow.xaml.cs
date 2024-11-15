@@ -101,12 +101,25 @@ namespace WpfLaba3Grafs
                             if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
+                                {
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                        graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                     if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
                                     {
                                         graphData.RemoveAt(j);
                                         break;
                                     }
+                                }
+                                Node delNode = graph.ElementAt(i).Value;
                                 graph.Remove(graph.ElementAt(i).Key);
+                                for (int k = 0; k < graph.Count; k++)
+                                {
+                                    if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
+                                        graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
+                                    for (int j = 0; j < delNode.edges.Count; j++)
+                                        if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
+                                            graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
+                                }
                             }
                     }
                     if (element.GetType() == typeof(Line))
@@ -115,7 +128,7 @@ namespace WpfLaba3Grafs
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
                         for (int i = 0; i < graph.Count; i++)
-                            if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10)  || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
+                            if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                     if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
@@ -123,6 +136,19 @@ namespace WpfLaba3Grafs
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                         break;
                                     }
+
+                                for (int j = 0; j < graph.Count; j++)
+                                {
+                                    if (graph.ElementAt(i).Value.position == end)
+                                    {
+                                        if (graph.ElementAt(j).Value == graph.ElementAt(i).Value.parents.ElementAt(0).Key) //для конца ребра
+                                            graph.ElementAt(j).Value.parents.Remove(graph.ElementAt(i).Value);
+                                    }
+                                    else if (graph.ElementAt(i).Value.position == begin)
+                                        for (int k = 0; k < graph[i].edges.Count; k++) //для начала ребра
+                                            if (graph.ElementAt(j).Value == graph[i].edges.ElementAt(k).adjacentNode)
+                                                graph[j].edges.Remove(graph[i].edges.ElementAt(k));
+                                }
                             }
                     }
                 }

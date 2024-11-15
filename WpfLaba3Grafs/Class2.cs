@@ -38,7 +38,6 @@ namespace WpfLaba3Grafs
                 Edge edge = new Edge(adjacentNode, row.Item3);
                 node.edges.Add(edge);
                 adjacentNode.parents.Add(node, edge);
-
             }
             return graph;
         }
@@ -74,12 +73,12 @@ namespace WpfLaba3Grafs
                 node.edges.Add(edge);
             }
             //если граф неориентированный
-            if (typeEdge == false)
-                if (AddSearchElement(graphData, adjacentNode, node, weight))
-                {
-                    node.parents.Add(adjacentNode, edge);
-                    adjacentNode.edges.Add(edge);
-                }
+            //if (typeEdge == false)
+            //    if (AddSearchElement(graphData, adjacentNode, node, weight))
+            //    {
+            //        node.parents.Add(adjacentNode, edge);
+            //        adjacentNode.edges.Add(edge);
+            //    }
             return true;
         }
         public bool AddSearchElement(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight)
