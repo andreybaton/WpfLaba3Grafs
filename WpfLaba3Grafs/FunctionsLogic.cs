@@ -71,7 +71,7 @@ namespace WpfLaba3Grafs
             }
             Edge edge2 = new Edge();
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
-                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.typeEdge))
+                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented))
                 {
                     CreateEdge(from.position, to.position);
                     TextBox textBox = new TextBox
@@ -118,7 +118,7 @@ namespace WpfLaba3Grafs
             };
             edge.MouseDown += mainWindow.BtnClick_Paint;
             mainWindow.DrawingCanvas.Children.Add(edge);
-            if (mainWindow.typeEdge == true)
+            if (mainWindow.isOriented == true)
                 mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
             newEdge = false;
         }
@@ -159,45 +159,19 @@ namespace WpfLaba3Grafs
                     matrix[j,i] = 0;
             }
 
-
-            var (start, end, weight) = graphData[0]; int retry=0, step = 0;
-            for (int i = 0; i < numEdges; i++)
+            int edgeIndex = 0;
+            foreach (var node in graph.Values)
             {
-                if (end != -1)
+                foreach (var edge in node.edges)
                 {
-                    if (graphData[i].Item1 == start)
-                    {
-                        while (graphData[retry].Item1 == graphData[i+step].Item1)
-                        {
-                            matrix[start + 1, i + retry] = 1;
-                            
-                            if (mainWindow.typeEdge == true)
-                                matrix[end + 1, i + retry] = -1;
-                            else
-                                matrix[end + 1, i + retry] = 1;
-                            retry++;
-                            (start, end, weight) = graphData[retry];
-                        }
-                        step = step + retry; 
-                    }
+                    int rowIndex = node.value;
+                    int colIndex = edgeIndex++;
+
+                    matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                    if (mainWindow.isOriented == true)
+                        matrix[edge.adjacentNode.value+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
                     else
-                    {
-                        matrix[start + 1, i] = 1; 
-                        matrix[end + 1, i] = -1;   
-                    }
-                    if (i+step < graphData.Count)
-                        (start, end, weight) = graphData[i + step];
-                }
-                else
-                {
-                    while (graphData[i + step].Item2 == -1)
-                    {
-                        if (i + step < graphData.Count)
-                            step++;
-                        else
-                            break;
-                    }
-                    (start, end, weight) = graphData[i + step];
+                        matrix[edge.adjacentNode.value + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
 
@@ -216,7 +190,6 @@ namespace WpfLaba3Grafs
             }
             mainWindow.dg_IncidenceMatrix.ItemsSource = dataTable.DefaultView;
         }
-        //функцию сортировки матрицы когда меняешь индекс у ребра
         private int CalculateEdges(List<(int, int, int)> graphData)
         {
             int count = 0;
@@ -241,11 +214,22 @@ namespace WpfLaba3Grafs
                 for (int j = 1; j < graph.Count; j++)
                     matrix[i, j] = 0;
             }
-            foreach (var row in graphData)
-                if (row.Item2 != -1)
-                    matrix[row.Item1 + 1, row.Item2] = 1;
-            DataTable dataTable = new DataTable();
 
+            foreach (var nodePair in graph)
+            {
+                int rowIndex = nodePair.Key;
+                Node node = nodePair.Value;
+
+                foreach (Edge edge in node.edges)
+                {
+                    int colIndex = edge.adjacentNode.value;
+                    matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                    if (mainWindow.isOriented == false)
+                        matrix[colIndex + 1, rowIndex] = edge.weight > 0 ? edge.weight : 1;
+                }
+            }
+
+            DataTable dataTable = new DataTable();
             for (int column = 0; column < matrix.GetLength(1); column++)
             {
                 string columnName = matrix[0, column].ToString();

@@ -19,11 +19,10 @@ namespace WpfLaba3Grafs
         private bool newVertex = false;
         private bool newEdge = false;
         private bool delete = false;
-        public bool typeEdge;
+        public bool isOriented;
         public List<(int, int, int)> graphData = new List<(int, int, int)>();
         public Dictionary<int, Node> graph = new Dictionary<int, Node>();
         private Line tempLine;
-        List<(int, int, int)> tuples = new List<(int, int, int)>();
         public MainWindow()
         {
             function = new FunctionsLogic(this);
@@ -50,7 +49,7 @@ namespace WpfLaba3Grafs
             }
         }
 
-        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) //for add vertex
+        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) 
         {
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
@@ -82,13 +81,14 @@ namespace WpfLaba3Grafs
             }
             else if (delete)
             {
-                if(DrawingCanvas != null&& DrawingCanvas.InputHitTest(MousePos)!=null)
+                if (DrawingCanvas != null && DrawingCanvas.InputHitTest(MousePos) != null)
                 {
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                    var temp = element;
                     if (element != null)
                     {
-                        while(element!=null &&!(element is Grid))
-                            element=VisualTreeHelper.GetParent(element) as UIElement;
+                        while (element != null && !(element is Grid))
+                            element = VisualTreeHelper.GetParent(element) as UIElement;
                         if (element is Grid grid)
                             DrawingCanvas.Children.Remove(grid);
                     }
@@ -144,6 +144,7 @@ namespace WpfLaba3Grafs
                                 }
                             }
                     }
+
                 }
             }
         }
@@ -215,9 +216,9 @@ namespace WpfLaba3Grafs
             RadioButton pressed = (RadioButton)sender;
 
             if (pressed.Content.ToString() == "Ориентированный")
-                typeEdge = true;
+                isOriented = true;
             else
-                typeEdge = false;
+                isOriented = false;
         }
         
         public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)

@@ -57,7 +57,7 @@ namespace WpfLaba3Grafs
     public class Edge
     {
         public Node adjacentNode; //узел, на который ведёт ребро
-        int weight;
+        public int weight;
         public Edge(Node adjacentNode, int weight) { this.adjacentNode = adjacentNode; this.weight = weight; }
         public Edge() { }
         public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge)
