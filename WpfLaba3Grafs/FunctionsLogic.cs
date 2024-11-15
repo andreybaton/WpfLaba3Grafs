@@ -143,15 +143,13 @@ namespace WpfLaba3Grafs
             };
             return arrowHead;
         }
-        public void GenerateIncidenceMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
+        public int[,] GenerateIncidenceMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
         {
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             int numEdges = CalculateEdges(graphData);
             if (numEdges <= 0)
-                return;
+                return null;
             int[,] matrix = new int[graph.Count+1,numEdges];
-            //MessageBox.Show("row " + matrix.GetLength(0));
-            //MessageBox.Show("column " + matrix.GetLength(1));
             for (int i = 0; i < numEdges; i++)
             {
                 matrix[0, i] = i+1;
@@ -189,6 +187,7 @@ namespace WpfLaba3Grafs
                 dataTable.Rows.Add(dataRow);
             }
             mainWindow.dg_IncidenceMatrix.ItemsSource = dataTable.DefaultView;
+            return matrix;
         }
         private int CalculateEdges(List<(int, int, int)> graphData)
         {
@@ -205,7 +204,7 @@ namespace WpfLaba3Grafs
             }
             return count;
         }
-        public void GenerateAdjacencyMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
+        public int[,] GenerateAdjacencyMatrix(List<(int, int, int)> graphData, Dictionary<int, Node> graph)
         {
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
@@ -243,6 +242,7 @@ namespace WpfLaba3Grafs
                 dataTable.Rows.Add(dataRow);
             }
             mainWindow.dg_AdjecencyMatrix.ItemsSource = dataTable.DefaultView;
+            return matrix;
         }
     }
 }

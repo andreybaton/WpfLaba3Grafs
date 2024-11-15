@@ -117,6 +117,13 @@ namespace WpfLaba3Grafs
                                             graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
                             }
+                        if (element != null)
+                        {
+                            while (element != null && !(element is Grid))
+                                element = VisualTreeHelper.GetParent(element) as UIElement;
+                            if (element is Grid grid)
+                                DrawingCanvas.Children.Remove(grid);
+                        }
                     }
                     if (element.GetType() == typeof(Line))
                     {
