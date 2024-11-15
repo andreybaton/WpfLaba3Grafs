@@ -11,8 +11,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Collections;
 using System.Data;
-using System.ComponentModel;
-using System.Security;
+
 
 namespace WpfLaba3Grafs
 {
@@ -59,7 +58,7 @@ namespace WpfLaba3Grafs
             Canvas.SetLeft(label, posX+5);
             mainWindow.DrawingCanvas.Children.Add(label);
         }
-        public void AddEdge(Point pos1, Point pos2, Dictionary<int,Node> graph, List <(int,int,int)> graphData, int weight)
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
         {
             Node from = new Node(); Node to = new Node();
             for (int i = 0; i < graph.Count; i++)
@@ -92,11 +91,19 @@ namespace WpfLaba3Grafs
 
                     mainWindow.DrawingCanvas.Children.Add(textBox);
 
-                    Edge edge = new Edge(to,weight);
+                    Edge edge = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edge);
                     edgePictures.Add(edgePic);
                 }
-            }
+        }
+        private void EdgeLine(Point ellipse1, Point ellipse2, double radius)
+        {
+            double distance = 0;
+            double d = Math.Sqrt((ellipse2.X - ellipse1.X) * (ellipse2.X - ellipse1.X) - (ellipse2.Y - ellipse1.Y) * (ellipse2.Y - ellipse1.Y));
+            if (d > radius * 2) 
+                distance = d - radius * 2;
+
+        }
         public void CreateEdge(Point pos1, Point pos2)
         {
             string selectedColorName = mainWindow.GetSelectedColor();

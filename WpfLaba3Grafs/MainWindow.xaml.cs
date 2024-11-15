@@ -90,25 +90,42 @@ namespace WpfLaba3Grafs
             }
             else if (delete)
             {
-                
                 if(DrawingCanvas != null)
                 {
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                    if (element != null)
+                    
                         DrawingCanvas.Children.Remove(element);
-                    for (int i=0; i < graph.Count; i++)
+                    //MessageBox.Show(element.GetType().ToString());
+                    if (element.GetType() == typeof(Ellipse))
                     {
-                        if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, 5))
-                        {
-                            for (int j=0; j < graphData.Count; j++)
-                                if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
-                                {
-                                    graphData.RemoveAt(j);
-                                    break;
-                                }
-
-                            graph.Remove(graph.ElementAt(i).Key);
-                        }
+                        for (int i = 0; i < graph.Count; i++)
+                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, 10))
+                            {
+                                for (int j = 0; j < graphData.Count; j++)
+                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    {
+                                        graphData.RemoveAt(j);
+                                        break;
+                                    }
+                                graph.Remove(graph.ElementAt(i).Key);
+                            }
+                    }
+                    if (element.GetType() == typeof(Line))
+                    {
+                        Line line = (Line) element;
+                        Point begin = new Point(line.X1, line.Y1);
+                        Point end = new Point(line.X2, line.Y2);
+                        for (int i = 0; i < graph.Count; i++)
+                            if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
+                            {
+                                for (int j = 0; j < graphData.Count; j++)
+                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    {
+                                        graphData.RemoveAt(j);
+                                        break;
+                                    }
+                                graph.Remove(graph.ElementAt(i).Key);
+                            }
                     }
                 }
             }
