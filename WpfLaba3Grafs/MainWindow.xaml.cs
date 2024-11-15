@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace WpfLaba3Grafs
@@ -22,7 +15,6 @@ namespace WpfLaba3Grafs
     public partial class MainWindow : Window
     {
         private FunctionsLogic function;
-        //private Graph graph;
         private Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
@@ -43,18 +35,18 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_Paint(object sender, RoutedEventArgs e)
         {
-            bool kostul = Bucket.IsChecked ?? false;
-            if (kostul == true) { 
-            if (sender is Line line)
-            {
-                string selectedColorName = GetSelectedColor();
-                line.Stroke = ConvertStringToBrush(selectedColorName);
-            }
-            else if (sender is Ellipse vertex)
-            {
-                string selectedColorName = GetSelectedColor();
-                vertex.Stroke = ConvertStringToBrush(selectedColorName);
-            }
+            bool isChecked = Bucket.IsChecked ?? false;
+            if (isChecked == true) { 
+                if (sender is Line line)
+                {
+                    string selectedColorName = GetSelectedColor();
+                    line.Stroke = ConvertStringToBrush(selectedColorName);
+                }
+                else if (sender is Ellipse vertex)
+                {
+                    string selectedColorName = GetSelectedColor();
+                    vertex.Stroke = ConvertStringToBrush(selectedColorName);
+                }
             }
         }
 
@@ -72,7 +64,7 @@ namespace WpfLaba3Grafs
                     graphData.Add((node.value, -1, 0));
 
                     NodePicture nodePic = new NodePicture("", "Black", node);
-                    function.nodePictures.Add(nodePic);
+                    function.nodePictures.Add(node, nodePic);
                 }
             }
             else if (newEdge)
@@ -111,11 +103,7 @@ namespace WpfLaba3Grafs
                                     if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                     if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
-                                    {
-
                                         graphData.RemoveAt(j);
-                                        break;
-                                    }
                                 }
                                 Node delNode = graph.ElementAt(i).Value;
                                 graph.Remove(graph.ElementAt(i).Key);
@@ -123,6 +111,7 @@ namespace WpfLaba3Grafs
                                 {
                                     if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
                                         graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
+
                                     for (int j = 0; j < delNode.edges.Count; j++)
                                         if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
                                             graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
@@ -139,10 +128,7 @@ namespace WpfLaba3Grafs
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                     if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
-                                    {
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
-                                        break;
-                                    }
 
                                 for (int j = 0; j < graph.Count; j++)
                                 {

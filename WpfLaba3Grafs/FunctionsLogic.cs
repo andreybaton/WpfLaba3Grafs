@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Shapes; 
-using System.Drawing;
-using System.Windows.Input;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
-using System.Collections;
 using System.Data;
 
 
@@ -21,8 +16,8 @@ namespace WpfLaba3Grafs
         public bool newVertex = false;
         public bool newEdge = false;
         private MainWindow mainWindow;
-        public List<EdgePicture> edgePictures = new List<EdgePicture>();
-        public List<NodePicture> nodePictures = new List<NodePicture>();
+        public Dictionary<Edge, EdgePicture> edgePictures = new Dictionary<Edge, EdgePicture>();
+        public Dictionary<Node, NodePicture> nodePictures = new Dictionary<Node, NodePicture>();
         public FunctionsLogic(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
@@ -78,7 +73,6 @@ namespace WpfLaba3Grafs
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
                 if (edge2.AddEdge(graphData, from, to, weight, mainWindow.typeEdge))
                 {
-                    //100=(x-from.postion.item1)^2+(y-from.position.item2)^2 100=(x-to.postion.item1)^2+(y-to.position.item2)^2
                     CreateEdge(from.position, to.position);
                     TextBox textBox = new TextBox
                     {
@@ -99,7 +93,7 @@ namespace WpfLaba3Grafs
 
                     Edge edge = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edge);
-                    edgePictures.Add(edgePic);
+                    edgePictures.Add(edge, edgePic);
                 }
         }
         private void EdgeLine(Point ellipse1, Point ellipse2, double radius)
