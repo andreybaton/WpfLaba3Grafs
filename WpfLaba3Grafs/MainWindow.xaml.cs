@@ -95,7 +95,6 @@ namespace WpfLaba3Grafs
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
                     
                         DrawingCanvas.Children.Remove(element);
-                    //MessageBox.Show(element.GetType().ToString());
                     if (element.GetType() == typeof(Ellipse))
                     {
                         for (int i = 0; i < graph.Count; i++)
@@ -119,12 +118,11 @@ namespace WpfLaba3Grafs
                             if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
-                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
                                     {
-                                        graphData.RemoveAt(j);
+                                        graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                         break;
                                     }
-                                graph.Remove(graph.ElementAt(i).Key);
                             }
                     }
                 }
