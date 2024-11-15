@@ -36,27 +36,33 @@ namespace WpfLaba3Grafs
                 Width = size,
                 Height = size,
                 Stroke = strokeBrush,
-                StrokeThickness = 2
+                StrokeThickness = 2,
+                Fill = Brushes.White,
             };
             
             vertex.MouseDown += mainWindow.BtnClick_Paint;
             double posX = position.X - vertex.Width / 2;
             double posY = position.Y - vertex.Height / 2;
 
-            Canvas.SetTop(vertex, posY);
-            Canvas.SetLeft(vertex, posX);
-            mainWindow.DrawingCanvas.Children.Add(vertex);
+            //Canvas.SetTop(vertex, posY);
+            //Canvas.SetLeft(vertex, posX);
+            //mainWindow.DrawingCanvas.Children.Add(vertex);
             TextBlock label = new TextBlock
             {
                 Text = mainWindow.graph.Count().ToString(),
-                //HorizontalAlignment = HorizontalAlignment.Right,
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontWeight = FontWeights.Bold,
-
             };
-            Canvas.SetTop(label, posY);
-            Canvas.SetLeft(label, posX+5);
-            mainWindow.DrawingCanvas.Children.Add(label);
+            //Canvas.SetTop(label, posY);
+            //Canvas.SetLeft(label, posX+5);
+            var grid = new Grid();
+            grid.Children.Add(vertex);
+            grid.Children.Add(label);
+            Canvas.SetTop(grid, posY);
+            Canvas.SetLeft(grid, posX + 5);
+            mainWindow.DrawingCanvas.Children.Add(grid);
+            //mainWindow.DrawingCanvas.Children.Add(label);
         }
         public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
         {
@@ -102,7 +108,6 @@ namespace WpfLaba3Grafs
             double d = Math.Sqrt((ellipse2.X - ellipse1.X) * (ellipse2.X - ellipse1.X) - (ellipse2.Y - ellipse1.Y) * (ellipse2.Y - ellipse1.Y));
             if (d > radius * 2) 
                 distance = d - radius * 2;
-
         }
         public void CreateEdge(Point pos1, Point pos2)
         {
@@ -200,9 +205,7 @@ namespace WpfLaba3Grafs
                     }
                     (start, end, weight) = graphData[i + step];
                 }
-
             }
-
 
             DataTable dataTable = new DataTable();
             for (int column = 0; column < matrix.GetLength(1); column++)

@@ -90,15 +90,21 @@ namespace WpfLaba3Grafs
             }
             else if (delete)
             {
-                if(DrawingCanvas != null)
+                if(DrawingCanvas != null&& DrawingCanvas.InputHitTest(MousePos)!=null)
                 {
                     var element = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                    
-                        DrawingCanvas.Children.Remove(element);
+                    if (element != null)
+                    {
+                        while(element!=null &&!(element is Grid))
+                            element=VisualTreeHelper.GetParent(element) as UIElement;
+                        if (element is Grid grid)
+                            DrawingCanvas.Children.Remove(grid);
+                    }
+
                     if (element.GetType() == typeof(Ellipse))
                     {
                         for (int i = 0; i < graph.Count; i++)
-                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, 10))
+                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, (function.size / 2)))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
@@ -106,6 +112,7 @@ namespace WpfLaba3Grafs
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                     if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
                                     {
+
                                         graphData.RemoveAt(j);
                                         break;
                                     }
@@ -124,7 +131,7 @@ namespace WpfLaba3Grafs
                     }
                     if (element.GetType() == typeof(Line))
                     {
-                        Line line = (Line) element;
+                        Line line = (Line)element;
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
                         for (int i = 0; i < graph.Count; i++)
