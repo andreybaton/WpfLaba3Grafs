@@ -183,6 +183,9 @@ namespace WpfLaba3Grafs
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var checkedButton = sender as ToggleButton;
+            ResetToggleButtons(colors1, checkedButton);
+            ResetToggleButtons(colors2, checkedButton);
+            //var checkedButton = sender as ToggleButton;
             foreach(var child in (checkedButton.Parent as Panel).Children)
                 if (child is ToggleButton button && button != checkedButton)
                     button.IsChecked = false;
