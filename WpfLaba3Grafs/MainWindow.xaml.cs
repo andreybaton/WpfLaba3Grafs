@@ -20,7 +20,7 @@ namespace WpfLaba3Grafs
         private bool newEdge = false;
         private bool delete = false;
         public bool isOriented;
-        public List<(int, int, int)> graphData = new List<(int, int, int)>();
+        public List<(int, int, int)> graphData = new List<(int, int, int)>(); // (int,int,int,Point)
         public Dictionary<int, Node> graph = new Dictionary<int, Node>();
         private Line tempLine;
         public MainWindow()
@@ -110,13 +110,15 @@ namespace WpfLaba3Grafs
                                 for (int k = 0; k < graph.Count; k++)
                                 {
                                     if (delNode.parents.Count > 0)
-                                        if (graph.ElementAt(k).Value == delNode.parents.ElementAt(0).Key) //если вершина - предок
-                                            graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(0).Value);
+                                        for (int l = 0; l < delNode.parents.Count; k++)
+                                            if (graph.ElementAt(k).Value == delNode.parents.ElementAt(l).Key) //если вершина - предок
+                                                graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(l).Value);
                                     else
                                         for (int j = 0; j < delNode.edges.Count; j++)
                                         if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
                                             graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
+                                // + удаление картинки ребра
                             }
                     }
                     if (element.GetType() == typeof(Line))
@@ -143,21 +145,21 @@ namespace WpfLaba3Grafs
                                         break;
                                     }
 
-                                for (int j = 0; j < graph.Count; j++)
+
+                                if (graph.ElementAt(i).Value.position == end)
                                 {
-                                    if (graph.ElementAt(i).Value.position == end)
+                                    for (int k = 0; k < graph.Count; k++)
+                                        for (int l = 0; l < graph.ElementAt(i).Value.parents.Count; l++)
+                                            if (begin == graph.ElementAt(i).Value.parents.ElementAt(l).Key.position) //для конца ребра
+                                                graph.ElementAt(i).Value.parents.Remove(graph.ElementAt(k).Value);
+                                }
+                                else if (graph.ElementAt(i).Value.position == begin)
+                                    for (int j = 0; j < graph.Count; j++)
                                     {
-                                        if (graph.ElementAt(j).Value == graph.ElementAt(i).Value.parents.ElementAt(0).Key) //для конца ребра
-                                            graph.ElementAt(j).Value.parents.Remove(graph.ElementAt(i).Value);
-                                    }
-                                    else if (graph.ElementAt(i).Value.position == begin)
                                         for (int k = 0; k < graph[i].edges.Count; k++) //для начала ребра
                                             if (graph.ElementAt(j).Value == graph[i].edges.ElementAt(k).adjacentNode)
-                                            {
-                                                //MessageBox.Show("remove");
-                                                graph[j].edges.Remove(graph[i].edges.ElementAt(k));
-                                            }
-                                }
+                                                graph.ElementAt(i).Value.edges.Remove(graph[k].edges.ElementAt(k));
+                                    }
                             }
                     }
                 }
@@ -241,11 +243,11 @@ namespace WpfLaba3Grafs
         
         public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)
         {
-            function.Dg_BuildArr(function.GenerateIncidenceMatrix(graph), dg_IncidenceMatrix);
+            function.Dg_BuildArr(function.GenerateIncidenceMatrix(graph), dg_graph);
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
-            function.Dg_BuildArr(function.GenerateAdjacencyMatrix(graph), dg_AdjecencyMatrix);
+            function.Dg_BuildArr(function.GenerateAdjacencyMatrix(graph), dg_graph);
         }
         public void BtnClick_arrGraph(object sender, EventArgs e) {
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));

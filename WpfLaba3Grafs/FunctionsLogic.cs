@@ -164,8 +164,10 @@ namespace WpfLaba3Grafs
             int edgeIndex = 0;
             foreach (var node in graph.Values)
             {
+                MessageBox.Show("from " + node.ToString());
                 foreach (var edge in node.edges)
                 {
+                    MessageBox.Show("to " + edge.ToString());
                     int rowIndex = node.value;
                     int colIndex = edgeIndex++;
 

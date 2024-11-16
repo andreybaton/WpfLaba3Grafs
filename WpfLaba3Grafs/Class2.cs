@@ -14,6 +14,7 @@ namespace WpfLaba3Grafs
         public Node(int value) { this.value = value; }
         public Node(int value, Point pos) { this.value = value; position = pos; }
         public Node() { }
+        public string ToString() { return value.ToString(); }
         public Node AddOrGetNode(Dictionary<int, Node> graph, int value)
         {
             if (value == -1) return null;
@@ -60,22 +61,17 @@ namespace WpfLaba3Grafs
         public int weight;
         public Edge(Node adjacentNode, int weight) { this.adjacentNode = adjacentNode; this.weight = weight; }
         public Edge() { }
+        public string ToString() { return adjacentNode.ToString(); }
         public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge)
         {
             Edge edge = new Edge(adjacentNode, weight);
 
             if (AddSearchElement(graphData, node, adjacentNode, weight))
             {
+                MessageBox.Show("addEdge " + adjacentNode.ToString());
                 adjacentNode.parents.Add(node, edge);
                 node.edges.Add(edge);
             }
-            //если граф неориентированный
-            //if (typeEdge == false)
-            //    if (AddSearchElement(graphData, adjacentNode, node, weight))
-            //    {
-            //        node.parents.Add(adjacentNode, edge);
-            //        adjacentNode.edges.Add(edge);
-            //    }
             return true;
         }
         public bool AddSearchElement(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight)
