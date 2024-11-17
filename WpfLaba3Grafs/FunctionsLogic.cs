@@ -79,7 +79,7 @@ namespace WpfLaba3Grafs
                         StrokeThickness = 2
                     };
                     edge.MouseDown += mainWindow.BtnClick_Paint;
-                    //mainWindow.DrawingCanvas.Children.Add(edge);
+                    
                     if (mainWindow.isOriented == true)
                         mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
                     newEdge = false;
@@ -104,22 +104,25 @@ namespace WpfLaba3Grafs
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
                     edgePictures.Add(edgesuk, edgePic);
                     
-                    var edgegrid = new Grid();
+                    //var edgegrid = new Grid();
 
                     double centerX = (from.position.X + to.position.X) /2;
                     double centerY = (from.position.Y + to.position.Y) / 2;
                     //Canvas.SetTop(edgegrid, Math.Min(pos1.X, pos2.X));
                     //Canvas.SetLeft(edgegrid, Math.Min(pos1.Y, pos2.Y));
-                    
-                    edgegrid.Children.Add(edge);
+
+                    //edgegrid.Children.Add(edge);
 
                     //MessageBox.Show(centerX.ToString());
                     //MessageBox.Show(centerY.ToString());
+                    
                     Canvas.SetLeft(textBox, centerX - textBox.ActualWidth / 2);
                     Canvas.SetTop(textBox, centerY - textBox.ActualHeight / 2);
-                    //mainWindow.DrawingCanvas.Children.Add(textBox);
-                    edgegrid.Children.Add(textBox);
-                    mainWindow.DrawingCanvas.Children.Add(edgegrid);
+                    edge.Tag=textBox;
+                    mainWindow.DrawingCanvas.Children.Add(edge);
+                    mainWindow.DrawingCanvas.Children.Add(textBox);
+                    //edgegrid.Children.Add(textBox);
+                    //mainWindow.DrawingCanvas.Children.Add(edgegrid);
                 }
         }
         private void EdgeLine(Point ellipse1, Point ellipse2, double radius)

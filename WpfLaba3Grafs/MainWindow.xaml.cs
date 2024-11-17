@@ -121,12 +121,11 @@ namespace WpfLaba3Grafs
                     }
                     if (element.GetType() == typeof(Line))
                     {
-                        var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                        while (temp != null && !(temp is Grid))
-                            temp = VisualTreeHelper.GetParent(temp) as UIElement;
-                        if (temp is Grid grid)
-                            DrawingCanvas.Children.Remove(grid);
+
+                        DrawingCanvas.Children.Remove(element);
                         Line line = (Line)element;
+                        TextBox tbToRemove = line.Tag as TextBox;
+                        DrawingCanvas.Children.Remove(tbToRemove);
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
                         for (int i = 0; i < graph.Count; i++)
