@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Data;
+using System.Reflection.Emit;
 
 
 namespace WpfLaba3Grafs
@@ -49,7 +50,7 @@ namespace WpfLaba3Grafs
             grid.Children.Add(vertex);
             grid.Children.Add(label);
             Canvas.SetTop(grid, posY);
-            Canvas.SetLeft(grid, posX + 5);
+            Canvas.SetLeft(grid, posX);
             mainWindow.DrawingCanvas.Children.Add(grid);
         }
         public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
@@ -66,27 +67,59 @@ namespace WpfLaba3Grafs
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
                 if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented))
                 {
-                    CreateEdge(from.position, to.position);
+                    string selectedColorName = mainWindow.GetSelectedColor();
+                    Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
+                    Line edge = new Line()
+                    {
+                        X1 = from.position.X,
+                        Y1 = from.position.Y,
+                        X2 = to.position.X,
+                        Y2 = to.position.Y,
+                        Stroke = strokeBrush,
+                        StrokeThickness = 2
+                    };
+                    edge.MouseDown += mainWindow.BtnClick_Paint;
+                    //mainWindow.DrawingCanvas.Children.Add(edge);
+                    if (mainWindow.isOriented == true)
+                        mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
+                    newEdge = false;
                     TextBox textBox = new TextBox
                     {
                         Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
                         BorderThickness = new Thickness(0, 0, 0, 0),
                         Width = 60,
-                        Height = 18
+                        Height = 18,
                     };
                     string tb = "№ " + CalculateEdges(graph).ToString();
                     if (weight != 0)
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
-                    Canvas.SetLeft(textBox, (pos1.X + pos2.X) / 2);
-                    Canvas.SetTop(textBox, (pos1.Y + pos2.Y) / 2);
+                    //Canvas.SetLeft(textBox, (pos1.X + pos2.X) / 2);
+                    //Canvas.SetTop(textBox, (pos1.Y + pos2.Y) / 2);
 
-                    mainWindow.DrawingCanvas.Children.Add(textBox);
+                    //mainWindow.DrawingCanvas.Children.Add(textBox);
 
-                    Edge edge = new Edge(to, weight);
-                    EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edge);
-                    edgePictures.Add(edge, edgePic);
+                    Edge edgesuk = new Edge(to, weight);
+                    EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
+                    edgePictures.Add(edgesuk, edgePic);
+                    
+                    var edgegrid = new Grid();
+
+                    double centerX = (from.position.X + to.position.X) /2;
+                    double centerY = (from.position.Y + to.position.Y) / 2;
+                    //Canvas.SetTop(edgegrid, Math.Min(pos1.X, pos2.X));
+                    //Canvas.SetLeft(edgegrid, Math.Min(pos1.Y, pos2.Y));
+                    
+                    edgegrid.Children.Add(edge);
+
+                    //MessageBox.Show(centerX.ToString());
+                    //MessageBox.Show(centerY.ToString());
+                    Canvas.SetLeft(textBox, centerX - textBox.ActualWidth / 2);
+                    Canvas.SetTop(textBox, centerY - textBox.ActualHeight / 2);
+                    //mainWindow.DrawingCanvas.Children.Add(textBox);
+                    edgegrid.Children.Add(textBox);
+                    mainWindow.DrawingCanvas.Children.Add(edgegrid);
                 }
         }
         private void EdgeLine(Point ellipse1, Point ellipse2, double radius)
@@ -96,25 +129,25 @@ namespace WpfLaba3Grafs
             if (d > radius * 2) 
                 distance = d - radius * 2;
         }
-        public void CreateEdge(Point pos1, Point pos2)
-        {
-            string selectedColorName = mainWindow.GetSelectedColor();
-            Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
-            Line edge = new Line()
-            {
-                X1 = pos1.X,
-                Y1 = pos1.Y,
-                X2 = pos2.X,
-                Y2 = pos2.Y,
-                Stroke = strokeBrush,
-                StrokeThickness = 2
-            };
-            edge.MouseDown += mainWindow.BtnClick_Paint;
-            mainWindow.DrawingCanvas.Children.Add(edge);
-            if (mainWindow.isOriented == true)
-                mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
-            newEdge = false;
-        }
+        //public void CreateEdge(Point pos1, Point pos2)
+        //{
+        //    string selectedColorName = mainWindow.GetSelectedColor();
+        //    Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
+        //    Line edge = new Line()
+        //    {
+        //        X1 = pos1.X,
+        //        Y1 = pos1.Y,
+        //        X2 = pos2.X,
+        //        Y2 = pos2.Y,
+        //        Stroke = strokeBrush,
+        //        StrokeThickness = 2
+        //    };
+        //    edge.MouseDown += mainWindow.BtnClick_Paint;
+        //    mainWindow.DrawingCanvas.Children.Add(edge);
+        //    if (mainWindow.isOriented == true)
+        //        mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
+        //    newEdge = false;
+        //}
         public Polygon DrawArrow(Point pos1, Point pos2)
         {
             double arrowLength = 10; // Длина стрелки

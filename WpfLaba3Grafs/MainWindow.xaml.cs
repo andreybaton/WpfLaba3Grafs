@@ -121,7 +121,11 @@ namespace WpfLaba3Grafs
                     }
                     if (element.GetType() == typeof(Line))
                     {
-                        DrawingCanvas.Children.Remove(element);
+                        var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                        while (temp != null && !(temp is Grid))
+                            temp = VisualTreeHelper.GetParent(temp) as UIElement;
+                        if (temp is Grid grid)
+                            DrawingCanvas.Children.Remove(grid);
                         Line line = (Line)element;
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
@@ -198,9 +202,9 @@ namespace WpfLaba3Grafs
             if (checkedButton == null)
                 return;
             ResetToggleButtons(DockPanel1,checkedButton);
-            ResetToggleButtons(DockPanel2, checkedButton);
+            //ResetToggleButtons(DockPanel2, checkedButton);
             ResetToggleButtons(DockPanel3, checkedButton);
-            ResetToggleButtons(DockPanel4, checkedButton);
+            //ResetToggleButtons(DockPanel4, checkedButton);
             ResetToggleButtons(DockPanel5, checkedButton);
             if (checkedButton == Pointer)
                 BtnClick_SelectItem();
