@@ -87,7 +87,10 @@
                     <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
                     <DockPanel>
                     <Button Margin="2" Click="BtnClick_GenerateIncidenceMatrix" Width="104">
-                        <TextBlock>Матрица <LineBreak /> инцидентности</TextBlock></Button>
+                        <TextBlock
+                            >Матрица <LineBreak /> инцидентности
+                        </TextBlock>
+                    </Button>
                     <Button Margin ="2" Click="BtnClick_GenerateAdjacencyMatrix" Width="104">
                         <TextBlock>
                             Матрица <LineBreak /> смежности
@@ -98,6 +101,9 @@
                         <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="140"></DataGrid>
                     </DockPanel>
                     <Button Margin="10" Click="BtnClick_SearchShortestPath">Поиск кратчайшего пути</Button>
+                    <Button Margin="10">Поиск максимального потока</Button>
+                    <Button Margin="10">
+                        <TextBlock>Поиск минимального <LineBreak /> покрывающего дерева</TextBlock></Button>
                 </StackPanel>
             </StackPanel>
         </Viewbox>

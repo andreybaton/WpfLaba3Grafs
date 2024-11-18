@@ -307,28 +307,49 @@ namespace WpfLaba3Grafs
         {
             function.Dg_BuildArr(function.GenerateAdjacencyMatrix(graph), dg_graph);
         }
-        public void BtnClick_arrGraph(object sender, EventArgs e) {
+        public void BtnClick_arrGraph(object sender, EventArgs e)
+        {
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
         }
-        
+        public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
+        {
+            List<List<int>> allPaths = function.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), 0, 4, graph.Count);
+            for (int count = 0; count < allPaths.Count; count++)
+            {
+                List<int> path = allPaths[count];
+                
+                if (path != null)
+                    for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                        if (DrawingCanvas.Children[i] is Grid grid)
+                        {
+                            Ellipse ellipse = (Ellipse)grid.Children[0];
+                            for (int j = 0; j < path.Count; j++)
+                                if (IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
+                                    ellipse.Fill = Brushes.Blue;
+                        }
+            }
+        }
+        private bool IsPointInsideEllipse(Grid grid, int x, int y)
+        {
+            double left = Canvas.GetLeft(grid);
+            double top = Canvas.GetTop(grid);
 
+            Ellipse ellipse = (Ellipse)grid.Children[0];
+            double width = ellipse.Width;
+            double height = ellipse.Height;
+
+            double h = left + width / 2;
+            double k = top + height / 2;
+            double r = width / 2;
+
+            return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
+        }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
             newEdge=false;
             newVertex=false;
         }
-        public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
-        {
-            List<int> path = function.SearchShortestPath(function.GenerateAdjacencyMatrix(graph), 0, 4, graph.Count);
-            if (path.Count != 0)
-            {
-                MessageBox.Show("Путь от вершины 0 до вершины 4");
-                for (int i = 0; i < path.Count; i++)
-                {
-                    MessageBox.Show(path[i].ToString());
-                }
-            }
-        }
+        
     }
 }
