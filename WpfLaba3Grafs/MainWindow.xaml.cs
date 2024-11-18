@@ -38,13 +38,13 @@ namespace WpfLaba3Grafs
             if (isChecked == true) { 
                 if (sender is Line line)
                 {
-                    string selectedColorName = GetSelectedColor();
-                    line.Stroke = ConvertStringToBrush(selectedColorName);
+                    string selectedColorName = function.GetSelectedColor();
+                    line.Stroke = function.ConvertStringToBrush(selectedColorName);
                 }
                 else if (sender is Ellipse vertex)
                 {
-                    string selectedColorName = GetSelectedColor();
-                    vertex.Stroke = ConvertStringToBrush(selectedColorName);
+                    string selectedColorName = function.GetSelectedColor();
+                    vertex.Stroke = function.ConvertStringToBrush(selectedColorName);
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace WpfLaba3Grafs
                     node = node.AddOrGetNode(graph, graph.Count);
                     node.position = MousePos;
                     function.CreateVertex(MousePos, node);
-                    graphData.Add((node.value, -1, 0));
+                    graphData.Add((node.MyValue, -1, 0));
 
                     NodePicture nodePic = new NodePicture("", "Black", node);
                     if (!function.nodePictures.Keys.Contains(node))
@@ -75,7 +75,7 @@ namespace WpfLaba3Grafs
                     Y1 = MousePos.Y,
                     X2 = MousePos.X,
                     Y2 = MousePos.Y,
-                    Stroke = ConvertStringToBrush(GetSelectedColor()),
+                    Stroke = function.ConvertStringToBrush(function.GetSelectedColor()),
                     StrokeThickness = 2,                  
                 };
                 DrawingCanvas.Children.Add(tempLine);
@@ -88,20 +88,24 @@ namespace WpfLaba3Grafs
 
                     if (element.GetType() == typeof(Ellipse))
                     {
-                        
+                        //
                         var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
                         while (temp != null && !(temp is Grid))
                             temp = VisualTreeHelper.GetParent(temp) as UIElement;
                         if (temp is Grid grid)
                             DrawingCanvas.Children.Remove(grid);
+
+                        //
+                        
                         for (int i = 0; i < graph.Count; i++)
+                            //удаление зависимых ребёр
                             if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size/2 + 5))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
-                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.MyValue)
                                     {
                                         graphData.RemoveAt(j);
                                         break;
@@ -121,17 +125,18 @@ namespace WpfLaba3Grafs
                                                         graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
 
-                                for (int k = delNode.value; k < graph.Count; k++)
+                                for (int k = delNode.MyValue; k < graph.Count; k++)
                                 {
                                     int newV = graphData[k].Item1 - 1;
                                     graphData[k] = (newV, graphData[k].Item2, graphData[k].Item3);
 
-                                    graph.ElementAt(k).Value.value--;
+                                    graph.ElementAt(k).Value.MyValue--;
                                     Node tempNode = graph.ElementAt(k).Value;
                                     graph.Remove(graph.ElementAt(k).Key);
-                                    graph.Add(tempNode.value, tempNode);
+                                    graph.Add(tempNode.MyValue, tempNode);
                                     
                                 }
+
                                 // + удаление картинки ребра
                                 List <Line> delLines = new List <Line>();
                                 if (delNode.parents.Count > 0)
@@ -158,13 +163,8 @@ namespace WpfLaba3Grafs
                                         };
                                         delLines.Add(delLine);
                                 }
-                                //for (int k = 0; k < delLines.Count; k++) {
-                                //    DrawingCanvas.Children.Remove(delLines[k]);
-                                //}
                                 for (int z = DrawingCanvas.Children.Count - 1; z >= 0; z--)
-                                {
                                     if (DrawingCanvas.Children[z] is Line line)
-                                    {
                                         for(int w = delLines.Count - 1; w >= 0; w--)
                                             if(delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2) { 
                                                 DrawingCanvas.Children.RemoveAt(z);
@@ -175,10 +175,8 @@ namespace WpfLaba3Grafs
                                                 {
                                                     DrawingCanvas.Children.Remove(arrowToRemove);
                                                 }
-                                                catch { }
+                                                catch { MessageBox.Show("Error CanvasChildrenRemove"); }
                                             }
-                                    }
-                                }
                             }
                     }
                     if (element.GetType() == typeof(Line))
@@ -199,7 +197,7 @@ namespace WpfLaba3Grafs
                             if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
                                     {
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                         break;
@@ -313,35 +311,24 @@ namespace WpfLaba3Grafs
             graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
             dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
         }
-        public string GetSelectedColor()
-        {
-            if (BlackButton.IsChecked == true)
-                return "Black";
-            if (RedButton.IsChecked == true)
-                return "Red";
-            if (OrangeButton.IsChecked == true)
-                return "Orange";
-            if (YellowButton.IsChecked == true)
-                return "Yellow";
-            if (GreenButton.IsChecked == true)
-                return "Green";
-            if (CadetBlueButton.IsChecked == true)
-                return "CadetBlue";
-            return "Black";
-        }
-        public Brush ConvertStringToBrush(string colorName)
-        {
-            var property = typeof(Brushes).GetProperty(colorName);
-            if (property != null)
-                return (Brush)property.GetValue(null);
-            else
-                return Brushes.Black;
-        }
+        
 
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
             newEdge=false;
             newVertex=false;
+        }
+        public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
+        {
+            List<int> path = function.SearchShortestPath(function.GenerateAdjacencyMatrix(graph), 0, 4, graph.Count);
+            if (path.Count != 0)
+            {
+                MessageBox.Show("Путь от вершины 0 до вершины 4");
+                for (int i = 0; i < path.Count; i++)
+                {
+                    MessageBox.Show(path[i].ToString());
+                }
+            }
         }
     }
 }

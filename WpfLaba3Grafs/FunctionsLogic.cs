@@ -12,7 +12,7 @@ using System.Windows.Data;
 
 namespace WpfLaba3Grafs
 {
-    public class FunctionsLogic 
+    public class FunctionsLogic
     {
         public int size = 20;
         public bool newVertex = false;
@@ -26,8 +26,8 @@ namespace WpfLaba3Grafs
         }
         public void CreateVertex(Point position, Node node)
         {
-            string selectedColorName = mainWindow.GetSelectedColor();
-            Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
+            string selectedColorName = GetSelectedColor();
+            Brush strokeBrush = ConvertStringToBrush(selectedColorName);
             Ellipse vertex = new Ellipse()
             {
                 Width = size,
@@ -52,7 +52,7 @@ namespace WpfLaba3Grafs
             Binding binding = new Binding("MyValue")
             {
                 Source = node,
-                StringFormat = node.value.ToString(), // Значение вершины в canvas
+                StringFormat = node.MyValue.ToString(), // Значение вершины в canvas
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
 
@@ -79,8 +79,8 @@ namespace WpfLaba3Grafs
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
                 if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented))
                 {
-                    string selectedColorName = mainWindow.GetSelectedColor();
-                    Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
+                    string selectedColorName = GetSelectedColor();
+                    Brush strokeBrush = ConvertStringToBrush(selectedColorName);
                     Line edge = new Line()
                     {
                         X1 = from.position.X,
@@ -91,7 +91,7 @@ namespace WpfLaba3Grafs
                         StrokeThickness = 2
                     };
                     edge.MouseDown += mainWindow.BtnClick_Paint;
-                    Polygon polygon = new Polygon();                   
+                    Polygon polygon = new Polygon();
 
                     newEdge = false;
                     TextBox textBox = new TextBox
@@ -106,19 +106,19 @@ namespace WpfLaba3Grafs
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
-                    
+
                     Edge edgesuk = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
                     edgePictures.Add(edgesuk, edgePic);
 
-                    double centerX = (from.position.X + to.position.X) /2;
+                    double centerX = (from.position.X + to.position.X) / 2;
                     double centerY = (from.position.Y + to.position.Y) / 2;
-                    
+
                     Canvas.SetLeft(textBox, centerX - textBox.ActualWidth / 2);
                     Canvas.SetTop(textBox, centerY - textBox.ActualHeight / 2);
-                    edge.Tag=textBox;
+                    edge.Tag = textBox;
                     //edge.Tag = DrawArrow(pos1, pos2);
-             
+
                     mainWindow.DrawingCanvas.Children.Add(edge);
                     mainWindow.DrawingCanvas.Children.Add(textBox);
                     if (mainWindow.isOriented == true)
@@ -129,7 +129,7 @@ namespace WpfLaba3Grafs
                     }
                 }
         }
-        
+
         public Polygon DrawArrow(Point pos1, Point pos2)
         {
             double arrowLength = 10; // Длина стрелки
@@ -140,7 +140,7 @@ namespace WpfLaba3Grafs
                 Fill = Brushes.Black,
                 Points = new PointCollection
                 {
-                    new Point(pos2.X, pos2.Y), 
+                    new Point(pos2.X, pos2.Y),
                     new Point(pos2.X - arrowLength * Math.Cos(angle - Math.PI / 6),
                     pos2.Y - arrowLength * Math.Sin(angle - Math.PI / 6)), // Левый угол стрелки
 
@@ -153,15 +153,15 @@ namespace WpfLaba3Grafs
         public int[,] GenerateIncidenceMatrix(Dictionary<int, Node> graph)
         {
             int numEdges = CalculateEdges(graph);
-            
+
             if (numEdges < 1)
                 return null;
-            int[,] matrix = new int[graph.Count+1, numEdges];
+            int[,] matrix = new int[graph.Count + 1, numEdges];
             for (int i = 0; i < numEdges; i++)
             {
-                matrix[0, i] = i+1;
+                matrix[0, i] = i + 1;
                 for (int j = 1; j < graph.Count; j++)
-                    matrix[j,i] = 0;
+                    matrix[j, i] = 0;
             }
 
             int edgeIndex = 0;
@@ -169,14 +169,14 @@ namespace WpfLaba3Grafs
             {
                 foreach (var edge in node.edges)
                 {
-                    int rowIndex = node.value;
+                    int rowIndex = node.MyValue;
                     int colIndex = edgeIndex++;
 
-                    matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                    matrix[rowIndex + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == true)
-                        matrix[edge.adjacentNode.value+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
+                        matrix[edge.adjacentNode.MyValue + 1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
                     else
-                        matrix[edge.adjacentNode.value + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                        matrix[edge.adjacentNode.MyValue + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
             return matrix;
@@ -193,7 +193,7 @@ namespace WpfLaba3Grafs
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
             {
-                matrix[0, i] = graph.ElementAt(i).Value.value;
+                matrix[0, i] = graph.ElementAt(i).Value.MyValue;
                 for (int j = 1; j < graph.Count; j++)
                     matrix[i, j] = 0;
             }
@@ -205,8 +205,8 @@ namespace WpfLaba3Grafs
 
                 foreach (Edge edge in node.edges)
                 {
-                    int colIndex = edge.adjacentNode.value;
-                    matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                    int colIndex = edge.adjacentNode.MyValue;
+                    matrix[rowIndex + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == false)
                         matrix[colIndex + 1, rowIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
@@ -215,7 +215,7 @@ namespace WpfLaba3Grafs
         }
         public void Dg_BuildArr(int[,] matrix, DataGrid dgName)
         {
-            
+
             DataTable dataTable = new DataTable();
             if (matrix != null)
             {
@@ -233,6 +233,88 @@ namespace WpfLaba3Grafs
                 }
             }
             dgName.ItemsSource = dataTable.DefaultView;
+        }
+
+        public List<int> SearchShortestPath(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices) //alg Deikstra
+        {
+            
+            int verticesCount = allVertices;
+            int[] distances = new int[verticesCount];
+            bool[] shortestPathSet = new bool[verticesCount];
+            int[] previousVertices = new int[verticesCount];
+
+            // Инициализация
+            for (int i = 0; i < verticesCount; i++)
+            {
+                distances[i] = int.MaxValue;
+                shortestPathSet[i] = false;
+                previousVertices[i] = -1;
+            }
+
+            distances[startVertex] = 0;
+
+            for (int count = 0; count < verticesCount - 1; count++)
+            {
+                int u = MinDistance(distances, shortestPathSet);
+                shortestPathSet[u] = true;
+
+                for (int v = 0; v < verticesCount; v++)
+                    if (!shortestPathSet[v] && AdjacencyMatrix[u+1, v] != 0 &&
+                        distances[u] != int.MaxValue &&
+                        distances[u] + AdjacencyMatrix[u+1, v] < distances[v])
+                    {
+                        distances[v] = distances[u] + AdjacencyMatrix[u + 1, v];
+                        previousVertices[v] = u;
+                    }
+            }
+
+            return ConstructPath(previousVertices, startVertex, endVertex);
+        }
+        private int MinDistance(int[] distances, bool[] shortestPathSet)
+        {
+            int min = int.MaxValue, minIndex = -1;
+            for (int v = 0; v < distances.Length; v++)
+                if (!shortestPathSet[v] && distances[v] <= min)
+                {
+                    min = distances[v];
+                    minIndex = v;
+                }
+
+            return minIndex;
+        }
+
+        private List<int> ConstructPath(int[] previousVertices, int startVertex, int endVertex)
+        {
+            List<int> path = new List<int>();
+            for (int at = endVertex; at != -1; at = previousVertices[at])
+                path.Add(at);
+            path.Reverse();
+
+            return path.Count > 1 && path[0] == startVertex ? path : new List<int>(); 
+        }
+        public string GetSelectedColor()
+        {
+            if (mainWindow.BlackButton.IsChecked == true)
+                return "Black";
+            if (mainWindow.RedButton.IsChecked == true)
+                return "Red";
+            if (mainWindow.OrangeButton.IsChecked == true)
+                return "Orange";
+            if (mainWindow.YellowButton.IsChecked == true)
+                return "Yellow";
+            if (mainWindow.GreenButton.IsChecked == true)
+                return "Green";
+            if (mainWindow.CadetBlueButton.IsChecked == true)
+                return "CadetBlue";
+            return "Black";
+        }
+        public Brush ConvertStringToBrush(string colorName)
+        {
+            var property = typeof(Brushes).GetProperty(colorName);
+            if (property != null)
+                return (Brush)property.GetValue(null);
+            else
+                return Brushes.Black;
         }
     }
 }

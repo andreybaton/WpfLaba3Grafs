@@ -85,12 +85,19 @@
                 </DockPanel>
                 <StackPanel Height="434" Width="234">
                     <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
-                    <Button Margin="10" Click="BtnClick_GenerateIncidenceMatrix">Матрица инцидентности</Button>
-                    <Button Margin ="5" Click="BtnClick_GenerateAdjacencyMatrix" Content="Матрица смежности" Width="149"></Button>
+                    <DockPanel>
+                    <Button Margin="2" Click="BtnClick_GenerateIncidenceMatrix" Width="104">
+                        <TextBlock>Матрица <LineBreak /> инцидентности</TextBlock></Button>
+                    <Button Margin ="2" Click="BtnClick_GenerateAdjacencyMatrix" Width="104">
+                        <TextBlock>
+                            Матрица <LineBreak /> смежности
+                        </TextBlock>
+                    </Button>
+                    </DockPanel>
                     <DockPanel>
                         <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="140"></DataGrid>
                     </DockPanel>
-
+                    <Button Margin="10" Click="BtnClick_SearchShortestPath">Поиск кратчайшего пути</Button>
                 </StackPanel>
             </StackPanel>
         </Viewbox>
