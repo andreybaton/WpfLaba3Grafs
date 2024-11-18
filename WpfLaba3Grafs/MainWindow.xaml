@@ -10,25 +10,33 @@
         <Viewbox>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Height="437" Width="164" >
+                    <StackPanel>
+                        <DockPanel Height="30" >
+                            <Button Width="110" Margin="5" Content="сохранить в файл">
+                            </Button>
+                            <TextBox Margin="5">
+                            </TextBox>
+                        </DockPanel>
+                        <DockPanel>
+                            <Button Width="110" Margin="5" Content="загрузить из файла">
+                            </Button>
+                            <TextBox Margin="5">
+                            </TextBox>
+                        </DockPanel>
+                    </StackPanel>
                     <DockPanel x:Name="DockPanel1" Width="164">
-                        <ToggleButton x:Name="Pointer" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                        <ToggleButton x:Name="Pointer" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Выделить элемент">
                             <Image Source="/Pointer.png" Height="32" Width="32"></Image>
                         </ToggleButton>
-                        <!--<TextBlock Margin="10">выделить элемент</TextBlock>-->
-                    </DockPanel>
-                    <DockPanel x:Name="DockPanel2">
-                        <ToggleButton x:Name="Vertex" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                        <ToggleButton x:Name="Vertex" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Создать вершину">
                             <Image Source="/Vertex.png" Height="32" Width="32"></Image>
                         </ToggleButton>
-                        <!--<TextBlock Margin="10">создать вершину</TextBlock>-->
                     </DockPanel>
                     <DockPanel x:Name="DockPanel3">
-                        <ToggleButton x:Name="Edge" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked">
+                        <ToggleButton x:Name="Edge" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Создать ребро">
                             <Image Source="/Edge.png" Height="32" Width="32"></Image>
                         </ToggleButton>
-                    </DockPanel>
-                    <DockPanel x:Name="DockPanel4">
-                        <ToggleButton x:Name="Crest" Height="42" Width="42" Margin="5" Checked="ControlToggleButton_Checked">
+                        <ToggleButton x:Name="Crest" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" ToolTip="Удалить элемент">
                             <Image Source="/Crest.png" Height="32" Width="32"></Image>
                         </ToggleButton>
                     </DockPanel>
@@ -39,7 +47,7 @@
                         <TextBlock FontSize="15" Margin="2" Text="Вес нового ребра:"></TextBlock>
                         <TextBox x:Name="tbWeight" Margin="2" Text="0" ></TextBox>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock FontSize="15" Margin="5,10,5,5">Изменение веса:</TextBlock>
+                            <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
                             <TextBox Margin="5"></TextBox>
                         </StackPanel>
                     </StackPanel>
@@ -78,15 +86,25 @@
                 <StackPanel Height="434" Width="234">
                     <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
                     <DockPanel>
-                        <Button Margin="5" Click="BtnClick_GenerateIncidenceMatrix" Width="99" Height="37">
-                            <TextBlock>Матрица <LineBreak/> инцидентности</TextBlock>
-                        </Button>
-                        <Button Margin ="5" Click="BtnClick_GenerateAdjacencyMatrix" Width="99" Height="37">
-                            <TextBlock>Матрица <LineBreak/> смежности</TextBlock>
-                        </Button>
+                        <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="101"></DataGrid>
                     </DockPanel>
-                    <DataGrid x:Name="dg_graph" AutoGenerateColumns="True"  Height="167" Margin="10"></DataGrid>
+                    <DockPanel Height="291">
+                        <StackPanel Height="300">
+                            <Button Margin="10" Click="BtnClick_GenerateIncidenceMatrix">Матрица инцидентности</Button>
+                            <StackPanel Height="101">
+                                <DataGrid x:Name="dg_IncidenceMatrix" AutoGenerateColumns="True" Height="101"></DataGrid>
+                            </StackPanel>
 
+                            <Button Margin ="5" Click="BtnClick_GenerateAdjacencyMatrix" Content="Матрица смежности" Width="149"></Button>
+                            <StackPanel Height="101">
+                                <DataGrid x:Name="dg_AdjecencyMatrix" Height="101"></DataGrid>
+                            </StackPanel>
+
+
+                        </StackPanel>
+                    </DockPanel>
+                    <TextBlock>сохранить</TextBlock>
+                    <TextBlock>сохранить</TextBlock>
                 </StackPanel>
             </StackPanel>
         </Viewbox>
