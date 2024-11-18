@@ -28,10 +28,6 @@ namespace WpfLaba3Grafs
             function = new FunctionsLogic(this);
             InitializeComponent();
         }
-        public void BtnClick_SelectItem()
-        {
-
-        }
         public void PaintColor(object sender, RoutedEventArgs e)
         {
             bool isChecked = Bucket.IsChecked ?? false;
@@ -174,7 +170,7 @@ namespace WpfLaba3Grafs
                                                 {
                                                     DrawingCanvas.Children.Remove(arrowToRemove);
                                                 }
-                                                catch {}
+                                                catch { }
                                             }
                             }
                     }
@@ -252,7 +248,7 @@ namespace WpfLaba3Grafs
             var checkedButton = sender as ToggleButton;
             ResetToggleButtons(colors1, checkedButton);
             ResetToggleButtons(colors2, checkedButton);
-            //var checkedButton = sender as ToggleButton;
+
             foreach(var child in (checkedButton.Parent as Panel).Children)
                 if (child is ToggleButton button && button != checkedButton)
                     button.IsChecked = false;
@@ -270,7 +266,10 @@ namespace WpfLaba3Grafs
             //ResetToggleButtons(DockPanel4, checkedButton);
             ResetToggleButtons(DockPanel5, checkedButton);
             if (checkedButton == Pointer)
-                BtnClick_SelectItem();
+            {
+                //BtnClick_SelectItem();
+            }
+
             else if (checkedButton == Vertex)
                 newVertex = true;
             else if (checkedButton == Edge)
@@ -346,9 +345,9 @@ namespace WpfLaba3Grafs
         }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            newEdge=false;
-            newVertex=false;
+            newEdge = false;
+            newVertex = false;
+            delete = false;
         }
-        
     }
 }
