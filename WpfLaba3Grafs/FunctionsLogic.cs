@@ -24,7 +24,7 @@ namespace WpfLaba3Grafs
         {
             this.mainWindow = mainWindow;
         }
-        public void CreateVertex(Point position, Node node)
+        public void CreateVertex(Point position, Node node) //создаем вершину
         {
             string selectedColorName = GetSelectedColor();
             Brush strokeBrush = ConvertStringToBrush(selectedColorName);
@@ -36,11 +36,11 @@ namespace WpfLaba3Grafs
                 StrokeThickness = 2,
                 Fill = Brushes.White,
             };
-            vertex.MouseDown += mainWindow.BtnClick_Paint;
+            vertex.MouseDown += mainWindow.PaintColor; //подписываем vertex(вершину) на событие изменения цвета
             double posX = position.X - vertex.Width / 2;
             double posY = position.Y - vertex.Height / 2;
 
-            TextBlock label = new TextBlock
+            TextBlock label = new TextBlock //создаем текстблок - номер вершины
             {
                 Text = mainWindow.graph.Count().ToString(),
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -58,17 +58,18 @@ namespace WpfLaba3Grafs
 
             label.SetBinding(TextBlock.TextProperty, binding);
 
-            var grid = new Grid();
+            var grid = new Grid(); //засовываем вершину и текстбокс в один объект grid
             grid.Children.Add(vertex);
             grid.Children.Add(label);
+
             Canvas.SetTop(grid, posY);
             Canvas.SetLeft(grid, posX);
             mainWindow.DrawingCanvas.Children.Add(grid);
         }
-        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight) //создаем ребро
         {
             Node from = new Node(); Node to = new Node();
-            for (int i = 0; i < graph.Count; i++)
+            for (int i = 0; i < graph.Count; i++) //если ребро между вершинами, то меняем координаты начала и конца ребра на координаты вершины, чтобы было по центру
             {
                 if (from.AreNodesClose(pos1, graph.ElementAt(i).Value.position, 10))
                     from = graph.ElementAt(i).Value;
@@ -90,8 +91,8 @@ namespace WpfLaba3Grafs
                         Stroke = strokeBrush,
                         StrokeThickness = 2
                     };
-                    edge.MouseDown += mainWindow.BtnClick_Paint;
-                    Polygon polygon = new Polygon();
+                    edge.MouseDown += mainWindow.PaintColor;
+                    Polygon polygon = new Polygon();                   
 
                     newEdge = false;
                     TextBox textBox = new TextBox

@@ -32,7 +32,7 @@ namespace WpfLaba3Grafs
         {
 
         }
-        public void BtnClick_Paint(object sender, RoutedEventArgs e)
+        public void PaintColor(object sender, RoutedEventArgs e)
         {
             bool isChecked = Bucket.IsChecked ?? false;
             if (isChecked == true) { 
@@ -98,8 +98,7 @@ namespace WpfLaba3Grafs
                         //
                         
                         for (int i = 0; i < graph.Count; i++)
-                            //удаление зависимых ребёр
-                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size/2 + 5))
+                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size/2 + 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
@@ -134,7 +133,6 @@ namespace WpfLaba3Grafs
                                     Node tempNode = graph.ElementAt(k).Value;
                                     graph.Remove(graph.ElementAt(k).Key);
                                     graph.Add(tempNode.MyValue, tempNode);
-                                    
                                 }
 
                                 // + удаление картинки ребра
@@ -166,7 +164,8 @@ namespace WpfLaba3Grafs
                                 for (int z = DrawingCanvas.Children.Count - 1; z >= 0; z--)
                                     if (DrawingCanvas.Children[z] is Line line)
                                         for(int w = delLines.Count - 1; w >= 0; w--)
-                                            if(delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2) { 
+                                            if(delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2) {
+                                                delLines.RemoveAt(w);
                                                 DrawingCanvas.Children.RemoveAt(z);
                                                 TextBox tbToRemove = line.Tag as TextBox;
                                                 Polygon arrowToRemove = tbToRemove.Tag as Polygon;
@@ -175,7 +174,7 @@ namespace WpfLaba3Grafs
                                                 {
                                                     DrawingCanvas.Children.Remove(arrowToRemove);
                                                 }
-                                                catch { MessageBox.Show("Error CanvasChildrenRemove"); }
+                                                catch {}
                                             }
                             }
                     }
@@ -279,7 +278,7 @@ namespace WpfLaba3Grafs
             else if (checkedButton == Crest)
                 delete = true;
             else if (checkedButton == Bucket)
-                BtnClick_Paint(sender, e);
+                PaintColor(sender, e);
         }
 
         public void ResetToggleButtons(Panel panel, ToggleButton checkedButton)
