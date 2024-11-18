@@ -1,20 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
 namespace WpfLaba3Grafs
 {
-    public class Node
+    public class Node : INotifyPropertyChanged
     {
-        public int value;
+        private int _myValue;
+
+        public int MyValue
+        {
+            get { return _myValue; }
+            set
+            {
+                if (_myValue != value)
+                {
+                    _myValue = value;
+                    OnPropertyChanged(nameof(MyValue));
+                }
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
         public Point position;
         public HashSet<Edge> edges = new HashSet<Edge>(); //список ребер
         public Dictionary<Node, Edge> parents = new Dictionary<Node, Edge>(); //список родителей 
-        public Node(int value) { this.value = value; }
-        public Node(int value, Point pos) { this.value = value; position = pos; }
+        public Node(int value) { this.MyValue = value; }
+        public Node(int value, Point pos) { this.MyValue = value; position = pos; }
         public Node() { }
-        public string ToString() { return value.ToString(); }
+        //public string ToString() { return MyValue.ToString(); }
         public Node AddOrGetNode(Dictionary<int, Node> graph, int value)
         {
             if (value == -1) return null;
@@ -79,18 +101,18 @@ namespace WpfLaba3Grafs
             foreach ((int, int, int) row in graphData)
             {
                 count++;
-                if (row.Item1 == node.value && row.Item2 == adjacentNode.value)
+                if (row.Item1 == node.MyValue && row.Item2 == adjacentNode.MyValue)
                 {
                     MessageBox.Show("Такое ребро уже существует!");
                     return false;
                 }
-                else if (row.Item1 == node.value && row.Item2 == -1)
+                else if (row.Item1 == node.MyValue && row.Item2 == -1)
                     marker = count - 1;
             }
             if (marker != -1)
-                graphData[marker] = ((node.value, adjacentNode.value, weight));
+                graphData[marker] = ((node.MyValue, adjacentNode.MyValue, weight));
             else
-                graphData.Add((node.value, adjacentNode.value, weight));
+                graphData.Add((node.MyValue, adjacentNode.MyValue, weight));
             return true;
         }
     }

@@ -59,11 +59,12 @@ namespace WpfLaba3Grafs
                 {
                     node = node.AddOrGetNode(graph, graph.Count);
                     node.position = MousePos;
-                    function.CreateVertex(MousePos);
-                    graphData.Add((node.value, -1, 0));
+                    function.CreateVertex(MousePos, node);
+                    graphData.Add((node.MyValue, -1, 0));
 
                     NodePicture nodePic = new NodePicture("", "Black", node);
-                    function.nodePictures.Add(node, nodePic);
+                    if (!function.nodePictures.Keys.Contains(node))
+                        function.nodePictures.Add(node, nodePic);
                 }
             }
             else if (newEdge)
@@ -87,6 +88,7 @@ namespace WpfLaba3Grafs
 
                     if (element.GetType() == typeof(Ellipse))
                     {
+                        
                         var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
                         while (temp != null && !(temp is Grid))
                             temp = VisualTreeHelper.GetParent(temp) as UIElement;
@@ -97,31 +99,40 @@ namespace WpfLaba3Grafs
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
-                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.MyValue)
                                     {
                                         graphData.RemoveAt(j);
                                         break;
                                     }
                                 }
                                 Node delNode = graph.ElementAt(i).Value;
-
+                                function.nodePictures.Remove(delNode);
                                 graph.Remove(graph.ElementAt(i).Key);
-                                for (int k = 0; k < graph.Count; k++) //
+                                for (int k = 0; k < graph.Count; k++) 
                                 {
                                         for (int l = 0; l < delNode.parents.Count; l++)
-                                        {
                                             if (graph.ElementAt(k).Value == delNode.parents.ElementAt(l).Key) //если вершина - предок
                                                 graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(l).Value);
                                             else
                                                 for (int j = 0; j < delNode.edges.Count; j++)
                                                     if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
                                                         graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
-                                        }
                                 }
-                                
-                                // + удаление картинки ребра
+
+                                for (int k = delNode.MyValue; k < graph.Count; k++)
+                                {
+                                    int newV = graphData[k].Item1 - 1;
+                                    graphData[k] = (newV, graphData[k].Item2, graphData[k].Item3);
+
+                                    graph.ElementAt(k).Value.MyValue--;
+                                    Node tempNode = graph.ElementAt(k).Value;
+                                    graph.Remove(graph.ElementAt(k).Key);
+                                    graph.Add(tempNode.MyValue, tempNode);
+                                    
+                                }
+                                // + удаление картинки ребра2
                                 List <Line> delLines = new List <Line>();
                                 if (delNode.parents.Count > 0)
                                     for (int j = 0; j < delNode.parents.Count; j++)
@@ -169,7 +180,7 @@ namespace WpfLaba3Grafs
                             if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
                                     {
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                         break;

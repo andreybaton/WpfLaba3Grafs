@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Data;
 using System.Reflection.Emit;
+using System.Windows.Data;
 
 
 namespace WpfLaba3Grafs
@@ -23,7 +24,7 @@ namespace WpfLaba3Grafs
         {
             this.mainWindow = mainWindow;
         }
-        public void CreateVertex(Point position)
+        public void CreateVertex(Point position, Node node)
         {
             string selectedColorName = mainWindow.GetSelectedColor();
             Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
@@ -46,6 +47,17 @@ namespace WpfLaba3Grafs
                 VerticalAlignment = VerticalAlignment.Center,
                 FontWeight = FontWeights.Bold,
             };
+
+            // Установка привязки
+            Binding binding = new Binding("MyValue")
+            {
+                Source = node,
+                StringFormat = node.MyValue.ToString(), // Значение вершины в canvas
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+
+            label.SetBinding(TextBlock.TextProperty, binding);
+
             var grid = new Grid();
             grid.Children.Add(vertex);
             grid.Children.Add(label);
@@ -166,14 +178,14 @@ namespace WpfLaba3Grafs
             {
                 foreach (var edge in node.edges)
                 {
-                    int rowIndex = node.value;
+                    int rowIndex = node.MyValue;
                     int colIndex = edgeIndex++;
 
                     matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == true)
-                        matrix[edge.adjacentNode.value+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
+                        matrix[edge.adjacentNode.MyValue+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
                     else
-                        matrix[edge.adjacentNode.value + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                        matrix[edge.adjacentNode.MyValue + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
             return matrix;
@@ -190,7 +202,7 @@ namespace WpfLaba3Grafs
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
             {
-                matrix[0, i] = graph.ElementAt(i).Value.value;
+                matrix[0, i] = graph.ElementAt(i).Value.MyValue;
                 for (int j = 1; j < graph.Count; j++)
                     matrix[i, j] = 0;
             }
@@ -202,7 +214,7 @@ namespace WpfLaba3Grafs
 
                 foreach (Edge edge in node.edges)
                 {
-                    int colIndex = edge.adjacentNode.value;
+                    int colIndex = edge.adjacentNode.MyValue;
                     matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == false)
                         matrix[colIndex + 1, rowIndex] = edge.weight > 0 ? edge.weight : 1;
