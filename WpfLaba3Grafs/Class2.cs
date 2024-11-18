@@ -68,7 +68,6 @@ namespace WpfLaba3Grafs
 
             if (AddSearchElement(graphData, node, adjacentNode, weight))
             {
-                MessageBox.Show("addEdge " + adjacentNode.ToString());
                 adjacentNode.parents.Add(node, edge);
                 node.edges.Add(edge);
             }
