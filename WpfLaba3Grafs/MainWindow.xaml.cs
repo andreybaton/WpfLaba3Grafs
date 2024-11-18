@@ -121,11 +121,16 @@ namespace WpfLaba3Grafs
                     }
                     if (element.GetType() == typeof(Line))
                     {
-
                         DrawingCanvas.Children.Remove(element);
                         Line line = (Line)element;
                         TextBox tbToRemove = line.Tag as TextBox;
+                        Polygon arrowToRemove = tbToRemove.Tag as Polygon;
                         DrawingCanvas.Children.Remove(tbToRemove);
+                        try
+                        {
+                            DrawingCanvas.Children.Remove(arrowToRemove);
+                        }
+                        catch { }
                         Point begin = new Point(line.X1, line.Y1);
                         Point end = new Point(line.X2, line.Y2);
                         for (int i = 0; i < graph.Count; i++)
@@ -149,7 +154,7 @@ namespace WpfLaba3Grafs
                                         for (int k = 0; k < graph[i].edges.Count; k++) //для начала ребра
                                             if (graph.ElementAt(j).Value == graph[i].edges.ElementAt(k).adjacentNode)
                                             {
-                                                MessageBox.Show("remove");
+                                                //MessageBox.Show("remove");
                                                 graph[j].edges.Remove(graph[i].edges.ElementAt(k));
                                             }
                                 }

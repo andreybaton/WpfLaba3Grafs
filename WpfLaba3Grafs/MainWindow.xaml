@@ -10,6 +10,20 @@
         <Viewbox>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Height="437" Width="164" >
+                    <StackPanel>
+                        <DockPanel Height="30" >
+                            <Button Width="110" Margin="5" Content="сохранить в файл">
+                            </Button>
+                            <TextBox Margin="5">
+                            </TextBox>
+                        </DockPanel>
+                        <DockPanel>
+                            <Button Width="110" Margin="5" Content="загрузить из файла">
+                            </Button>
+                            <TextBox Margin="5">
+                            </TextBox>
+                        </DockPanel>
+                    </StackPanel>
                     <DockPanel x:Name="DockPanel1" Width="164">
                         <ToggleButton x:Name="Pointer" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Выделить элемент">
                             <Image Source="/Pointer.png" Height="32" Width="32"></Image>

@@ -79,9 +79,9 @@ namespace WpfLaba3Grafs
                         StrokeThickness = 2
                     };
                     edge.MouseDown += mainWindow.BtnClick_Paint;
+                    Polygon polygon = new Polygon();
                     
-                    if (mainWindow.isOriented == true)
-                        mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
+
                     newEdge = false;
                     TextBox textBox = new TextBox
                     {
@@ -95,34 +95,28 @@ namespace WpfLaba3Grafs
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
-                    //Canvas.SetLeft(textBox, (pos1.X + pos2.X) / 2);
-                    //Canvas.SetTop(textBox, (pos1.Y + pos2.Y) / 2);
-
-                    //mainWindow.DrawingCanvas.Children.Add(textBox);
+                    
 
                     Edge edgesuk = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
                     edgePictures.Add(edgesuk, edgePic);
-                    
-                    //var edgegrid = new Grid();
 
                     double centerX = (from.position.X + to.position.X) /2;
                     double centerY = (from.position.Y + to.position.Y) / 2;
-                    //Canvas.SetTop(edgegrid, Math.Min(pos1.X, pos2.X));
-                    //Canvas.SetLeft(edgegrid, Math.Min(pos1.Y, pos2.Y));
-
-                    //edgegrid.Children.Add(edge);
-
-                    //MessageBox.Show(centerX.ToString());
-                    //MessageBox.Show(centerY.ToString());
                     
                     Canvas.SetLeft(textBox, centerX - textBox.ActualWidth / 2);
                     Canvas.SetTop(textBox, centerY - textBox.ActualHeight / 2);
                     edge.Tag=textBox;
+                    //edge.Tag = DrawArrow(pos1, pos2);
+             
                     mainWindow.DrawingCanvas.Children.Add(edge);
                     mainWindow.DrawingCanvas.Children.Add(textBox);
-                    //edgegrid.Children.Add(textBox);
-                    //mainWindow.DrawingCanvas.Children.Add(edgegrid);
+                    if (mainWindow.isOriented == true)
+                    {
+                        polygon = DrawArrow(pos1, pos2);
+                        textBox.Tag = polygon;
+                        mainWindow.DrawingCanvas.Children.Add(polygon);
+                    }
                 }
         }
         private void EdgeLine(Point ellipse1, Point ellipse2, double radius)
@@ -132,25 +126,7 @@ namespace WpfLaba3Grafs
             if (d > radius * 2) 
                 distance = d - radius * 2;
         }
-        //public void CreateEdge(Point pos1, Point pos2)
-        //{
-        //    string selectedColorName = mainWindow.GetSelectedColor();
-        //    Brush strokeBrush = mainWindow.ConvertStringToBrush(selectedColorName);
-        //    Line edge = new Line()
-        //    {
-        //        X1 = pos1.X,
-        //        Y1 = pos1.Y,
-        //        X2 = pos2.X,
-        //        Y2 = pos2.Y,
-        //        Stroke = strokeBrush,
-        //        StrokeThickness = 2
-        //    };
-        //    edge.MouseDown += mainWindow.BtnClick_Paint;
-        //    mainWindow.DrawingCanvas.Children.Add(edge);
-        //    if (mainWindow.isOriented == true)
-        //        mainWindow.DrawingCanvas.Children.Add(DrawArrow(pos1, pos2));
-        //    newEdge = false;
-        //}
+        
         public Polygon DrawArrow(Point pos1, Point pos2)
         {
             double arrowLength = 10; // Длина стрелки
