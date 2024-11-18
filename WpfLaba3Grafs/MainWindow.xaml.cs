@@ -60,7 +60,7 @@ namespace WpfLaba3Grafs
                     node = node.AddOrGetNode(graph, graph.Count);
                     node.position = MousePos;
                     function.CreateVertex(MousePos, node);
-                    graphData.Add((node.MyValue, -1, 0));
+                    graphData.Add((node.value, -1, 0));
 
                     NodePicture nodePic = new NodePicture("", "Black", node);
                     if (!function.nodePictures.Keys.Contains(node))
@@ -99,9 +99,9 @@ namespace WpfLaba3Grafs
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
-                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.MyValue)
+                                    if (graphData[j].Item1 == graph.ElementAt(i).Value.value)
                                     {
                                         graphData.RemoveAt(j);
                                         break;
@@ -121,18 +121,18 @@ namespace WpfLaba3Grafs
                                                         graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
 
-                                for (int k = delNode.MyValue; k < graph.Count; k++)
+                                for (int k = delNode.value; k < graph.Count; k++)
                                 {
                                     int newV = graphData[k].Item1 - 1;
                                     graphData[k] = (newV, graphData[k].Item2, graphData[k].Item3);
 
-                                    graph.ElementAt(k).Value.MyValue--;
+                                    graph.ElementAt(k).Value.value--;
                                     Node tempNode = graph.ElementAt(k).Value;
                                     graph.Remove(graph.ElementAt(k).Key);
-                                    graph.Add(tempNode.MyValue, tempNode);
+                                    graph.Add(tempNode.value, tempNode);
                                     
                                 }
-                                // + удаление картинки ребра2
+                                // + удаление картинки ребра
                                 List <Line> delLines = new List <Line>();
                                 if (delNode.parents.Count > 0)
                                     for (int j = 0; j < delNode.parents.Count; j++)
@@ -199,7 +199,7 @@ namespace WpfLaba3Grafs
                             if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
-                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.MyValue)
+                                    if (graphData[j].Item2 == graph.ElementAt(i).Value.value)
                                     {
                                         graphData[j] = (graphData[j].Item1, -1, graphData[j].Item3);
                                         break;

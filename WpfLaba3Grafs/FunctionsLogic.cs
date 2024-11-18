@@ -52,7 +52,7 @@ namespace WpfLaba3Grafs
             Binding binding = new Binding("MyValue")
             {
                 Source = node,
-                StringFormat = node.MyValue.ToString(), // Значение вершины в canvas
+                StringFormat = node.value.ToString(), // Значение вершины в canvas
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
 
@@ -129,13 +129,6 @@ namespace WpfLaba3Grafs
                     }
                 }
         }
-        private void EdgeLine(Point ellipse1, Point ellipse2, double radius)
-        {
-            double distance = 0;
-            double d = Math.Sqrt((ellipse2.X - ellipse1.X) * (ellipse2.X - ellipse1.X) - (ellipse2.Y - ellipse1.Y) * (ellipse2.Y - ellipse1.Y));
-            if (d > radius * 2) 
-                distance = d - radius * 2;
-        }
         
         public Polygon DrawArrow(Point pos1, Point pos2)
         {
@@ -176,14 +169,14 @@ namespace WpfLaba3Grafs
             {
                 foreach (var edge in node.edges)
                 {
-                    int rowIndex = node.MyValue;
+                    int rowIndex = node.value;
                     int colIndex = edgeIndex++;
 
                     matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == true)
-                        matrix[edge.adjacentNode.MyValue+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
+                        matrix[edge.adjacentNode.value+1, colIndex] = -(edge.weight > 0 ? edge.weight : 1);
                     else
-                        matrix[edge.adjacentNode.MyValue + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
+                        matrix[edge.adjacentNode.value + 1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                 }
             }
             return matrix;
@@ -200,7 +193,7 @@ namespace WpfLaba3Grafs
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
             {
-                matrix[0, i] = graph.ElementAt(i).Value.MyValue;
+                matrix[0, i] = graph.ElementAt(i).Value.value;
                 for (int j = 1; j < graph.Count; j++)
                     matrix[i, j] = 0;
             }
@@ -212,7 +205,7 @@ namespace WpfLaba3Grafs
 
                 foreach (Edge edge in node.edges)
                 {
-                    int colIndex = edge.adjacentNode.MyValue;
+                    int colIndex = edge.adjacentNode.value;
                     matrix[rowIndex+1, colIndex] = edge.weight > 0 ? edge.weight : 1;
                     if (mainWindow.isOriented == false)
                         matrix[colIndex + 1, rowIndex] = edge.weight > 0 ? edge.weight : 1;
