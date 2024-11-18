@@ -137,29 +137,48 @@ namespace WpfLaba3Grafs
                                 if (delNode.parents.Count > 0)
                                     for (int j = 0; j < delNode.parents.Count; j++)
                                     {
-                                    Line delLine = new Line
-                                    {
-                                        X1 = delNode.parents.ElementAt(j).Key.position.X,
-                                        Y1 = delNode.parents.ElementAt(j).Key.position.Y,
-                                        X2 = delNode.position.X,
-                                        Y2 = delNode.position.Y,
-                                    };
-                                    delLines.Add(delLine);
+                                        Line delLine = new Line
+                                        {
+                                            X1 = delNode.parents.ElementAt(j).Key.position.X,
+                                            Y1 = delNode.parents.ElementAt(j).Key.position.Y,
+                                            X2 = delNode.position.X,
+                                            Y2 = delNode.position.Y,
+                                        };
+                                        delLines.Add(delLine);
                                     }
                                 if (delNode.edges.Count > 0)
                                     for (int j = 0; j < delNode.edges.Count; j++)
                                     { 
-                                    Line delLine = new Line
-                                    {
-                                        X1 = delNode.position.X,
-                                        Y1 = delNode.position.Y,
-                                        X2 = delNode.edges.ElementAt(j).adjacentNode.position.X,
-                                        Y2 = delNode.edges.ElementAt(j).adjacentNode.position.Y,
-                                    };
-                                    delLines.Add(delLine);
+                                        Line delLine = new Line
+                                        {
+                                            X1 = delNode.position.X,
+                                            Y1 = delNode.position.Y,
+                                            X2 = delNode.edges.ElementAt(j).adjacentNode.position.X,
+                                            Y2 = delNode.edges.ElementAt(j).adjacentNode.position.Y,
+                                        };
+                                        delLines.Add(delLine);
                                 }
-                                for (int k = 0; k < delLines.Count; k++)
-                                    DrawingCanvas.Children.Remove(delLines[k]);
+                                //for (int k = 0; k < delLines.Count; k++) {
+                                //    DrawingCanvas.Children.Remove(delLines[k]);
+                                //}
+                                for (int z = DrawingCanvas.Children.Count - 1; z >= 0; z--)
+                                {
+                                    if (DrawingCanvas.Children[z] is Line line)
+                                    {
+                                        for(int w = delLines.Count - 1; w >= 0; w--)
+                                            if(delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2) { 
+                                                DrawingCanvas.Children.RemoveAt(z);
+                                                TextBox tbToRemove = line.Tag as TextBox;
+                                                Polygon arrowToRemove = tbToRemove.Tag as Polygon;
+                                                DrawingCanvas.Children.Remove(tbToRemove);
+                                                try
+                                                {
+                                                    DrawingCanvas.Children.Remove(arrowToRemove);
+                                                }
+                                                catch { }
+                                            }
+                                    }
+                                }
                             }
                     }
                     if (element.GetType() == typeof(Line))

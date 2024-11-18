@@ -91,8 +91,7 @@ namespace WpfLaba3Grafs
                         StrokeThickness = 2
                     };
                     edge.MouseDown += mainWindow.BtnClick_Paint;
-                    Polygon polygon = new Polygon();
-                    
+                    Polygon polygon = new Polygon();                   
 
                     newEdge = false;
                     TextBox textBox = new TextBox
@@ -108,7 +107,6 @@ namespace WpfLaba3Grafs
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
                     
-
                     Edge edgesuk = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
                     edgePictures.Add(edgesuk, edgePic);
