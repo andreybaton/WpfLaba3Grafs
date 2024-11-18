@@ -125,7 +125,7 @@ namespace WpfLaba3Grafs
                     mainWindow.DrawingCanvas.Children.Add(textBox);
                     if (mainWindow.isOriented == true)
                     {
-                        polygon = DrawArrow(pos1, pos2);
+                        polygon = DrawArrow(from.position, to.position);
                         textBox.Tag = polygon;
                         mainWindow.DrawingCanvas.Children.Add(polygon);
                     }
