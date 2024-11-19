@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace WpfLaba3Grafs
 {
@@ -312,19 +313,45 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
         {
-            List<List<int>> allPaths = function.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), 0, 4, graph.Count);
-            for (int count = 0; count < allPaths.Count; count++)
+            InputWindow iw = new InputWindow();
+            int start = 0; int end = 0;
+            iw.ShowDialog();
+            if (iw.isOpen == false)
             {
-                List<int> path = allPaths[count];
-                
-                if (path != null)
+                start = iw.GetStartV();
+                end = iw.GetEndV();
+                if (end != start)
+                    return;
+            }
+            
+            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                if (DrawingCanvas.Children[i] is Grid grid)
+                {
+                    Ellipse ellipse = (Ellipse)grid.Children[0];
+                    if (ellipse.Fill == Brushes.Blue)
+                        ellipse.Fill = Brushes.White;
+                }
+            List<List<int>> allPaths = FunctionsLogic.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), start, end); 
+            if (allPaths == null || allPaths.Count == 0)
+            {
+                MessageBox.Show("Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString());
+                return;
+            }
+
+            for (int k = 0; k < allPaths.Count; k++)
+            {
+                List<int> path = allPaths[k];
+                if (path != null && path.Count > 0)
                     for (int i = 0; i < DrawingCanvas.Children.Count; i++)
                         if (DrawingCanvas.Children[i] is Grid grid)
                         {
                             Ellipse ellipse = (Ellipse)grid.Children[0];
                             for (int j = 0; j < path.Count; j++)
                                 if (IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
+                                {
                                     ellipse.Fill = Brushes.Blue;
+                                    function.nodePictures.ElementAt(path[j]).Value.colorNode = "Blue";
+                                }
                         }
             }
         }

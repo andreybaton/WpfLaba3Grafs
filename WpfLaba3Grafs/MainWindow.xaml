@@ -7,53 +7,71 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+
         <Viewbox>
             <StackPanel Orientation="Horizontal">
+
+                
+
                 <StackPanel Height="437" Width="164" >
+                    <ToolBar Height="34">
+                        <Button>
+                            <Menu>
+                                <MenuItem Header="Файл">
+                                    <MenuItem Header="Сохранить граф"/>
+                                    <MenuItem Header="Загрузить граф"/>
+                                    <MenuItem Header="Сохранить изменения"/>
+                                </MenuItem>
+                                <MenuItem Header="Инструменты">
+                                    <MenuItem Header="Создать вершину"/>
+                                    <MenuItem Header="Создать ребро"/>
+                                    <MenuItem Header="Удалить элемент"/>
+                                    <MenuItem Header="Создать матрицу смежности"/>
+                                    <MenuItem Header="Создать матрицу инцидентности"/>
+                                </MenuItem>
+                            </Menu>
+                        </Button>
+                    </ToolBar>
                     <StackPanel>
                         <DockPanel Height="30" >
-                            <Button Width="110" Margin="5" Content="сохранить в файл">
-                            </Button>
-                            <TextBox Margin="5">
-                            </TextBox>
+                            <Button Width="110" Margin="5" Content="сохранить в файл"/>
+                            <TextBox Margin="5"/>
                         </DockPanel>
                         <DockPanel>
-                            <Button Width="110" Margin="5" Content="загрузить из файла">
-                            </Button>
-                            <TextBox Margin="5">
-                            </TextBox>
+                            <Button Width="110" Margin="5" Content="загрузить из файла"/>
+                            <TextBox Margin="5"/>
                         </DockPanel>
                     </StackPanel>
                     <DockPanel x:Name="DockPanel1" Width="164">
                         <ToggleButton x:Name="Pointer" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Выделить элемент">
-                            <Image Source="/Pointer.png" Height="32" Width="32"></Image>
+                            <Image Source="/Pointer.png" Height="32" Width="32"/>
                         </ToggleButton>
                         <ToggleButton x:Name="Vertex" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Создать вершину">
-                            <Image Source="/Vertex.png" Height="32" Width="32"></Image>
+                            <Image Source="/Vertex.png" Height="32" Width="32"/>
                         </ToggleButton>
                     </DockPanel>
                     <DockPanel x:Name="DockPanel3">
                         <ToggleButton x:Name="Edge" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" Unchecked="ControlToggleButton_Unchecked" ToolTip="Создать ребро">
-                            <Image Source="/Edge.png" Height="32" Width="32"></Image>
+                            <Image Source="/Edge.png" Height="32" Width="32"/>
                         </ToggleButton>
                         <ToggleButton x:Name="Crest" Height="42" Width="42" Margin="10" Checked="ControlToggleButton_Checked" ToolTip="Удалить элемент">
-                            <Image Source="/Crest.png" Height="32" Width="32"></Image>
+                            <Image Source="/Crest.png" Height="32" Width="32"/>
                         </ToggleButton>
                     </DockPanel>
                     <StackPanel Width="145">
-                        <TextBlock FontSize="15" Text="Граф:"></TextBlock>
-                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Ориентированный</RadioButton>
-                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked">Неориентированный</RadioButton>
-                        <TextBlock FontSize="15" Margin="2" Text="Вес нового ребра:"></TextBlock>
-                        <TextBox x:Name="tbWeight" Margin="2" Text="0" ></TextBox>
+                        <TextBlock FontSize="15" Text="Граф:"/>
+                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked" Content="Ориентированный"/>
+                        <RadioButton Margin="2" GroupName="GrafType" Checked="RadioButton_Checked" Content="Неориентированный"/>
+                        <TextBlock FontSize="15" Margin="2" Text="Вес нового ребра:"/>
+                        <TextBox x:Name="tbWeight" Margin="2" Text="0" />
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Margin="5,10,5,5">Изменение веса</TextBlock>
-                            <TextBox Margin="5"></TextBox>
+                            <TextBlock Margin="5,5,5,5"><Run Text="Изменение веса"/></TextBlock>
+                            <TextBox Margin="5"/>
                         </StackPanel>
                     </StackPanel>
                     <DockPanel Height="65" x:Name="DockPanel5">
                         <ToggleButton x:Name="Bucket" Width="50" Margin="5,10,5,10" Checked="ControlToggleButton_Checked">
-                            <Image Source="/Bucket.png" Height="32" Width="32"></Image>
+                            <Image Source="/Bucket.png" Height="32" Width="32"/>
                         </ToggleButton>
                         <StackPanel Orientation="Vertical">
                             <DockPanel x:Name="colors1" Height="30" Width="100">
@@ -71,8 +89,8 @@
 
 
                 </StackPanel>
-                <DockPanel Height="434" Width="400">
-                    <Canvas Height="427" Width="396" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" MouseMove="DrawingCanvas_MouseMove" Background="LightGray" RenderTransformOrigin="0.5,0.5">
+                <DockPanel Height="454" Width="400">
+                    <Canvas Height="447" Width="396" x:Name ="DrawingCanvas" MouseLeftButtonDown="MouseLeftBtnDown_DrawingGraph" MouseLeftButtonUp="MouseLeftButtonUp_DrawingGraph" MouseMove="DrawingCanvas_MouseMove" Background="LightGray" RenderTransformOrigin="0.5,0.5">
                         <Canvas.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -84,26 +102,24 @@
                     </Canvas>
                 </DockPanel>
                 <StackPanel Height="434" Width="234">
-                    <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph">Массив с графом</Button>
+                    <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph" Content="Массив с графом"/>
                     <DockPanel>
-                    <Button Margin="2" Click="BtnClick_GenerateIncidenceMatrix" Width="104">
-                        <TextBlock
-                            >Матрица <LineBreak /> инцидентности
-                        </TextBlock>
-                    </Button>
-                    <Button Margin ="2" Click="BtnClick_GenerateAdjacencyMatrix" Width="104">
-                        <TextBlock>
-                            Матрица <LineBreak /> смежности
-                        </TextBlock>
-                    </Button>
+                        <Button Margin="2" Click="BtnClick_GenerateIncidenceMatrix" Width="104">
+                            <TextBlock
+                            ><Run Text="Матрица"/><LineBreak /><Run Text="инцидентности"/></TextBlock>
+                        </Button>
+                        <Button Margin ="2" Click="BtnClick_GenerateAdjacencyMatrix" Width="104">
+                            <TextBlock><Run Text="Матрица"/><LineBreak /><Run Text="смежности"/></TextBlock>
+                        </Button>
                     </DockPanel>
                     <DockPanel>
-                        <DataGrid x:Name="dg_graph" AutoGenerateColumns="True" Height="140"></DataGrid>
+                        <DataGrid Margin="5" x:Name="dg_graph" AutoGenerateColumns="True" Height="140"/>
                     </DockPanel>
-                    <Button Margin="10" Click="BtnClick_SearchShortestPath">Поиск кратчайшего пути</Button>
-                    <Button Margin="10">Поиск максимального потока</Button>
+                    <Button Margin="10" Click="BtnClick_SearchShortestPath" Content="Поиск кратчайшего пути"/>
+                    <Button Margin="10" Content="Поиск максимального потока"/>
                     <Button Margin="10">
-                        <TextBlock>Поиск минимального <LineBreak /> покрывающего дерева</TextBlock></Button>
+                        <TextBlock><Run Text="Поиск минимального"/><LineBreak /><Run Text="покрывающего дерева"/></TextBlock>
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Viewbox>

@@ -236,25 +236,20 @@ namespace WpfLaba3Grafs
             dgName.ItemsSource = dataTable.DefaultView;
         }
 
-        //public List<int> SearchShortestPath(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices) //alg Deikstra
-        public List<List<int>> SearchShortestPaths(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices)
+        public List<int> SearchPath(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices, bool[] prevPath) //alg Deikstra
         {
+
             int verticesCount = allVertices;
             int[] distances = new int[verticesCount];
             bool[] shortestPathSet = new bool[verticesCount];
-
-            // Список списков для хранения всех предыдущих вершин
-            List<int>[] previousVertices = new List<int>[verticesCount];
-            for (int i = 0; i < verticesCount; i++)
-            {
-                previousVertices[i] = new List<int>();
-            }
+            int[] previousVertices = new int[verticesCount];
 
             // Инициализация
             for (int i = 0; i < verticesCount; i++)
             {
                 distances[i] = int.MaxValue;
                 shortestPathSet[i] = false;
+                previousVertices[i] = -1;
             }
 
             distances[startVertex] = 0;
@@ -263,37 +258,28 @@ namespace WpfLaba3Grafs
             {
                 int u = MinDistance(distances, shortestPathSet);
                 shortestPathSet[u] = true;
-
+                if (u != 0 && prevPath[u] == true)
+                    continue;
                 for (int v = 0; v < verticesCount; v++)
-                {
-                    //MessageBox.Show("step " + u.ToString() + " " + v.ToString());
                     if (!shortestPathSet[v] && AdjacencyMatrix[u + 1, v] != 0 &&
-                        distances[u] != int.MaxValue)
+                        distances[u] != int.MaxValue &&
+                        distances[u] + AdjacencyMatrix[u + 1, v] < distances[v])
                     {
-                        int newDist = distances[u] + AdjacencyMatrix[u + 1, v];
-                        if (newDist < distances[v])
-                        {
-                            distances[v] = newDist;
-                            previousVertices[v].Clear(); // Очистить предыдущие пути
-                            previousVertices[v].Add(u); // Добавить текущую вершину
-                            //MessageBox.Show("new" + "num" + v.ToString() + " " + u.ToString());
-                        }
-                        else if (newDist == distances[v])
-                        {
-                            previousVertices[v].Add(u); // Добавить текущую вершину как альтернативный путь
-                            MessageBox.Show("another" + u.ToString());
-                        }
+                        distances[v] = distances[u] + AdjacencyMatrix[u + 1, v];
+                        previousVertices[v] = u;
                     }
-                }
             }
-            //for (int i = 0; i < previousVertices.Count(); i++)
-            //{
-            //    if (previousVertices[i].Count == 0)
-            //        previousVertices[i] = null;
-            //}
-            
-            return ConstructPaths(previousVertices, startVertex, endVertex);
+            return ConstructPath(previousVertices, startVertex, endVertex);
+        }
 
+        private List<int> ConstructPath(int[] previousVertices, int startVertex, int endVertex)
+        {
+            List<int> path = new List<int>();
+            for (int at = endVertex; at != -1; at = previousVertices[at])
+                path.Add(at);
+            path.Reverse();
+
+            return path.Count > 1 && path[0] == startVertex ? path : new List<int>();
         }
         private int MinDistance(int[] distances, bool[] shortestPathSet)
         {
@@ -307,83 +293,52 @@ namespace WpfLaba3Grafs
             return minIndex;
         }
 
-        //private List<int> ConstructPath(int[] previousVertices, int startVertex, int endVertex)
-        //{
-        //    List<int> path = new List<int>();
-        //    for (int at = endVertex; at != -1; at = previousVertices[at])
-        //        path.Add(at);
-        //    path.Reverse();
+       
 
-        //    return path.Count > 1 && path[0] == startVertex ? path : new List<int>(); 
-        //}
-        private List<List<int>> ConstructPaths(List<int>[] previousVertices, int startVertex, int endVertex)
+        public static List<List<int>> SearchShortestPaths(int[,] adjacencyMatrix, int startVertex, int endVertex)
         {
-            List<List<int>> allPaths = new List<List<int>>();
-            FindAllPaths(previousVertices, startVertex, endVertex, new List<int>(), allPaths);
-            return allPaths;
-        }
+            int n = adjacencyMatrix.GetLength(1);
+            List<Vertex> vertices = new List<Vertex>();
 
-        private void FindAllPaths(List<int>[] previousVertices, int currentVertex, int startVertex, List<int> path, List<List<int>> allPaths)
-        {
-            //MessageBox.Show("count " + previousVertices.Count().ToString());
-            //for (int i = 0; i < previousVertices.Count(); i++)
-            //        MessageBox.Show("v" + previousVertices[i].Count.ToString());
+            for (int i = 0; i < n; i++)
+                vertices.Add( new Vertex(i, int.MaxValue, new List<int>(), new List<(int, int)>()) );
 
+            vertices[startVertex].Distance = 0;
+            vertices[startVertex].Path.Add(startVertex);
+            HashSet<int> visited = new HashSet<int>();
 
-
-            //MessageBox.Show(startVertex.ToString());
-            //MessageBox.Show("curV " + currentVertex.ToString());
-            if (currentVertex == startVertex + 1)
+            while (visited.Count < n)
             {
-                path.Add(currentVertex - 1);
-                //MessageBox.Show(path.Count().ToString());
-                path.Reverse();
-                allPaths.Add(new List<int>(path));
-                path.Clear(); // Вернуть порядок обратно
-                return;
-            }
-            else
-            {
-                if (previousVertices[currentVertex].Count > 0)
-                {
-                    //MessageBox.Show("flag");
-                    //MessageBox.Show("add" + currentVertex.ToString());
-                    //path.Add(currentVertex);
-                    //previousVertices[currentVertex].Remove(currentVertex);
-                    //foreach (int prev in previousVertices[currentVertex])
-                    for (int i = 0; i < previousVertices[currentVertex].Count; i++)
+                Vertex current = vertices.Where(v => !visited.Contains(v.Index)).OrderBy(v => v.Distance).FirstOrDefault();
+                if (current == null)
+                    break;
+
+                visited.Add(current.Index);
+
+                for (int i = 0; i < n; i++)
+                    if (adjacencyMatrix[current.Index+1, i] > 0 && !visited.Contains(i))
                     {
-                        var prev = previousVertices[currentVertex].ElementAt(i);
-                        path.Add(prev);
-                        previousVertices[currentVertex].Remove(prev);
-                        //MessageBox.Show("prev " + prev.ToString());
-                        FindAllPaths(previousVertices, prev, startVertex, path, allPaths);
+                        int distance = current.Distance + adjacencyMatrix[current.Index+1, i];
+
+                        if (distance < vertices[i].Distance)
+                        {
+                            vertices[i].Distance = distance;
+                            vertices[i].Path.Clear();
+                            vertices[i].Path.AddRange(current.Path);
+                            vertices[i].Path.Add(i);
+                        }
+                        else if (distance == vertices[i].Distance) //newpath
+                        {
+                            List<int> newPath = new List<int>(current.Path);
+                            newPath.Add(i);
+                            vertices[i].Path.AddRange(newPath);
+                        }
                     }
-                }
-                else
-                {
-                    int count = 0;
-                    for (int i = 0; i < previousVertices.Count() + 1; i++)
-                        if (i == previousVertices.Count())
-                        {
-                            currentVertex = i;
-                            count++;
-                        }
-                        else if (previousVertices[i].Count > 0)
-                        {
-                            currentVertex = i;
-                            count++;
-                            break;
-                        }
-                    //MessageBox.Show("count " + count.ToString());
-                    if (count != 0)
-                        FindAllPaths(previousVertices, currentVertex, startVertex, path, allPaths);
-                }
             }
-            //MessageBox.Show("count " + path.Count.ToString());
-            //if (path.Count > 0)
-            //    path.RemoveAt(path.Count - 1); // Удалить текущую вершину перед возвратом
+            List<List<int>> allPath = vertices[endVertex].Path.Select(p => vertices[p].Path).ToList();
+            return allPath;
         }
+
         public string GetSelectedColor()
         {
             if (mainWindow.BlackButton.IsChecked == true)
@@ -407,6 +362,21 @@ namespace WpfLaba3Grafs
                 return (Brush)property.GetValue(null);
             else
                 return Brushes.Black;
+        }
+    }
+    class Vertex
+    {
+        public int Index { get; set; }
+        public int Distance { get; set; }
+        public List<int> Path { get; set; }
+        public List<(int, int)> Edges = new List<(int, int)>(); //prev, current
+
+        public Vertex(int index, int distance, List<int> path, List<(int, int)> edges)
+        {
+            Index = index;
+            Distance = distance;
+            Path = new List<int>(path);
+            Edges = edges;
         }
     }
 }
