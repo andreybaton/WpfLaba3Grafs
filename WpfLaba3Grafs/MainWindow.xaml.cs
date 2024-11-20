@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -320,7 +321,7 @@ namespace WpfLaba3Grafs
             {
                 start = iw.GetStartV();
                 end = iw.GetEndV();
-                if (end != start)
+                if (end == start)
                     return;
             }
             
@@ -331,7 +332,7 @@ namespace WpfLaba3Grafs
                     if (ellipse.Fill == Brushes.Blue)
                         ellipse.Fill = Brushes.White;
                 }
-            List<List<int>> allPaths = FunctionsLogic.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), start, end); 
+            List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end); //FunctionsLogic.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), start, end); 
             if (allPaths == null || allPaths.Count == 0)
             {
                 MessageBox.Show("Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString());
@@ -347,7 +348,7 @@ namespace WpfLaba3Grafs
                         {
                             Ellipse ellipse = (Ellipse)grid.Children[0];
                             for (int j = 0; j < path.Count; j++)
-                                if (IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
+                                if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
                                 {
                                     ellipse.Fill = Brushes.Blue;
                                     function.nodePictures.ElementAt(path[j]).Value.colorNode = "Blue";
@@ -355,20 +356,41 @@ namespace WpfLaba3Grafs
                         }
             }
         }
-        private bool IsPointInsideEllipse(Grid grid, int x, int y)
+        
+        public void BtnClick_SearchMaximumFlowProblem(object sender, RoutedEventArgs e)
         {
-            double left = Canvas.GetLeft(grid);
-            double top = Canvas.GetTop(grid);
+            InputWindow iw = new InputWindow();
+            int start = 0; int end = 0;
+            iw.ShowDialog();
+            if (iw.isOpen == false)
+            {
+                start = iw.GetStartV();
+                end = iw.GetEndV();
+                if (end == start)
+                    return;
+            }
 
-            Ellipse ellipse = (Ellipse)grid.Children[0];
-            double width = ellipse.Width;
-            double height = ellipse.Height;
+            List<List<int>> allPaths = function.SearchMaximumFlowProblem(function.GenerateAdjacencyMatrix(graph), start, end, graph.Count, graph);
+            for (int k = 0; k < allPaths.Count; k++)
+            {
+                List<int> path = allPaths[k];
+                if (path != null && path.Count > 0)
+                    for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                        if (DrawingCanvas.Children[i] is Grid grid)
+                        {
+                            Ellipse ellipse = (Ellipse)grid.Children[0];
+                            for (int j = 0; j < path.Count; j++)
+                                if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
+                                {
+                                    ellipse.Fill = Brushes.Blue;
+                                    function.nodePictures.ElementAt(path[j]).Value.colorNode = "Blue";
+                                }
+                        }
+            }
+        }
+        private void OpenInputDialog()
+        {
 
-            double h = left + width / 2;
-            double k = top + height / 2;
-            double r = width / 2;
-
-            return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
         }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {

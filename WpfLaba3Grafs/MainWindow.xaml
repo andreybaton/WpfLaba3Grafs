@@ -116,7 +116,7 @@
                         <DataGrid Margin="5" x:Name="dg_graph" AutoGenerateColumns="True" Height="140"/>
                     </DockPanel>
                     <Button Margin="10" Click="BtnClick_SearchShortestPath" Content="Поиск кратчайшего пути"/>
-                    <Button Margin="10" Content="Поиск максимального потока"/>
+                    <Button Margin="10" Click="BtnClick_SearchMaximumFlowProblem" Content="Поиск максимального потока"/>
                     <Button Margin="10">
                         <TextBlock><Run Text="Поиск минимального"/><LineBreak /><Run Text="покрывающего дерева"/></TextBlock>
                     </Button>

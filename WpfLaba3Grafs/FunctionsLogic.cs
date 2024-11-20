@@ -236,50 +236,56 @@ namespace WpfLaba3Grafs
             dgName.ItemsSource = dataTable.DefaultView;
         }
 
-        public List<int> SearchPath(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices, bool[] prevPath) //alg Deikstra
+        public List<List<int>> SearchPath(int[,] AdjacencyMatrix, int startVertex, int endVertex)//alg Deikstra
         {
-
-            int verticesCount = allVertices;
+            int verticesCount = AdjacencyMatrix.GetLength(1);
             int[] distances = new int[verticesCount];
-            bool[] shortestPathSet = new bool[verticesCount];
-            int[] previousVertices = new int[verticesCount];
+            bool[] visited = new bool[verticesCount];
+            List<int>[] paths = new List<int>[verticesCount];
+            List<List<int>> resultPaths = new List<List<int>>();
 
             // Инициализация
             for (int i = 0; i < verticesCount; i++)
             {
                 distances[i] = int.MaxValue;
-                shortestPathSet[i] = false;
-                previousVertices[i] = -1;
+                visited[i] = false;
+                paths[i] = new List<int>();
             }
 
             distances[startVertex] = 0;
+            paths[startVertex].Add(startVertex);
 
             for (int count = 0; count < verticesCount - 1; count++)
             {
-                int u = MinDistance(distances, shortestPathSet);
-                shortestPathSet[u] = true;
-                if (u != 0 && prevPath[u] == true)
-                    continue;
+                int u = MinDistance(distances, visited);
+                if (u == -1) break;
+                visited[u] = true;
+
                 for (int v = 0; v < verticesCount; v++)
-                    if (!shortestPathSet[v] && AdjacencyMatrix[u + 1, v] != 0 &&
-                        distances[u] != int.MaxValue &&
-                        distances[u] + AdjacencyMatrix[u + 1, v] < distances[v])
+                    if (!visited[v] && AdjacencyMatrix[u+1, v] != 0 &&
+                        distances[u] != int.MaxValue)
                     {
-                        distances[v] = distances[u] + AdjacencyMatrix[u + 1, v];
-                        previousVertices[v] = u;
+                        int newDist = distances[u] + AdjacencyMatrix[u+1, v];
+                        if (newDist < distances[v])
+                        {
+                            distances[v] = newDist;
+                            paths[v] = new List<int>(paths[u]) { v };
+                        }
+                        else if (newDist == distances[v])
+                        {
+                            paths[v].AddRange(paths[u]);
+                            paths[v].Add(v);
+                        }
                     }
             }
-            return ConstructPath(previousVertices, startVertex, endVertex);
-        }
-
-        private List<int> ConstructPath(int[] previousVertices, int startVertex, int endVertex)
-        {
-            List<int> path = new List<int>();
-            for (int at = endVertex; at != -1; at = previousVertices[at])
-                path.Add(at);
-            path.Reverse();
-
-            return path.Count > 1 && path[0] == startVertex ? path : new List<int>();
+            foreach (var path in paths[endVertex])
+                if (path != endVertex)
+                {
+                    List<int> altPath = new List<int>(paths[path]) { endVertex };
+                    if (!resultPaths.Contains(altPath))
+                        resultPaths.Add(altPath);
+                }
+            return resultPaths;
         }
         private int MinDistance(int[] distances, bool[] shortestPathSet)
         {
@@ -292,52 +298,64 @@ namespace WpfLaba3Grafs
                 }
             return minIndex;
         }
+        //private List<List<int>> ConstructAllPaths(List<int>[] previousVertices, int startVertex, int endVertex)
+        //{
+        //    List<List<int>> paths = new List<List<int>>();
+        //    FindAllPaths(previousVertices, endVertex, new List<int>(), paths);
 
-       
+        //    // Добавляем начальную вершину к каждому найденному пути
+        //    foreach (var path in paths)
+        //    {
+        //        path.Add(startVertex);
+        //        path.Reverse();
+        //    }
 
-        public static List<List<int>> SearchShortestPaths(int[,] adjacencyMatrix, int startVertex, int endVertex)
-        {
-            int n = adjacencyMatrix.GetLength(1);
-            List<Vertex> vertices = new List<Vertex>();
+        //    return paths;
+        //}
 
-            for (int i = 0; i < n; i++)
-                vertices.Add( new Vertex(i, int.MaxValue, new List<int>(), new List<(int, int)>()) );
+        //public static List<List<int>> SearchShortestPaths(int[,] adjacencyMatrix, int startVertex, int endVertex)
+        //{
+        //    int n = adjacencyMatrix.GetLength(1);
+        //    List<Vertex> vertices = new List<Vertex>();
 
-            vertices[startVertex].Distance = 0;
-            vertices[startVertex].Path.Add(startVertex);
-            HashSet<int> visited = new HashSet<int>();
+        //    for (int i = 0; i < n; i++)
+        //        vertices.Add( new Vertex(i, int.MaxValue, new List<int>(), new List<(int, int)>()) );
 
-            while (visited.Count < n)
-            {
-                Vertex current = vertices.Where(v => !visited.Contains(v.Index)).OrderBy(v => v.Distance).FirstOrDefault();
-                if (current == null)
-                    break;
+        //    vertices[startVertex].Distance = 0;
+        //    vertices[startVertex].Path.Add(startVertex);
+        //    HashSet<int> visited = new HashSet<int>();
 
-                visited.Add(current.Index);
+        //    while (visited.Count < n)
+        //    {
+        //        Vertex current = vertices.Where(v => !visited.Contains(v.Index)).OrderBy(v => v.Distance).FirstOrDefault();
+        //        if (current == null)
+        //            break;
 
-                for (int i = 0; i < n; i++)
-                    if (adjacencyMatrix[current.Index+1, i] > 0 && !visited.Contains(i))
-                    {
-                        int distance = current.Distance + adjacencyMatrix[current.Index+1, i];
+        //        visited.Add(current.Index);
 
-                        if (distance < vertices[i].Distance)
-                        {
-                            vertices[i].Distance = distance;
-                            vertices[i].Path.Clear();
-                            vertices[i].Path.AddRange(current.Path);
-                            vertices[i].Path.Add(i);
-                        }
-                        else if (distance == vertices[i].Distance) //newpath
-                        {
-                            List<int> newPath = new List<int>(current.Path);
-                            newPath.Add(i);
-                            vertices[i].Path.AddRange(newPath);
-                        }
-                    }
-            }
-            List<List<int>> allPath = vertices[endVertex].Path.Select(p => vertices[p].Path).ToList();
-            return allPath;
-        }
+        //        for (int i = 0; i < n; i++)
+        //            if (adjacencyMatrix[current.Index+1, i] > 0 && !visited.Contains(i))
+        //            {
+        //                int distance = current.Distance + adjacencyMatrix[current.Index+1, i];
+
+        //                if (distance < vertices[i].Distance)
+        //                {
+        //                    vertices[i].Distance = distance;
+        //                    vertices[i].Path.Clear();
+        //                    vertices[i].Path.AddRange(current.Path);
+        //                    vertices[i].Path.Add(i);
+        //                }
+        //                else if (distance == vertices[i].Distance) //newpath
+        //                {
+        //                    List<int> newPath = new List<int>(current.Path);
+        //                    newPath.Add(i);
+        //                    vertices[i].Path.AddRange(newPath);
+        //                }
+        //            }
+        //    }
+        //    List<List<int>> allPath = vertices[endVertex].Path.Select(p => vertices[p].Path).ToList();
+        //    return allPath;
+        //}
 
         public string GetSelectedColor()
         {
@@ -362,6 +380,49 @@ namespace WpfLaba3Grafs
                 return (Brush)property.GetValue(null);
             else
                 return Brushes.Black;
+        }
+        public List<List<int>> SearchMaximumFlowProblem(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices, Dictionary<int,Node> graph) //Ford-Falkerson alg
+        {
+            int maxFlowProblem = 0;
+            int weight = int.MaxValue;
+            List<List<int>> allPaths = new List<List<int>>();
+            allPaths = SearchPath(AdjacencyMatrix, startVertex, endVertex);
+
+            for (int num = 0; num < allPaths.Count; num++)
+            {
+                List<int> path = allPaths[num];
+                for (int q = 0; q < allPaths[num].Count; q++)
+                    MessageBox.Show(allPaths[num].ElementAt(q).ToString());
+                for (int v = 0; v < path.Count - 1; v++)
+                    for (int i = 0; i < graph[path[v]].edges.Count; i++)
+                        if (v != path.Count - 1)
+                            if (graph[path[v]].edges.ElementAt(i).adjacentNode.MyValue == path[v + 1] && weight > graph[path[v]].edges.ElementAt(i).weight)
+                                weight = graph[path[v]].edges.ElementAt(i).weight;
+                //MessageBox.Show(weight.ToString());
+                maxFlowProblem = maxFlowProblem + weight;
+            }
+            //    allPaths.Add(path);
+            //    path = SearchPath(AdjacencyMatrix, startVertex, endVertex, allVertices);
+            //}
+
+
+            MessageBox.Show("result " + maxFlowProblem.ToString());
+            return allPaths;
+        }
+        public bool IsPointInsideEllipse(Grid grid, int x, int y)
+        {
+            double left = Canvas.GetLeft(grid);
+            double top = Canvas.GetTop(grid);
+
+            Ellipse ellipse = (Ellipse)grid.Children[0];
+            double width = ellipse.Width;
+            double height = ellipse.Height;
+
+            double h = left + width / 2;
+            double k = top + height / 2;
+            double r = width / 2;
+
+            return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
         }
     }
     class Vertex
