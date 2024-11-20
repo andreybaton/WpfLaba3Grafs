@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Data;
 using System.Reflection.Emit;
 using System.Windows.Data;
+using System.Windows.Input;
 
 
 namespace WpfLaba3Grafs
@@ -97,16 +98,26 @@ namespace WpfLaba3Grafs
                     newEdge = false;
                     TextBox textBox = new TextBox
                     {
-                        Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                        Background = Brushes.Transparent,
                         BorderThickness = new Thickness(0, 0, 0, 0),
                         Width = 60,
                         Height = 18,
+                        IsReadOnly = false,
+                        IsHitTestVisible = true,
                     };
                     string tb = "№ " + CalculateEdges(graph).ToString();
                     if (weight != 0)
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
+
+                    textBox.PreviewMouseDown += (object sender, MouseButtonEventArgs e) =>
+                    {
+                        MessageBox.Show("a");
+                        var clickedTb = sender as TextBox;
+                        if (clickedTb != null)
+                            clickedTb.Focus();
+                    };
 
                     Edge edgesuk = new Edge(to, weight);
                     EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);

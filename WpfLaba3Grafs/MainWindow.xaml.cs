@@ -21,6 +21,7 @@ namespace WpfLaba3Grafs
         private bool newVertex = false;
         private bool newEdge = false;
         private bool delete = false;
+        private bool pointer = false;
         public bool isOriented;
         public List<(int, int, int)> graphData = new List<(int, int, int)>(); // (int,int,int,Point)
         public Dictionary<int, Node> graph = new Dictionary<int, Node>();
@@ -46,7 +47,16 @@ namespace WpfLaba3Grafs
                 }
             }
         }
-
+        //public object nadomne(object sender, MouseButtonEventArgs e)
+        //{
+        //    var send = object;
+        //    return send;
+        //}
+        //public MouseButtonEventArgs nado2(MouseButtonEventArgs e)
+        //{
+        //    var but = e as MouseButtonEventArgs;
+        //    return but;
+        //}
         public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) 
         {
             MousePos = e.GetPosition(DrawingCanvas);
@@ -219,6 +229,20 @@ namespace WpfLaba3Grafs
                     }
                 }
             }
+            else if (pointer)
+            {
+                var el = DrawingCanvas.InputHitTest(MousePos) as UIElement;
+                if (e != null)
+                {
+                    MessageBox.Show(el.GetType().ToString());
+                }
+                if (el.GetType() == typeof(TextBox))
+                {
+                    MessageBox.Show("a");
+                    TextBox tb = (TextBox)el;
+                    tb.IsEnabled = true;
+                }
+            }
         }
       
         private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e) //for add edge
@@ -268,10 +292,7 @@ namespace WpfLaba3Grafs
             //ResetToggleButtons(DockPanel4, checkedButton);
             ResetToggleButtons(DockPanel5, checkedButton);
             if (checkedButton == Pointer)
-            {
-                //BtnClick_SelectItem();
-            }
-
+                pointer = true;
             else if (checkedButton == Vertex)
                 newVertex = true;
             else if (checkedButton == Edge)
@@ -394,9 +415,23 @@ namespace WpfLaba3Grafs
         }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
+            pointer = false;
             newEdge = false;
             newVertex = false;
             delete = false;
+        }
+
+        private void edgeSelector_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int newWeight = 0;
+            int index = Convert.ToInt32(EdgeSelector.Text);
+            try { 
+                newWeight = Convert.ToInt32(WeightChange.Text);
+            }
+            catch { }
+            if (newWeight > 0) {
+                function.edgePictures.ElementAt(index).Key.weight = Convert.ToInt32(WeightChange);
+            }
         }
     }
 }
