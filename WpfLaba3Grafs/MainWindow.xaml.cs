@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace WpfLaba3Grafs
 {
@@ -232,14 +233,16 @@ namespace WpfLaba3Grafs
             else if (pointer)
             {
                 var el = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                if (e != null)
+                //if (e != null)
+                //{
+                //    MessageBox.Show(el.GetType().ToString());
+                //}
+                if (el.GetType() == typeof(Line))
                 {
-                    MessageBox.Show(el.GetType().ToString());
-                }
-                if (el.GetType() == typeof(TextBox))
-                {
-                    MessageBox.Show("a");
-                    TextBox tb = (TextBox)el;
+                    Line line = (Line)el;
+                    TextBox tb = line.Tag as TextBox;
+                    //MessageBox.Show("a");
+                    //TextBox tb = (TextBox)el;
                     tb.IsEnabled = true;
                 }
             }
