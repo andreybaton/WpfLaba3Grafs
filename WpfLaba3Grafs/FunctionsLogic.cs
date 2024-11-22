@@ -25,7 +25,7 @@ namespace WpfLaba3Grafs
         {
             this.mainWindow = mainWindow;
         }
-        public void CreateVertex(Point position, Node node) //создаем вершину
+        public void CreateVertex(Point position, Node node) 
         {
             string selectedColorName = GetSelectedColor();
             Brush strokeBrush = ConvertStringToBrush(selectedColorName);
@@ -225,27 +225,27 @@ namespace WpfLaba3Grafs
             }
             return matrix;
         }
-        public void Dg_BuildArr(int[,] matrix, DataGrid dgName)
-        {
+        //public void Dg_BuildArr(int[,] matrix, DataGrid dgName)
+        //{
 
-            DataTable dataTable = new DataTable();
-            if (matrix != null)
-            {
-                for (int column = 0; column < matrix.GetLength(1); column++)
-                {
-                    string columnName = matrix[0, column].ToString();
-                    dataTable.Columns.Add(columnName);
-                }
-                for (int row = 1; row < matrix.GetLength(0); row++)
-                {
-                    DataRow dataRow = dataTable.NewRow();
-                    for (int column = 0; column < matrix.GetLength(1); column++)
-                        dataRow[column] = matrix[row, column];
-                    dataTable.Rows.Add(dataRow);
-                }
-            }
-            dgName.ItemsSource = dataTable.DefaultView;
-        }
+        //    DataTable dataTable = new DataTable();
+        //    if (matrix != null)
+        //    {
+        //        for (int column = 0; column < matrix.GetLength(1); column++)
+        //        {
+        //            string columnName = matrix[0, column].ToString();
+        //            dataTable.Columns.Add(columnName);
+        //        }
+        //        for (int row = 1; row < matrix.GetLength(0); row++)
+        //        {
+        //            DataRow dataRow = dataTable.NewRow();
+        //            for (int column = 0; column < matrix.GetLength(1); column++)
+        //                dataRow[column] = matrix[row, column];
+        //            dataTable.Rows.Add(dataRow);
+        //        }
+        //    }
+        //    dgName.ItemsSource = dataTable.DefaultView;
+        //}
 
         public List<List<int>> SearchPath(int[,] AdjacencyMatrix, int startVertex, int endVertex)//alg Deikstra
         {
@@ -309,64 +309,6 @@ namespace WpfLaba3Grafs
                 }
             return minIndex;
         }
-        //private List<List<int>> ConstructAllPaths(List<int>[] previousVertices, int startVertex, int endVertex)
-        //{
-        //    List<List<int>> paths = new List<List<int>>();
-        //    FindAllPaths(previousVertices, endVertex, new List<int>(), paths);
-
-        //    // Добавляем начальную вершину к каждому найденному пути
-        //    foreach (var path in paths)
-        //    {
-        //        path.Add(startVertex);
-        //        path.Reverse();
-        //    }
-
-        //    return paths;
-        //}
-
-        //public static List<List<int>> SearchShortestPaths(int[,] adjacencyMatrix, int startVertex, int endVertex)
-        //{
-        //    int n = adjacencyMatrix.GetLength(1);
-        //    List<Vertex> vertices = new List<Vertex>();
-
-        //    for (int i = 0; i < n; i++)
-        //        vertices.Add( new Vertex(i, int.MaxValue, new List<int>(), new List<(int, int)>()) );
-
-        //    vertices[startVertex].Distance = 0;
-        //    vertices[startVertex].Path.Add(startVertex);
-        //    HashSet<int> visited = new HashSet<int>();
-
-        //    while (visited.Count < n)
-        //    {
-        //        Vertex current = vertices.Where(v => !visited.Contains(v.Index)).OrderBy(v => v.Distance).FirstOrDefault();
-        //        if (current == null)
-        //            break;
-
-        //        visited.Add(current.Index);
-
-        //        for (int i = 0; i < n; i++)
-        //            if (adjacencyMatrix[current.Index+1, i] > 0 && !visited.Contains(i))
-        //            {
-        //                int distance = current.Distance + adjacencyMatrix[current.Index+1, i];
-
-        //                if (distance < vertices[i].Distance)
-        //                {
-        //                    vertices[i].Distance = distance;
-        //                    vertices[i].Path.Clear();
-        //                    vertices[i].Path.AddRange(current.Path);
-        //                    vertices[i].Path.Add(i);
-        //                }
-        //                else if (distance == vertices[i].Distance) //newpath
-        //                {
-        //                    List<int> newPath = new List<int>(current.Path);
-        //                    newPath.Add(i);
-        //                    vertices[i].Path.AddRange(newPath);
-        //                }
-        //            }
-        //    }
-        //    List<List<int>> allPath = vertices[endVertex].Path.Select(p => vertices[p].Path).ToList();
-        //    return allPath;
-        //}
 
         public string GetSelectedColor()
         {
@@ -392,33 +334,47 @@ namespace WpfLaba3Grafs
             else
                 return Brushes.Black;
         }
-        public List<List<int>> SearchMaximumFlowProblem(int[,] AdjacencyMatrix, int startVertex, int endVertex, int allVertices, Dictionary<int,Node> graph) //Ford-Falkerson alg
+        public List<List<int>> SearchMaximumFlowProblem(List<List<int>> allPaths, Dictionary<int,Node> graph, int startVertex) //Ford-Falkerson alg
         {
             int maxFlowProblem = 0;
             int weight = int.MaxValue;
-            List<List<int>> allPaths = new List<List<int>>();
-            allPaths = SearchPath(AdjacencyMatrix, startVertex, endVertex);
-
+            List<int> path = new List<int>();
             for (int num = 0; num < allPaths.Count; num++)
             {
-                List<int> path = allPaths[num];
-                for (int q = 0; q < allPaths[num].Count; q++)
-                    MessageBox.Show(allPaths[num].ElementAt(q).ToString());
+                path = allPaths[num];
+                path.Insert(0,startVertex);
+
                 for (int v = 0; v < path.Count - 1; v++)
                     for (int i = 0; i < graph[path[v]].edges.Count; i++)
                         if (v != path.Count - 1)
                             if (graph[path[v]].edges.ElementAt(i).adjacentNode.MyValue == path[v + 1] && weight > graph[path[v]].edges.ElementAt(i).weight)
-                                weight = graph[path[v]].edges.ElementAt(i).weight;
-                //MessageBox.Show(weight.ToString());
-                maxFlowProblem = maxFlowProblem + weight;
+                                    weight = graph[path[v]].edges.ElementAt(i).weight;
+                if (weight != int.MaxValue)
+                    maxFlowProblem = maxFlowProblem + weight;
+                weight = int.MaxValue;
             }
-            //    allPaths.Add(path);
-            //    path = SearchPath(AdjacencyMatrix, startVertex, endVertex, allVertices);
-            //}
-
-
-            MessageBox.Show("result " + maxFlowProblem.ToString());
+            mainWindow.tb_graph.Text += "Минимальной поток равен " + maxFlowProblem.ToString();
             return allPaths;
+        }
+        public List<List<int>> ExtractListsFromTextBox(string text) //слизал полностью из гпт, каюсь перед всеми высшими силами и низшими, что властны надо мной и сим миром, Аминь
+        {
+            List<List<int>> result = new List<List<int>>();
+            // Разделяем текст на строки
+            string[] lines = text.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            Array.Resize(ref lines, lines.Length - 1);
+            MessageBox.Show("lines count " + lines.Count());
+            foreach (var line in lines)
+            {
+                // Разделяем строку на числа, удаляем лишние пробелы и преобразуем в int
+                List<int> numbers = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(num =>
+                {
+                    int.TryParse(num.Trim(), out int n);
+                    return n; // Возвращаем число, если преобразование успешно
+                }).ToList();
+                // Добавляем список чисел в результирующий список
+                result.Add(numbers);
+            }
+            return result != null && result.Count > 0 ? result : null;
         }
         public bool IsPointInsideEllipse(Grid grid, int x, int y)
         {
@@ -434,6 +390,20 @@ namespace WpfLaba3Grafs
             double r = width / 2;
 
             return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
+        }
+        public void FindRoutes(int[,] adjacencyMatrix, int start, int end, bool[] visited, string route, TextBox tb)
+        {
+            int allVertices = adjacencyMatrix.GetLength(1);
+            if (start == end)
+                tb.Text += route.Substring(0, route.Length - 2) + ";" + '\n';
+            else
+            {
+                visited[start] = true;
+                for (int i = 0; i < allVertices; i++)
+                    if (adjacencyMatrix[start + 1,i] != 0 && !visited[i])
+                        FindRoutes(adjacencyMatrix, i, end, visited, route + i + ", ", tb);  
+                visited[start] = false;
+            }
         }
     }
     class Vertex

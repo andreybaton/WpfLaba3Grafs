@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -325,17 +326,44 @@ namespace WpfLaba3Grafs
         
         public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)
         {
-            function.Dg_BuildArr(function.GenerateIncidenceMatrix(graph), dg_graph);
+            try
+            {
+                int[,] arr = function.GenerateAdjacencyMatrix(graph);
+                tb_graph.Text = "р/в".PadRight(arr.GetLength(1));
+                for (int row = 0; row < arr.GetLength(0); row++)
+                {
+                    for (int col = 0; col < arr.GetLength(1); col++)
+                        tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
+                    tb_graph.Text += '\n';
+                    if (row != arr.GetLength(0) - 1)
+                        tb_graph.Text += arr[0, row].ToString().PadRight(arr.GetLength(0));
+                }
+            }
+            catch { tb_graph.Text = "Граф не имеет ребёр!"; }
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
-            function.Dg_BuildArr(function.GenerateAdjacencyMatrix(graph), dg_graph);
+            int[,] arr = function.GenerateAdjacencyMatrix(graph);
+            if (arr == null || arr.GetLength(0) == 0)
+            {
+                tb_graph.Text = "Граф не имеет вершин!";
+                return;
+            }
+            tb_graph.Text = "в/в".PadRight(arr.GetLength(1));
+            for (int row = 0; row < arr.GetLength(0); row++)
+            {
+                for (int col = 0; col < arr.GetLength(1); col++)
+                    tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
+                tb_graph.Text += '\n';
+                if (row != arr.GetLength(0)-1)
+                    tb_graph.Text += arr[0, row].ToString().PadRight(arr.GetLength(0));
+            }
         }
-        public void BtnClick_arrGraph(object sender, EventArgs e)
-        {
-            graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
-            dg_graph.ItemsSource = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
-        }
+        //public void BtnClick_arrGraph(object sender, EventArgs e)
+        //{
+        //    graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+        //    tb_graph.Text = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
+        //}
         public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
         {
             InputWindow iw = new InputWindow();
@@ -383,6 +411,7 @@ namespace WpfLaba3Grafs
         
         public void BtnClick_SearchMaximumFlowProblem(object sender, RoutedEventArgs e)
         {
+            tb_graph.Clear();
             InputWindow iw = new InputWindow();
             int start = 0; int end = 0;
             iw.ShowDialog();
@@ -393,29 +422,33 @@ namespace WpfLaba3Grafs
                 if (end == start)
                     return;
             }
+            bool[] visited = new bool[graph.Count];
+            //for (int count = 0; count < graph.Count; count++)
+            //    visited[count] = false;
+            function.FindRoutes(function.GenerateAdjacencyMatrix(graph), start, end, visited, "", tb_graph);
+            List<List<int>> allPaths = function.ExtractListsFromTextBox(tb_graph.Text);
+            if (allPaths == null) { MessageBox.Show("Нет доступных путей из вершины А в B"); return; }
 
-            List<List<int>> allPaths = function.SearchMaximumFlowProblem(function.GenerateAdjacencyMatrix(graph), start, end, graph.Count, graph);
+            function.SearchMaximumFlowProblem(allPaths, graph, start);
             for (int k = 0; k < allPaths.Count; k++)
             {
-                List<int> path = allPaths[k];
-                if (path != null && path.Count > 0)
+                List<int> curPath = allPaths[k];
+                curPath.Insert(0, start);
+                if (curPath != null && curPath.Count > 0)
                     for (int i = 0; i < DrawingCanvas.Children.Count; i++)
                         if (DrawingCanvas.Children[i] is Grid grid)
                         {
                             Ellipse ellipse = (Ellipse)grid.Children[0];
-                            for (int j = 0; j < path.Count; j++)
-                                if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
+                            for (int j = 0; j < curPath.Count; j++)
+                                if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(curPath[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(curPath[j]).Value.position.Y)))
                                 {
                                     ellipse.Fill = Brushes.Blue;
-                                    function.nodePictures.ElementAt(path[j]).Value.colorNode = "Blue";
+                                    function.nodePictures.ElementAt(curPath[j]).Value.colorNode = "Blue";
                                 }
                         }
             }
         }
-        private void OpenInputDialog()
-        {
-
-        }
+        
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
             pointer = false;

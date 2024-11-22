@@ -105,7 +105,7 @@
                     </Canvas>
                 </DockPanel>
                 <StackPanel Height="434" Width="234">
-                    <Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph" Content="Массив с графом"/>
+                    <!--<Button Margin="10" x:Name="arrGraph" Click="BtnClick_arrGraph" Content="Массив с графом"/>-->
                     <DockPanel>
                         <Button Margin="2" Click="BtnClick_GenerateIncidenceMatrix" Width="104">
                             <TextBlock
@@ -116,7 +116,8 @@
                         </Button>
                     </DockPanel>
                     <DockPanel>
-                        <DataGrid Margin="5" x:Name="dg_graph" AutoGenerateColumns="True" Height="140"/>
+                        <TextBox x:Name="tb_graph" Margin="5" Height="140"></TextBox>
+                        <!--<DataGrid Margin="5" x:Name="dg_graph" AutoGenerateColumns="True" Height="140"/>-->
                     </DockPanel>
                     <Button Margin="10" Click="BtnClick_SearchShortestPath" Content="Поиск кратчайшего пути"/>
                     <Button Margin="10" Click="BtnClick_SearchMaximumFlowProblem" Content="Поиск максимального потока"/>
