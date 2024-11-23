@@ -31,12 +31,15 @@ namespace WpfLaba3Grafs
         public string ToString() { return _myValue.ToString(); }
 
         public Point position;
+        public NodePicture nodePic;
         public HashSet<Edge> edges = new HashSet<Edge>(); //список ребер
         public Dictionary<Node, Edge> parents = new Dictionary<Node, Edge>(); //список родителей 
-        public Node(int value) { this.MyValue = value; }
-        public Node(int value, Point pos) { this.MyValue = value; position = pos; }
+        public Node(int value) { MyValue = value; }
+        public Node(int value, Point pos) { MyValue = value; position = pos; }
+        public Node(int value, Point pos, NodePicture nodePicture) { MyValue = value; position = pos; nodePic = nodePicture; }
         public Node() { }
-        //public string ToString() { return MyValue.ToString(); }
+ 
+            
         public Node AddOrGetNode(Dictionary<int, Node> graph, int value)
         {
             if (value == -1) return null;
@@ -46,21 +49,21 @@ namespace WpfLaba3Grafs
             graph.Add(value, node);
             return node;
         }
-        public Dictionary<int, Node> CreateGraph(List<(int, int, int)> graphData)
-        {
-            Dictionary<int, Node> graph = new Dictionary<int, Node>();
-            foreach ((int, int, int) row in graphData)
-            {
-                Node node = AddOrGetNode(graph, row.Item1); //откуда
-                Node adjacentNode = AddOrGetNode(graph, row.Item2); //куда
-                if (adjacentNode == null)
-                    continue;
-                Edge edge = new Edge(adjacentNode, row.Item3);
-                node.edges.Add(edge);
-                adjacentNode.parents.Add(node, edge);
-            }
-            return graph;
-        }
+        //public Dictionary<int, Node> CreateGraph(List<(int, int, int)> graphData)
+        //{
+        //    Dictionary<int, Node> graph = new Dictionary<int, Node>();
+        //    foreach ((int, int, int) row in graphData)
+        //    {
+        //        Node node = AddOrGetNode(graph, row.Item1); //откуда
+        //        Node adjacentNode = AddOrGetNode(graph, row.Item2); //куда
+        //        if (adjacentNode == null)
+        //            continue;
+        //        Edge edge = new Edge(adjacentNode, row.Item3);
+        //        node.edges.Add(edge);
+        //        adjacentNode.parents.Add(node, edge);
+        //    }
+        //    return graph;
+        //}
         public bool ContainsNode(Point pos, Dictionary<int, Node> graph)
         {
             for (int i = 0; i < graph.Count; i++)
@@ -77,16 +80,19 @@ namespace WpfLaba3Grafs
         }
     }
 
-    public class Edge
+    public class Edge 
     {
         public Node adjacentNode; //узел, на который ведёт ребро
         public int weight;
-        public Edge(Node adjacentNode, int weight) { this.adjacentNode = adjacentNode; this.weight = weight; }
+        public EdgePicture edgePic;
+        public int num;
+        public Edge(Node adjacentNode, int weight, int numEdge) { this.adjacentNode = adjacentNode; this.weight = weight; num = numEdge; }
         public Edge() { }
+        public Edge(Node adjacentNode, int weight, EdgePicture edgePicture) { this.adjacentNode = adjacentNode; this.weight = weight; edgePic = edgePicture; }
         public string ToString() { return adjacentNode.ToString(); }
-        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge)
+        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge, int numEdge)
         {
-            Edge edge = new Edge(adjacentNode, weight);
+            Edge edge = new Edge(adjacentNode, weight, numEdge);
 
             if (AddSearchElement(graphData, node, adjacentNode, weight))
             {
@@ -116,29 +122,25 @@ namespace WpfLaba3Grafs
             return true;
         }
     }
-    public class EdgePicture : Edge
+    public class EdgePicture 
     {
         public string tbEdge { get; set; }
         public string colorEdge { get; set; }
-        public Edge edge { get; set; }
 
-        public EdgePicture(string tb, string color, Edge edge)
+        public EdgePicture(string tb, string color)
         {
             tbEdge = tb;
             colorEdge = color;
-            this.edge = edge;
         }
     }
-    public class NodePicture : Node
+    public class NodePicture 
     {
         public string tbNode { get; set; }
         public string colorNode { get; set; }
-        public Node node { get; set; }
-        public NodePicture (string tb, string color, Node node)
+        public NodePicture (string tb, string color)
         {
             tbNode = tb;
             colorNode = color;
-            this.node = node;
         }
     }
 }

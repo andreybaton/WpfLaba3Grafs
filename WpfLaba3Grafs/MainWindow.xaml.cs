@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,8 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Xml;
-using System.Xml.Linq;
+
 
 namespace WpfLaba3Grafs
 {
@@ -72,9 +69,8 @@ namespace WpfLaba3Grafs
                     function.CreateVertex(MousePos, node);
                     graphData.Add((node.MyValue, -1, 0));
 
-                    NodePicture nodePic = new NodePicture("", "Black", node);
-                    if (!function.nodePictures.Keys.Contains(node))
-                        function.nodePictures.Add(node, nodePic);
+                    NodePicture nodePic = new NodePicture("", "Black");
+                    node.nodePic = nodePic;
                 }
             }
             else if (newEdge)
@@ -352,11 +348,6 @@ namespace WpfLaba3Grafs
                     tb_graph.Text += arr[0, row].ToString().PadRight(arr.GetLength(0));
             }
         }
-        //public void BtnClick_arrGraph(object sender, EventArgs e)
-        //{
-        //    graphData.Sort((a, b) => a.Item1.CompareTo(b.Item1));
-        //    tb_graph.Text = graphData.Select(t => new { from = t.Item1, to = t.Item2, weight = t.Item3 }).ToList();
-        //}
         public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
         {
             InputWindow iw = new InputWindow();
@@ -377,7 +368,7 @@ namespace WpfLaba3Grafs
                     if (ellipse.Fill == Brushes.Blue)
                         ellipse.Fill = Brushes.White;
                 }
-            List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end); //FunctionsLogic.SearchShortestPaths(function.GenerateAdjacencyMatrix(graph), start, end); 
+            List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end); 
             if (allPaths == null || allPaths.Count == 0)
             {
                 MessageBox.Show("Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString());
@@ -415,9 +406,8 @@ namespace WpfLaba3Grafs
                 if (end == start)
                     return;
             }
+
             bool[] visited = new bool[graph.Count];
-            //for (int count = 0; count < graph.Count; count++)
-            //    visited[count] = false;
             function.FindRoutes(function.GenerateAdjacencyMatrix(graph), start, end, visited, "", tb_graph);
             List<List<int>> allPaths = function.ExtractListsFromTextBox(tb_graph.Text);
             if (allPaths == null) { MessageBox.Show("Нет доступных путей из вершины А в B"); return; }
@@ -462,11 +452,23 @@ namespace WpfLaba3Grafs
 
             for (int obj = 0; obj < DrawingCanvas.Children.Count; obj++)
                 if (DrawingCanvas.Children[obj] is Line line)
-                    for (int v = 0; v < mbstEdges.Count; v++)
-                        if (function.IsPointOnLine(line, mbstEdges[v].adjacentNode.position, 5))
+                    for (int edg = 0; edg < mbstEdges.Count; edg++)
+                        if (function.IsPointOnLine(line, mbstEdges[edg].adjacentNode.position, 5))
                         {
                             line.Fill = Brushes.Blue;
-                            function.edgePictures[mbstEdges[v]].colorEdge = "Blue";
+                            for (int v = 0; v < graph.Count; v++)
+                                if (graph.ElementAt(v).Value.edges.Contains(mbstEdges[edg]))
+                                {
+                                    graph.ElementAt(v).Value.edges.Remove(mbstEdges[edg]);
+                                    mbstEdges[edg].edgePic = new EdgePicture(mbstEdges[edg].edgePic.tbEdge, "Blue");
+                                    graph.ElementAt(v).Value.edges.Add(mbstEdges[edg]);
+                                }
+                                else //if (graph.ElementAt(v).Value.parents.Values.Contains(mbstEdges[edg])) {
+                                    for (int i =0; i < graph.ElementAt(v).Value.parents.Count; i++)
+                                        if (graph.ElementAt(v).Value.parents.ElementAt(i).Value == mbstEdges[edg])
+                                            graph.ElementAt(v).Value.parents.ElementAt(i).Value.edgePic = new EdgePicture(mbstEdges[edg].edgePic.tbEdge, "Blue");
+                                
+                            //function.edgePictures[mbstEdges[edg]].colorEdge = "Blue";
                         }
         }
 
@@ -478,17 +480,17 @@ namespace WpfLaba3Grafs
             delete = false;
         }
 
-        private void edgeSelector_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int newWeight = 0;
-            int index = Convert.ToInt32(EdgeSelector.Text);
-            try { 
-                newWeight = Convert.ToInt32(WeightChange.Text);
-            }
-            catch { }
-            if (newWeight > 0) {
-                function.edgePictures.ElementAt(index).Key.weight = Convert.ToInt32(WeightChange);
-            }
-        }
+        //private void edgeSelector_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    int newWeight = 0;
+        //    int index = Convert.ToInt32(EdgeSelector.Text);
+        //    try { 
+        //        newWeight = Convert.ToInt32(WeightChange.Text);
+        //    }
+        //    catch { }
+        //    if (newWeight > 0) {
+        //        function.edgePictures.ElementAt(index).Key.weight = Convert.ToInt32(WeightChange);
+        //    }
+        //}
     }
 }

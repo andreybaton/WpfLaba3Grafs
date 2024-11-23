@@ -19,8 +19,8 @@ namespace WpfLaba3Grafs
         public bool newVertex = false;
         public bool newEdge = false;
         private MainWindow mainWindow;
-        public Dictionary<Edge, EdgePicture> edgePictures = new Dictionary<Edge, EdgePicture>();
-        public Dictionary<Node, NodePicture> nodePictures = new Dictionary<Node, NodePicture>();
+        //public Dictionary<Edge, EdgePicture> edgePictures = new Dictionary<Edge, EdgePicture>();
+        //public Dictionary<Node, NodePicture> nodePictures = new Dictionary<Node, NodePicture>();
         public FunctionsLogic(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
@@ -67,7 +67,7 @@ namespace WpfLaba3Grafs
             Canvas.SetLeft(grid, posX);
             mainWindow.DrawingCanvas.Children.Add(grid);
         }
-        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight) //создаем ребро
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight) 
         {
             Node from = new Node(); Node to = new Node();
             for (int i = 0; i < graph.Count; i++) //если ребро между вершинами, то меняем координаты начала и конца ребра на координаты вершины, чтобы было по центру
@@ -79,7 +79,7 @@ namespace WpfLaba3Grafs
             }
             Edge edge2 = new Edge();
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
-                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented))
+                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented, CalculateEdges(graph)))
                 {
                     string selectedColorName = GetSelectedColor();
                     Brush strokeBrush = ConvertStringToBrush(selectedColorName);
@@ -95,7 +95,7 @@ namespace WpfLaba3Grafs
                     edge.MouseDown += mainWindow.PaintColor;
                     Polygon polygon = new Polygon();                   
 
-                    newEdge = false;
+                    this.newEdge = false;
                     TextBox textBox = new TextBox
                     {
                         Background = Brushes.Transparent,
@@ -105,7 +105,7 @@ namespace WpfLaba3Grafs
                         IsReadOnly = false,
                         IsHitTestVisible = true,
                     };
-                    string tb = "№ " + CalculateEdges(graph).ToString();
+                    string tb = "№ " + edge2.num.ToString();
                     if (weight != 0)
                         tb = tb + "; Вес " + weight.ToString();
                     textBox.Text = tb;
@@ -119,9 +119,7 @@ namespace WpfLaba3Grafs
                             clickedTb.Focus();
                     };
 
-                    Edge edgesuk = new Edge(to, weight);
-                    EdgePicture edgePic = new EdgePicture(textBox.Text, "Black", edgesuk);
-                    edgePictures.Add(edgesuk, edgePic);
+                    Edge newEdge = new Edge(to, weight, new EdgePicture(textBox.Text, "Black"));
 
                     double centerX = (from.position.X + to.position.X) / 2;
                     double centerY = (from.position.Y + to.position.Y) / 2;
@@ -129,7 +127,6 @@ namespace WpfLaba3Grafs
                     Canvas.SetLeft(textBox, centerX - textBox.ActualWidth / 2);
                     Canvas.SetTop(textBox, centerY - textBox.ActualHeight / 2);
                     edge.Tag = textBox;
-                    //edge.Tag = DrawArrow(pos1, pos2);
 
                     mainWindow.DrawingCanvas.Children.Add(edge);
                     mainWindow.DrawingCanvas.Children.Add(textBox);
@@ -227,27 +224,6 @@ namespace WpfLaba3Grafs
             }
             return matrix;
         }
-        //public void Dg_BuildArr(int[,] matrix, DataGrid dgName)
-        //{
-
-        //    DataTable dataTable = new DataTable();
-        //    if (matrix != null)
-        //    {
-        //        for (int column = 0; column < matrix.GetLength(1); column++)
-        //        {
-        //            string columnName = matrix[0, column].ToString();
-        //            dataTable.Columns.Add(columnName);
-        //        }
-        //        for (int row = 1; row < matrix.GetLength(0); row++)
-        //        {
-        //            DataRow dataRow = dataTable.NewRow();
-        //            for (int column = 0; column < matrix.GetLength(1); column++)
-        //                dataRow[column] = matrix[row, column];
-        //            dataTable.Rows.Add(dataRow);
-        //        }
-        //    }
-        //    dgName.ItemsSource = dataTable.DefaultView;
-        //}
 
         public List<List<int>> SearchPath(int[,] AdjacencyMatrix, int startVertex, int endVertex)//alg Deikstra
         {
@@ -364,7 +340,6 @@ namespace WpfLaba3Grafs
             // Разделяем текст на строки
             string[] lines = text.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             Array.Resize(ref lines, lines.Length - 1);
-            MessageBox.Show("lines count " + lines.Count());
             foreach (var line in lines)
             {
                 // Разделяем строку на числа, удаляем лишние пробелы и преобразуем в int
@@ -411,25 +386,25 @@ namespace WpfLaba3Grafs
         {
             List<Edge> mbstEdges = new List<Edge>();
             HashSet<Node> visited = new HashSet<Node>();
-            PriorityQueue<Edge, int> priorityQueue = new PriorityQueue<Edge, int>();
+            //PriorityQueue<Edge, int> priorityQueue = new PriorityQueue<Edge, int>();
 
             Node startNode = nodes.Values.First();
             visited.Add(startNode);
-            foreach (var edge in startNode.edges)
-                priorityQueue.Enqueue(edge, edge.weight);
+            //foreach (var edge in startNode.edges)
+            //    priorityQueue.Enqueue(edge, edge.weight);
 
-            while (priorityQueue.Count > 0)
-            {
-                Edge edge = priorityQueue.Dequeue();
-                if (visited.Contains(edge.adjacentNode))
-                    continue; 
+            //while (priorityQueue.Count > 0)
+            //{
+            //    Edge edge = priorityQueue.Dequeue();
+            //    if (visited.Contains(edge.adjacentNode))
+            //        continue; 
 
-                mbstEdges.Add(edge);
-                visited.Add(edge.adjacentNode);
-                foreach (var nextEdge in edge.adjacentNode.edges)
-                    if (!visited.Contains(nextEdge.adjacentNode))
-                        priorityQueue.Enqueue(nextEdge, nextEdge.weight);
-            }
+            //    mbstEdges.Add(edge);
+            //    visited.Add(edge.adjacentNode);
+            //    foreach (var nextEdge in edge.adjacentNode.edges)
+            //        if (!visited.Contains(nextEdge.adjacentNode))
+            //            priorityQueue.Enqueue(nextEdge, nextEdge.weight);
+            //}
             return mbstEdges;
         }
         public bool IsPointOnLine(Line line, Point position, double a)
