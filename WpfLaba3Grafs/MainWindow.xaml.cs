@@ -323,32 +323,25 @@ namespace WpfLaba3Grafs
             else
                 isOriented = false;
         }
-        
+
         public void BtnClick_GenerateIncidenceMatrix(object sender, RoutedEventArgs e)
         {
-            try
+            int[,] arr = function.GenerateIncidenceMatrix(graph);
+            if (arr == null) { tb_graph.Text = "Граф не имеет ребёр!"; return; }
+            tb_graph.Text = "р/в".PadRight(arr.GetLength(1));
+            for (int row = 0; row < arr.GetLength(0); row++)
             {
-                int[,] arr = function.GenerateAdjacencyMatrix(graph);
-                tb_graph.Text = "р/в".PadRight(arr.GetLength(1));
-                for (int row = 0; row < arr.GetLength(0); row++)
-                {
-                    for (int col = 0; col < arr.GetLength(1); col++)
-                        tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
-                    tb_graph.Text += '\n';
-                    if (row != arr.GetLength(0) - 1)
-                        tb_graph.Text += arr[0, row].ToString().PadRight(arr.GetLength(0));
-                }
-            }
-            catch { tb_graph.Text = "Граф не имеет ребёр!"; }
+                if (row != 0)
+                    tb_graph.Text += (row - 1).ToString().PadRight(arr.GetLength(0));
+                for (int col = 0; col < arr.GetLength(1); col++)
+                    tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
+                tb_graph.Text += '\n';
+            } 
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
             int[,] arr = function.GenerateAdjacencyMatrix(graph);
-            if (arr == null || arr.GetLength(0) == 0)
-            {
-                tb_graph.Text = "Граф не имеет вершин!";
-                return;
-            }
+            if (arr == null) { tb_graph.Text = "Граф не имеет вершин!"; return; }
             tb_graph.Text = "в/в".PadRight(arr.GetLength(1));
             for (int row = 0; row < arr.GetLength(0); row++)
             {

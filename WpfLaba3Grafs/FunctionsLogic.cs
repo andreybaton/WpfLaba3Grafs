@@ -202,6 +202,8 @@ namespace WpfLaba3Grafs
         }
         public int[,] GenerateAdjacencyMatrix(Dictionary<int, Node> graph)
         {
+            if (graph == null || graph.Count == 0)
+                return null;
             int[,] matrix = new int[graph.Count + 1, graph.Count];
             for (int i = 0; i < graph.Count; i++)
             {
