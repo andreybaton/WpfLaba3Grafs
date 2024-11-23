@@ -441,7 +441,35 @@ namespace WpfLaba3Grafs
                         }
             }
         }
-        
+        public void BtnClick_SearchMBST(object sender, EventArgs e)
+        {
+            tb_graph.Clear();
+            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                if (DrawingCanvas.Children[i] is Grid grid)
+                {
+                    Ellipse ellipse = (Ellipse)grid.Children[0];
+                    if (ellipse.Fill == Brushes.Blue)
+                        ellipse.Fill = Brushes.White;
+                }
+
+            List<Edge> mbstEdges = function.SearchMBST(graph);
+            if (mbstEdges.Count == 0 || mbstEdges == null)
+            {
+                tb_graph.Text = "Минимальное покрывающее дерево не найдено. Скорее всего, ваш граф не связный.";
+                return;
+            }
+            else { tb_graph.Text = "Минимальное покрывающее дерево найдено."; }
+
+            for (int obj = 0; obj < DrawingCanvas.Children.Count; obj++)
+                if (DrawingCanvas.Children[obj] is Line line)
+                    for (int v = 0; v < mbstEdges.Count; v++)
+                        if (function.IsPointOnLine(line, mbstEdges[v].adjacentNode.position, 5))
+                        {
+                            line.Fill = Brushes.Blue;
+                            function.edgePictures[mbstEdges[v]].colorEdge = "Blue";
+                        }
+        }
+
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
             pointer = false;

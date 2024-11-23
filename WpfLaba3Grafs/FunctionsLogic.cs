@@ -407,6 +407,76 @@ namespace WpfLaba3Grafs
                 visited[start] = false;
             }
         }
+        public List<Edge> SearchMBST(Dictionary<int, Node> nodes) //alg Prima
+        {
+            List<Edge> mbstEdges = new List<Edge>();
+            HashSet<Node> visited = new HashSet<Node>();
+            PriorityQueue<Edge, int> priorityQueue = new PriorityQueue<Edge, int>();
+
+            Node startNode = nodes.Values.First();
+            visited.Add(startNode);
+            foreach (var edge in startNode.edges)
+                priorityQueue.Enqueue(edge, edge.weight);
+
+            while (priorityQueue.Count > 0)
+            {
+                Edge edge = priorityQueue.Dequeue();
+                if (visited.Contains(edge.adjacentNode))
+                    continue; 
+
+                mbstEdges.Add(edge);
+                visited.Add(edge.adjacentNode);
+                foreach (var nextEdge in edge.adjacentNode.edges)
+                    if (!visited.Contains(nextEdge.adjacentNode))
+                        priorityQueue.Enqueue(nextEdge, nextEdge.weight);
+            }
+            return mbstEdges;
+        }
+        public bool IsPointOnLine(Line line, Point position, double a)
+        {
+            double x1 = line.X1;
+            double y1 = line.Y1;
+            double x2 = line.X2;
+            double y2 = line.Y2;
+
+            double distance = DistanceFromPointToLineSegment(x1, y1, x2, y2, position.X, position.Y); //расстояние от точки до линии
+            return distance <= a;
+        }
+
+        private double DistanceFromPointToLineSegment(double x1, double y1, double x2, double y2, double px, double py)
+        {
+            double A = px - x1;
+            double B = py - y1;
+            double C = x2 - x1;
+            double D = y2 - y1;
+
+            double dot = A * C + B * D;
+            double len_sq = C * C + D * D;
+            double param = -1;
+            if (len_sq != 0) // если линия не нулевая
+                param = dot / len_sq;
+
+            double xx, yy;
+            if (param < 0) // ближайшая точка - начало отрезка
+            {
+                xx = x1;
+                yy = y1;
+            }
+            else if (param > 1) // ближайшая точка - конец отрезка
+            {
+                xx = x2;
+                yy = y2;
+            }
+            else // ближайшая точка - на отрезке
+            {
+                xx = x1 + param * C;
+                yy = y1 + param * D;
+            }
+
+            double dx = px - xx;
+            double dy = py - yy;
+            return Math.Sqrt(dx * dx + dy * dy); //расстояние до ближайшей точки
+        }
     }
     class Vertex
     {
