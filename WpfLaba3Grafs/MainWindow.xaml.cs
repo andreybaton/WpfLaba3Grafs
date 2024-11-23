@@ -117,7 +117,7 @@ namespace WpfLaba3Grafs
                                     }
                                 }
                                 Node delNode = graph.ElementAt(i).Value;
-                                function.nodePictures.Remove(delNode);
+                                //function.nodePictures.Remove(delNode);
                                 graph.Remove(graph.ElementAt(i).Key);
                                 for (int k = 0; k < graph.Count; k++) 
                                 {
@@ -350,6 +350,15 @@ namespace WpfLaba3Grafs
         }
         public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
         {
+            ResetColour(graph);
+            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                if (DrawingCanvas.Children[i] is Grid grid)
+                {
+                    Ellipse ellipse = (Ellipse)grid.Children[0];
+                    if (ellipse.Fill == Brushes.Blue)
+                        ellipse.Fill = Brushes.White;
+                }
+
             InputWindow iw = new InputWindow();
             int start = 0; int end = 0;
             iw.ShowDialog();
@@ -361,17 +370,10 @@ namespace WpfLaba3Grafs
                     return;
             }
             
-            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
-                if (DrawingCanvas.Children[i] is Grid grid)
-                {
-                    Ellipse ellipse = (Ellipse)grid.Children[0];
-                    if (ellipse.Fill == Brushes.Blue)
-                        ellipse.Fill = Brushes.White;
-                }
             List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end); 
             if (allPaths == null || allPaths.Count == 0)
             {
-                MessageBox.Show("Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString());
+                tb_graph.Text = "Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString();
                 return;
             }
 
@@ -387,7 +389,9 @@ namespace WpfLaba3Grafs
                                 if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(path[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(path[j]).Value.position.Y)))
                                 {
                                     ellipse.Fill = Brushes.Blue;
-                                    function.nodePictures.ElementAt(path[j]).Value.colorNode = "Blue";
+                                    for (int v = 0; v < graph.Count; v++)
+                                        if (graph.ElementAt(v).Value.MyValue == path[j])
+                                            graph.ElementAt(v).Value.nodePic = new NodePicture(graph.ElementAt(v).Value.nodePic.tbNode, "Blue");
                                 }
                         }
             }
@@ -395,6 +399,7 @@ namespace WpfLaba3Grafs
         
         public void BtnClick_SearchMaximumFlowProblem(object sender, RoutedEventArgs e)
         {
+            ResetColour(graph);
             tb_graph.Clear();
             InputWindow iw = new InputWindow();
             int start = 0; int end = 0;
@@ -426,13 +431,16 @@ namespace WpfLaba3Grafs
                                 if (function.IsPointInsideEllipse(grid, Convert.ToInt32(graph.ElementAt(curPath[j]).Value.position.X), Convert.ToInt32(graph.ElementAt(curPath[j]).Value.position.Y)))
                                 {
                                     ellipse.Fill = Brushes.Blue;
-                                    function.nodePictures.ElementAt(curPath[j]).Value.colorNode = "Blue";
+                                    for (int v = 0; v < graph.Count; v++)
+                                        if (graph.ElementAt(v).Value.MyValue == curPath[j])
+                                            graph.ElementAt(v).Value.nodePic = new NodePicture(graph.ElementAt(v).Value.nodePic.tbNode, "Blue");
                                 }
                         }
             }
         }
         public void BtnClick_SearchMBST(object sender, EventArgs e)
         {
+            ResetColour(graph);
             tb_graph.Clear();
             for (int i = 0; i < DrawingCanvas.Children.Count; i++)
                 if (DrawingCanvas.Children[i] is Grid grid)
@@ -471,7 +479,20 @@ namespace WpfLaba3Grafs
                             //function.edgePictures[mbstEdges[edg]].colorEdge = "Blue";
                         }
         }
-
+        public void ResetColour(Dictionary<int, Node> graph)
+        {
+            for (int V = 0; V < graph.Count; V++)
+            {
+                if (graph.ElementAt(V).Value.nodePic.colorNode == "Blue")
+                    graph.ElementAt(V).Value.nodePic.colorNode = "White";
+                for (int i = 0; i < graph.ElementAt(V).Value.edges.Count; i++)
+                    if (graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.colorEdge == "Blue")
+                        graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.colorEdge = "Black";
+                for (int j = 0; j < graph.ElementAt(V).Value.parents.Count; j++)
+                    if (graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.colorEdge == "Blue")
+                        graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.colorEdge = "Black";
+            }
+        }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
             pointer = false;

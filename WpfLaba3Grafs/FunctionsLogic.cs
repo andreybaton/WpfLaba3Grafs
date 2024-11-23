@@ -92,8 +92,7 @@ namespace WpfLaba3Grafs
                         Stroke = strokeBrush,
                         StrokeThickness = 2
                     };
-                    edge.MouseDown += mainWindow.PaintColor;
-                    Polygon polygon = new Polygon();                   
+                    edge.MouseDown += mainWindow.PaintColor;              
 
                     this.newEdge = false;
                     TextBox textBox = new TextBox
@@ -107,7 +106,7 @@ namespace WpfLaba3Grafs
                     };
                     string tb = "№ " + edge2.num.ToString();
                     if (weight != 0)
-                        tb = tb + "; Вес " + weight.ToString();
+                        tb += "; Вес " + weight.ToString();
                     textBox.Text = tb;
                     textBox.IsEnabled = false;
 
@@ -118,8 +117,6 @@ namespace WpfLaba3Grafs
                         if (clickedTb != null)
                             clickedTb.Focus();
                     };
-
-                    Edge newEdge = new Edge(to, weight, new EdgePicture(textBox.Text, "Black"));
 
                     double centerX = (from.position.X + to.position.X) / 2;
                     double centerY = (from.position.Y + to.position.Y) / 2;
@@ -132,6 +129,7 @@ namespace WpfLaba3Grafs
                     mainWindow.DrawingCanvas.Children.Add(textBox);
                     if (mainWindow.isOriented == true)
                     {
+                        Polygon polygon = new Polygon();
                         polygon = DrawArrow(from.position, to.position);
                         textBox.Tag = polygon;
                         mainWindow.DrawingCanvas.Children.Add(polygon);

@@ -37,9 +37,7 @@ namespace WpfLaba3Grafs
         public Node(int value) { MyValue = value; }
         public Node(int value, Point pos) { MyValue = value; position = pos; }
         public Node(int value, Point pos, NodePicture nodePicture) { MyValue = value; position = pos; nodePic = nodePicture; }
-        public Node() { }
- 
-            
+        public Node() { }            
         public Node AddOrGetNode(Dictionary<int, Node> graph, int value)
         {
             if (value == -1) return null;
