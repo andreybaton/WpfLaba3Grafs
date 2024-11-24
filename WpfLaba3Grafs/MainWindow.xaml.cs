@@ -29,6 +29,7 @@ namespace WpfLaba3Grafs
         {
             function = new FunctionsLogic(this);
             InitializeComponent();
+            tb_save.Text = AppDomain.CurrentDomain.BaseDirectory + "\\userSettings.xml";
         }
         public void PaintColor(object sender, RoutedEventArgs e)
         {
@@ -351,13 +352,6 @@ namespace WpfLaba3Grafs
         public void BtnClick_SearchShortestPath(object sender, RoutedEventArgs e)
         {
             ResetColour(graph);
-            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
-                if (DrawingCanvas.Children[i] is Grid grid)
-                {
-                    Ellipse ellipse = (Ellipse)grid.Children[0];
-                    if (ellipse.Fill == Brushes.Blue)
-                        ellipse.Fill = Brushes.White;
-                }
 
             InputWindow iw = new InputWindow();
             int start = 0; int end = 0;
@@ -376,6 +370,7 @@ namespace WpfLaba3Grafs
                 tb_graph.Text = "Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString();
                 return;
             }
+            else { tb_graph.Text = "Кратчайший путь из вершины " + start.ToString() + " в " + end.ToString() + " найден."; }
 
             for (int k = 0; k < allPaths.Count; k++)
             {
@@ -442,18 +437,11 @@ namespace WpfLaba3Grafs
         {
             ResetColour(graph);
             tb_graph.Clear();
-            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
-                if (DrawingCanvas.Children[i] is Grid grid)
-                {
-                    Ellipse ellipse = (Ellipse)grid.Children[0];
-                    if (ellipse.Fill == Brushes.Blue)
-                        ellipse.Fill = Brushes.White;
-                }
-
+            
             List<Edge> mbstEdges = function.SearchMBST(graph);
             if (mbstEdges.Count == 0 || mbstEdges == null)
             {
-                tb_graph.Text = "Минимальное покрывающее дерево не найдено. Скорее всего, ваш граф не связный.";
+                tb_graph.Text = "Минимальное остовное дерево не найдено. Скорее всего, ваш граф не связный.";
                 return;
             }
             else { tb_graph.Text = "Минимальное покрывающее дерево найдено."; }
@@ -468,15 +456,13 @@ namespace WpfLaba3Grafs
                                 if (graph.ElementAt(v).Value.edges.Contains(mbstEdges[edg]))
                                 {
                                     graph.ElementAt(v).Value.edges.Remove(mbstEdges[edg]);
-                                    mbstEdges[edg].edgePic = new EdgePicture(mbstEdges[edg].edgePic.tbEdge, "Blue");
+                                    mbstEdges[edg].edgePic = new EdgePicture(mbstEdges[edg].edgePic.TbEdge, "Blue");
                                     graph.ElementAt(v).Value.edges.Add(mbstEdges[edg]);
                                 }
                                 else //if (graph.ElementAt(v).Value.parents.Values.Contains(mbstEdges[edg])) {
                                     for (int i =0; i < graph.ElementAt(v).Value.parents.Count; i++)
                                         if (graph.ElementAt(v).Value.parents.ElementAt(i).Value == mbstEdges[edg])
-                                            graph.ElementAt(v).Value.parents.ElementAt(i).Value.edgePic = new EdgePicture(mbstEdges[edg].edgePic.tbEdge, "Blue");
-                                
-                            //function.edgePictures[mbstEdges[edg]].colorEdge = "Blue";
+                                            graph.ElementAt(v).Value.parents.ElementAt(i).Value.edgePic = new EdgePicture(mbstEdges[edg].edgePic.TbEdge, "Blue");
                         }
         }
         public void ResetColour(Dictionary<int, Node> graph)
@@ -486,12 +472,19 @@ namespace WpfLaba3Grafs
                 if (graph.ElementAt(V).Value.nodePic.colorNode == "Blue")
                     graph.ElementAt(V).Value.nodePic.colorNode = "White";
                 for (int i = 0; i < graph.ElementAt(V).Value.edges.Count; i++)
-                    if (graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.colorEdge == "Blue")
-                        graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.colorEdge = "Black";
+                    if (graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.ColorEdge == "Blue")
+                        graph.ElementAt(V).Value.edges.ElementAt(i).edgePic.ColorEdge = "Black";
                 for (int j = 0; j < graph.ElementAt(V).Value.parents.Count; j++)
-                    if (graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.colorEdge == "Blue")
-                        graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.colorEdge = "Black";
+                    if (graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.ColorEdge == "Blue")
+                        graph.ElementAt(V).Value.parents.ElementAt(j).Value.edgePic.ColorEdge = "Black";
             }
+            for (int i = 0; i < DrawingCanvas.Children.Count; i++)
+                if (DrawingCanvas.Children[i] is Grid grid)
+                {
+                    Ellipse ellipse = (Ellipse)grid.Children[0];
+                    if (ellipse.Fill == Brushes.Blue)
+                        ellipse.Fill = Brushes.White;
+                }
         }
         private void ControlToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -501,17 +494,27 @@ namespace WpfLaba3Grafs
             delete = false;
         }
 
-        //private void edgeSelector_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    int newWeight = 0;
-        //    int index = Convert.ToInt32(EdgeSelector.Text);
-        //    try { 
-        //        newWeight = Convert.ToInt32(WeightChange.Text);
-        //    }
-        //    catch { }
-        //    if (newWeight > 0) {
-        //        function.edgePictures.ElementAt(index).Key.weight = Convert.ToInt32(WeightChange);
-        //    }
-        //}
+        private void edgeSelector_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //int newWeight = 0;
+            //int index = Convert.ToInt32(EdgeSelector.Text);
+            //try
+            //{
+            //    newWeight = Convert.ToInt32(WeightChange.Text);
+            //}
+            //catch { }
+            //if (newWeight > 0)
+            //{
+            //    function.edgePictures.ElementAt(index).Key.weight = Convert.ToInt32(WeightChange);
+            //}
+        }
+        private void BtnClick_SaveGraph(object sender, RoutedEventArgs e)
+        {
+            string filepath = tb_save.Text;
+            UserSettings settings = new UserSettings();
+            SettingsManager settingsManager = new SettingsManager();
+            settings.graph = graph.Values.ToList();
+            settingsManager.SaveSettings(settings, filepath);
+        }
     }
 }

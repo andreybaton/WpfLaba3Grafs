@@ -36,8 +36,8 @@
                     </ToolBar>
                     <StackPanel>
                         <DockPanel Height="30" >
-                            <Button Width="110" Margin="5" Content="сохранить в файл"/>
-                            <TextBox Margin="5"/>
+                            <Button Width="110" Margin="5" Content="сохранить в файл" Click="BtnClick_SaveGraph"/>
+                            <TextBox Margin="5" x:Name="tb_save"/>
                         </DockPanel>
                         <DockPanel>
                             <Button Width="110" Margin="5" Content="загрузить из файла"/>

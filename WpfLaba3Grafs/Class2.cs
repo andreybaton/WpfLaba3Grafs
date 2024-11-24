@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using Newtonsoft.Json;
 
 namespace WpfLaba3Grafs
 {
@@ -22,14 +23,6 @@ namespace WpfLaba3Grafs
                 }
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public string ToString() { return _myValue.ToString(); }
-
         public Point position;
         public NodePicture nodePic;
         public HashSet<Edge> edges = new HashSet<Edge>(); //список ребер
@@ -37,7 +30,14 @@ namespace WpfLaba3Grafs
         public Node(int value) { MyValue = value; }
         public Node(int value, Point pos) { MyValue = value; position = pos; }
         public Node(int value, Point pos, NodePicture nodePicture) { MyValue = value; position = pos; nodePic = nodePicture; }
-        public Node() { }            
+        public Node() { }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public string ToString() { return _myValue.ToString(); }
         public Node AddOrGetNode(Dictionary<int, Node> graph, int value)
         {
             if (value == -1) return null;
@@ -122,14 +122,15 @@ namespace WpfLaba3Grafs
     }
     public class EdgePicture 
     {
-        public string tbEdge { get; set; }
-        public string colorEdge { get; set; }
+        public string TbEdge { get; set; }
+        public string ColorEdge { get; set; }
 
         public EdgePicture(string tb, string color)
         {
-            tbEdge = tb;
-            colorEdge = color;
+            TbEdge = tb;
+            ColorEdge = color;
         }
+        public EdgePicture() { }
     }
     public class NodePicture 
     {
@@ -140,5 +141,6 @@ namespace WpfLaba3Grafs
             tbNode = tb;
             colorNode = color;
         }
+        public NodePicture() { }
     }
 }
