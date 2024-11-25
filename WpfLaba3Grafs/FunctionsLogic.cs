@@ -25,7 +25,7 @@ namespace WpfLaba3Grafs
         {
             this.mainWindow = mainWindow;
         }
-        public void CreateVertex(Point position, Node node) 
+        public void CreateVertex(Point position, Node node)
         {
             string selectedColorName = GetSelectedColor();
             Brush strokeBrush = ConvertStringToBrush(selectedColorName);
@@ -67,7 +67,7 @@ namespace WpfLaba3Grafs
             Canvas.SetLeft(grid, posX);
             mainWindow.DrawingCanvas.Children.Add(grid);
         }
-        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight) 
+        public void AddEdge(Point pos1, Point pos2, Dictionary<int, Node> graph, List<(int, int, int)> graphData, int weight)
         {
             Node from = new Node(); Node to = new Node();
             for (int i = 0; i < graph.Count; i++) //если ребро между вершинами, то меняем координаты начала и конца ребра на координаты вершины, чтобы было по центру
@@ -77,9 +77,11 @@ namespace WpfLaba3Grafs
                 else if (to.AreNodesClose(pos2, graph.ElementAt(i).Value.position, 10))
                     to = graph.ElementAt(i).Value;
             }
+            int numEdges = CalculateEdges(graph);
             Edge edge2 = new Edge();
+            EdgePicture edgePic = new EdgePicture(numEdges.ToString(), "Black");
             if (from.ContainsNode(from.position, graph) && to.ContainsNode(to.position, graph))
-                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented, CalculateEdges(graph)))
+                if (edge2.AddEdge(graphData, from, to, weight, mainWindow.isOriented, numEdges, edgePic))
                 {
                     string selectedColorName = GetSelectedColor();
                     Brush strokeBrush = ConvertStringToBrush(selectedColorName);
@@ -92,7 +94,7 @@ namespace WpfLaba3Grafs
                         Stroke = strokeBrush,
                         StrokeThickness = 2
                     };
-                    edge.MouseDown += mainWindow.PaintColor;              
+                    edge.MouseDown += mainWindow.PaintColor;
 
                     this.newEdge = false;
                     TextBox textBox = new TextBox
@@ -104,7 +106,7 @@ namespace WpfLaba3Grafs
                         IsReadOnly = false,
                         IsHitTestVisible = true,
                     };
-                    string tb = "№ " + edge2.num.ToString();
+                    string tb = "№ " + numEdges.ToString();
                     if (weight != 0)
                         tb += "; Вес " + weight.ToString();
                     textBox.Text = tb;
@@ -112,7 +114,6 @@ namespace WpfLaba3Grafs
 
                     textBox.PreviewMouseDown += (object sender, MouseButtonEventArgs e) =>
                     {
-                        MessageBox.Show("a");
                         var clickedTb = sender as TextBox;
                         if (clickedTb != null)
                             clickedTb.Focus();
@@ -249,10 +250,10 @@ namespace WpfLaba3Grafs
                 visited[u] = true;
 
                 for (int v = 0; v < verticesCount; v++)
-                    if (!visited[v] && AdjacencyMatrix[u+1, v] != 0 &&
+                    if (!visited[v] && AdjacencyMatrix[u + 1, v] != 0 &&
                         distances[u] != int.MaxValue)
                     {
-                        int newDist = distances[u] + AdjacencyMatrix[u+1, v];
+                        int newDist = distances[u] + AdjacencyMatrix[u + 1, v];
                         if (newDist < distances[v])
                         {
                             distances[v] = newDist;
@@ -310,7 +311,7 @@ namespace WpfLaba3Grafs
             else
                 return Brushes.Black;
         }
-        public List<List<int>> SearchMaximumFlowProblem(List<List<int>> allPaths, Dictionary<int,Node> graph, int startVertex) //Ford-Falkerson alg
+        public List<List<int>> SearchMaximumFlowProblem(List<List<int>> allPaths, Dictionary<int, Node> graph, int startVertex) //Ford-Falkerson alg
         {
             int maxFlowProblem = 0;
             int weight = int.MaxValue;
@@ -318,13 +319,13 @@ namespace WpfLaba3Grafs
             for (int num = 0; num < allPaths.Count; num++)
             {
                 path = allPaths[num];
-                path.Insert(0,startVertex);
+                path.Insert(0, startVertex);
 
                 for (int v = 0; v < path.Count - 1; v++)
                     for (int i = 0; i < graph[path[v]].edges.Count; i++)
                         if (v != path.Count - 1)
                             if (graph[path[v]].edges.ElementAt(i).adjacentNode.MyValue == path[v + 1] && weight > graph[path[v]].edges.ElementAt(i).weight)
-                                    weight = graph[path[v]].edges.ElementAt(i).weight;
+                                weight = graph[path[v]].edges.ElementAt(i).weight;
                 if (weight != int.MaxValue)
                     maxFlowProblem = maxFlowProblem + weight;
                 weight = int.MaxValue;
@@ -366,6 +367,20 @@ namespace WpfLaba3Grafs
 
             return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
         }
+        public bool IsPointInsideEllipse(Ellipse ellipse, double x, double y)
+        {
+            double left = Canvas.GetLeft(ellipse);
+            double top = Canvas.GetTop(ellipse);
+
+            double width = ellipse.Width;
+            double height = ellipse.Height;
+
+            double h = left + width / 2;
+            double k = top + height / 2;
+            double r = width / 2;
+
+            return (Math.Pow(x - h, 2) / Math.Pow(r, 2)) + (Math.Pow(y - k, 2) / Math.Pow(r, 2)) <= 1;
+        }
         public void FindRoutes(int[,] adjacencyMatrix, int start, int end, bool[] visited, string route, TextBox tb)
         {
             int allVertices = adjacencyMatrix.GetLength(1);
@@ -375,8 +390,8 @@ namespace WpfLaba3Grafs
             {
                 visited[start] = true;
                 for (int i = 0; i < allVertices; i++)
-                    if (adjacencyMatrix[start + 1,i] != 0 && !visited[i])
-                        FindRoutes(adjacencyMatrix, i, end, visited, route + i + ", ", tb);  
+                    if (adjacencyMatrix[start + 1, i] != 0 && !visited[i])
+                        FindRoutes(adjacencyMatrix, i, end, visited, route + i + ", ", tb);
                 visited[start] = false;
             }
         }
@@ -384,25 +399,25 @@ namespace WpfLaba3Grafs
         {
             List<Edge> mbstEdges = new List<Edge>();
             HashSet<Node> visited = new HashSet<Node>();
-            //PriorityQueue<Edge, int> priorityQueue = new PriorityQueue<Edge, int>();
+            PriorityQueue<Edge, int> priorityQueue = new PriorityQueue<Edge, int>();
 
             Node startNode = nodes.Values.First();
             visited.Add(startNode);
-            //foreach (var edge in startNode.edges)
-            //    priorityQueue.Enqueue(edge, edge.weight);
+            foreach (var edge in startNode.edges)
+                priorityQueue.Enqueue(edge, edge.weight);
 
-            //while (priorityQueue.Count > 0)
-            //{
-            //    Edge edge = priorityQueue.Dequeue();
-            //    if (visited.Contains(edge.adjacentNode))
-            //        continue; 
+            while (priorityQueue.Count > 0)
+            {
+                Edge edge = priorityQueue.Dequeue();
+                if (visited.Contains(edge.adjacentNode))
+                    continue;
 
-            //    mbstEdges.Add(edge);
-            //    visited.Add(edge.adjacentNode);
-            //    foreach (var nextEdge in edge.adjacentNode.edges)
-            //        if (!visited.Contains(nextEdge.adjacentNode))
-            //            priorityQueue.Enqueue(nextEdge, nextEdge.weight);
-            //}
+                mbstEdges.Add(edge);
+                visited.Add(edge.adjacentNode);
+                foreach (var nextEdge in edge.adjacentNode.edges)
+                    if (!visited.Contains(nextEdge.adjacentNode))
+                        priorityQueue.Enqueue(nextEdge, nextEdge.weight);
+            }
             return mbstEdges;
         }
         public bool IsPointOnLine(Line line, Point position, double a)

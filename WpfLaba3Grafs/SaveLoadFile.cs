@@ -2,32 +2,35 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace WpfLaba3Grafs
 {
-    public class UserSettings
-    {
-        public List<Node> graph = new List<Node>();
-    }
+    //public class UserSettings
+    //{
+    //    public List<Node> graph = new List<Node>();
+    //}
     [Serializable]
     public class SettingsManager
     {
         //private string SettingsFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\userSettings.xml";
 
-        public void SaveSettings(UserSettings settings, string SettingsFilePath)
+        public void SaveSettings(List<NodeDTO> graph, string SettingsFilePath)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(UserSettings));
-            using (StreamWriter writer = new StreamWriter(SettingsFilePath))
-                serializer.Serialize(writer, settings);
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string json = JsonConvert.SerializeObject(graph, settings); //Formatting.Indented);
+            File.WriteAllText(SettingsFilePath, json);
         }
-        public UserSettings LoadSettings(string SettingsFilePath)
+        public List<NodeDTO> LoadSettings(string SettingsFilePath)
         {
-            if (!System.IO.File.Exists(SettingsFilePath))
-                return new UserSettings();
+            if (!File.Exists(SettingsFilePath))
+                throw new FileNotFoundException("Файл не найден", SettingsFilePath);
 
-            XmlSerializer serializer = new XmlSerializer(typeof(UserSettings));
-            using (StreamReader reader = new StreamReader(SettingsFilePath))
-                return (UserSettings)serializer.Deserialize(reader);
+            string json = File.ReadAllText(SettingsFilePath);
+            return JsonConvert.DeserializeObject<List<NodeDTO>>(json);
         }
     }
 }

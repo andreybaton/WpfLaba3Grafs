@@ -78,19 +78,19 @@ namespace WpfLaba3Grafs
         }
     }
 
-    public class Edge 
+    public class Edge
     {
         public Node adjacentNode; //узел, на который ведёт ребро
         public int weight;
         public EdgePicture edgePic;
         public int num;
-        public Edge(Node adjacentNode, int weight, int numEdge) { this.adjacentNode = adjacentNode; this.weight = weight; num = numEdge; }
+        //public Edge(Node adjacentNode, int weight, int numEdge) { this.adjacentNode = adjacentNode; this.weight = weight; num = numEdge; }
         public Edge() { }
-        public Edge(Node adjacentNode, int weight, EdgePicture edgePicture) { this.adjacentNode = adjacentNode; this.weight = weight; edgePic = edgePicture; }
+        public Edge(Node adjacentNode, int weight, int num, EdgePicture edgePicture) { this.adjacentNode = adjacentNode; this.weight = weight; edgePic = edgePicture; this.num = num; }
         public string ToString() { return adjacentNode.ToString(); }
-        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge, int numEdge)
+        public bool AddEdge(List<(int, int, int)> graphData, Node node, Node adjacentNode, int weight, bool typeEdge, int numEdge, EdgePicture edgePic)
         {
-            Edge edge = new Edge(adjacentNode, weight, numEdge);
+            Edge edge = new Edge(adjacentNode, weight, numEdge, edgePic);
 
             if (AddSearchElement(graphData, node, adjacentNode, weight))
             {
@@ -120,7 +120,7 @@ namespace WpfLaba3Grafs
             return true;
         }
     }
-    public class EdgePicture 
+    public class EdgePicture
     {
         public string TbEdge { get; set; }
         public string ColorEdge { get; set; }
@@ -132,15 +132,50 @@ namespace WpfLaba3Grafs
         }
         public EdgePicture() { }
     }
-    public class NodePicture 
+    public class NodePicture
     {
         public string tbNode { get; set; }
         public string colorNode { get; set; }
-        public NodePicture (string tb, string color)
+        public NodePicture(string tb, string color)
         {
             tbNode = tb;
             colorNode = color;
         }
         public NodePicture() { }
+    }
+    public class EdgeDTO
+    {
+        public int adjacentNodeValue;
+        public int weight;
+        public EdgePicture edgePic;
+        public int num;
+        public EdgeDTO() { }
+        public EdgeDTO(Edge edge)
+        {
+            adjacentNodeValue = edge.adjacentNode.MyValue;
+            weight = edge.weight;
+            edgePic = edge.edgePic;
+            num = edge.num;
+        }
+    }
+    public class NodeDTO
+    {
+        public int value;
+        public Point position;
+        public NodePicture nodePic;
+        public HashSet<EdgeDTO> edges = new HashSet<EdgeDTO>();
+        public Dictionary<Node, EdgeDTO> parents = new Dictionary<Node, EdgeDTO>();
+        public NodeDTO() { }
+        public NodeDTO(Node node)
+        {
+            value = node.MyValue;
+            position = node.position;
+            nodePic = node.nodePic;
+            for (int i = 0; i < node.edges.Count; i++)
+                edges.Add(new EdgeDTO(node.edges.ElementAt(i)));
+            for (int j = 0; j < node.parents.Count; j++)
+                parents.Add(node.parents.ElementAt(j).Key, new EdgeDTO(node.parents.ElementAt(j).Value));
+
+        }
     }
 }

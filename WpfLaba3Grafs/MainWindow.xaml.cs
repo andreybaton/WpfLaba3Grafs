@@ -12,11 +12,11 @@ using System.Windows.Shapes;
 
 namespace WpfLaba3Grafs
 {
-
     public partial class MainWindow : Window
     {
+
         private FunctionsLogic function;
-        private Point MousePos;
+        private System.Windows.Point MousePos;
         private bool newVertex = false;
         private bool newEdge = false;
         private bool delete = false;
@@ -29,35 +29,40 @@ namespace WpfLaba3Grafs
         {
             function = new FunctionsLogic(this);
             InitializeComponent();
-            tb_save.Text = AppDomain.CurrentDomain.BaseDirectory + "\\userSettings.xml";
+            tb_save.Text = AppDomain.CurrentDomain.BaseDirectory + "\\userSettings.json";
         }
         public void PaintColor(object sender, RoutedEventArgs e)
         {
             bool isChecked = Bucket.IsChecked ?? false;
-            if (isChecked == true) { 
+            if (isChecked == true)
+            {
                 if (sender is Line line)
                 {
                     string selectedColorName = function.GetSelectedColor();
                     line.Stroke = function.ConvertStringToBrush(selectedColorName);
+                    for (int V = 0; V < graph.Count; V++)
+                    {
+                        for (int i = 0; i < graph[V].edges.Count; i++)
+                            if (graph[V].edges.Count > 0 && graph[V].edges != null)
+                                if (function.IsPointOnLine(line, graph[V].position, 5) && function.IsPointOnLine(line, graph[V].edges.ElementAt(i).adjacentNode.position, 5))
+                                    graph[V].edges.ElementAt(i).edgePic.ColorEdge = selectedColorName;
+                        for (int j = 0; j < graph[V].parents.Count; j++)
+                            if (graph[V].parents.Count > 0 && graph[V].parents != null)
+                                if (function.IsPointOnLine(line, graph[V].parents.ElementAt(j).Value.adjacentNode.position, 5) && function.IsPointOnLine(line, graph[V].position, 5))
+                                    graph[V].parents.ElementAt(j).Value.edgePic.ColorEdge = selectedColorName;
+                    }
                 }
                 else if (sender is Ellipse vertex)
                 {
                     string selectedColorName = function.GetSelectedColor();
                     vertex.Stroke = function.ConvertStringToBrush(selectedColorName);
+                    for (int V = 0; V < graph.Count; V++)
+                        if (function.IsPointInsideEllipse(vertex, graph[V].position.X, graph[V].position.Y))
+                            graph[V].nodePic.colorNode = selectedColorName;
                 }
             }
         }
-        //public object nadomne(object sender, MouseButtonEventArgs e)
-        //{
-        //    var send = object;
-        //    return send;
-        //}
-        //public MouseButtonEventArgs nado2(MouseButtonEventArgs e)
-        //{
-        //    var but = e as MouseButtonEventArgs;
-        //    return but;
-        //}
-        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e) 
+        public void MouseLeftBtnDown_DrawingGraph(object sender, MouseButtonEventArgs e)
         {
             MousePos = e.GetPosition(DrawingCanvas);
             if (newVertex)
@@ -83,7 +88,7 @@ namespace WpfLaba3Grafs
                     X2 = MousePos.X,
                     Y2 = MousePos.Y,
                     Stroke = function.ConvertStringToBrush(function.GetSelectedColor()),
-                    StrokeThickness = 2,                  
+                    StrokeThickness = 2,
                 };
                 DrawingCanvas.Children.Add(tempLine);
             }
@@ -95,17 +100,15 @@ namespace WpfLaba3Grafs
 
                     if (element.GetType() == typeof(Ellipse))
                     {
-                        //
                         var temp = DrawingCanvas.InputHitTest(MousePos) as UIElement;
                         while (temp != null && !(temp is Grid))
                             temp = VisualTreeHelper.GetParent(temp) as UIElement;
                         if (temp is Grid grid)
                             DrawingCanvas.Children.Remove(grid);
 
-                        //
-                        
+
                         for (int i = 0; i < graph.Count; i++)
-                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size/2 + 10))
+                            if (graph.ElementAt(i).Value.AreNodesClose(MousePos, graph.ElementAt(i).Value.position, function.size / 2 + 10))
                             {
                                 for (int j = 0; j < graphData.Count; j++)
                                 {
@@ -118,17 +121,16 @@ namespace WpfLaba3Grafs
                                     }
                                 }
                                 Node delNode = graph.ElementAt(i).Value;
-                                //function.nodePictures.Remove(delNode);
                                 graph.Remove(graph.ElementAt(i).Key);
-                                for (int k = 0; k < graph.Count; k++) 
+                                for (int k = 0; k < graph.Count; k++)
                                 {
-                                        for (int l = 0; l < delNode.parents.Count; l++)
-                                            if (graph.ElementAt(k).Value == delNode.parents.ElementAt(l).Key) //если вершина - предок
-                                                graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(l).Value);
-                                            else
-                                                for (int j = 0; j < delNode.edges.Count; j++)
-                                                    if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
-                                                        graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
+                                    for (int l = 0; l < delNode.parents.Count; l++)
+                                        if (graph.ElementAt(k).Value == delNode.parents.ElementAt(l).Key) //если вершина - предок
+                                            graph.ElementAt(k).Value.edges.Remove(delNode.parents.ElementAt(l).Value);
+                                        else
+                                            for (int j = 0; j < delNode.edges.Count; j++)
+                                                if (graph.ElementAt(k).Value == delNode.edges.ElementAt(j).adjacentNode) //если вершина - потомок  
+                                                    graph.ElementAt(k).Value.parents.Remove(graph.ElementAt(k).Value.parents.ElementAt(0).Key);
                                 }
 
                                 for (int k = delNode.MyValue; k < graph.Count; k++)
@@ -143,7 +145,7 @@ namespace WpfLaba3Grafs
                                 }
 
                                 // + удаление картинки ребра
-                                List <Line> delLines = new List <Line>();
+                                List<Line> delLines = new List<Line>();
                                 if (delNode.parents.Count > 0)
                                     for (int j = 0; j < delNode.parents.Count; j++)
                                     {
@@ -158,7 +160,7 @@ namespace WpfLaba3Grafs
                                     }
                                 if (delNode.edges.Count > 0)
                                     for (int j = 0; j < delNode.edges.Count; j++)
-                                    { 
+                                    {
                                         Line delLine = new Line
                                         {
                                             X1 = delNode.position.X,
@@ -167,11 +169,12 @@ namespace WpfLaba3Grafs
                                             Y2 = delNode.edges.ElementAt(j).adjacentNode.position.Y,
                                         };
                                         delLines.Add(delLine);
-                                }
+                                    }
                                 for (int z = DrawingCanvas.Children.Count - 1; z >= 0; z--)
                                     if (DrawingCanvas.Children[z] is Line line)
-                                        for(int w = delLines.Count - 1; w >= 0; w--)
-                                            if(delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2) {
+                                        for (int w = delLines.Count - 1; w >= 0; w--)
+                                            if (delLines[w].X1 == line.X1 && delLines[w].X2 == line.X2 && delLines[w].Y1 == line.Y1 && delLines[w].Y2 == line.Y2)
+                                            {
                                                 delLines.RemoveAt(w);
                                                 DrawingCanvas.Children.RemoveAt(z);
                                                 TextBox tbToRemove = line.Tag as TextBox;
@@ -197,8 +200,8 @@ namespace WpfLaba3Grafs
                             DrawingCanvas.Children.Remove(arrowToRemove);
                         }
                         catch { }
-                        Point begin = new Point(line.X1, line.Y1);
-                        Point end = new Point(line.X2, line.Y2);
+                        System.Windows.Point begin = new System.Windows.Point(line.X1, line.Y1);
+                        System.Windows.Point end = new System.Windows.Point(line.X2, line.Y2);
                         for (int i = 0; i < graph.Count; i++)
                             if (graph.ElementAt(i).Value.AreNodesClose(begin, graph.ElementAt(i).Value.position, 10) || graph.ElementAt(i).Value.AreNodesClose(end, graph.ElementAt(i).Value.position, 10))
                             {
@@ -231,28 +234,39 @@ namespace WpfLaba3Grafs
             else if (pointer)
             {
                 var el = DrawingCanvas.InputHitTest(MousePos) as UIElement;
-                //if (e != null)
-                //{
-                //    MessageBox.Show(el.GetType().ToString());
-                //}
+                NewWeight nw = new NewWeight();
                 if (el.GetType() == typeof(Line))
                 {
                     Line line = (Line)el;
-                    TextBox tb = line.Tag as TextBox;
-                    //MessageBox.Show("a");
-                    //TextBox tb = (TextBox)el;
-                    tb.IsEnabled = true;
+                    nw.ShowDialog();
+                    int weight = nw.newWeight;
+                    for (int V = 0; V < graph.Count; V++)
+                    {
+                        for (int i = 0; i < graph[i].edges.Count; i++)
+                            if (graph[V].edges.Count > 0 && graph[V].edges != null)
+                                if (function.IsPointOnLine(line, graph[V].position, 5) && function.IsPointOnLine(line, graph[V].edges.ElementAt(i).adjacentNode.position, 5))
+                                {
+                                    graph[V].edges.ElementAt(i).weight = weight;
+                                    TextBox tb = line.Tag as TextBox;
+                                    string[] parts = tb.Text.Split(';');
+                                    tb.Text = parts[0] + ";Вес " + weight.ToString();
+                                }
+                        for (int j = 0; j < graph[V].parents.Count; j++)
+                            if (graph[V].parents.Count > 0 && graph[V].parents != null)
+                                if (function.IsPointOnLine(line, graph[V].parents.ElementAt(j).Value.adjacentNode.position, 5) && function.IsPointOnLine(line, graph[V].position, 5))
+                                    graph[V].parents.ElementAt(j).Value.weight = weight;
+                    }
                 }
             }
         }
-      
+
         private void MouseLeftButtonUp_DrawingGraph(object sender, MouseButtonEventArgs e) //for add edge
         {
-             if (newEdge && tempLine!=null)
-             {
+            if (newEdge && tempLine != null)
+            {
                 DrawingCanvas.Children.Remove(tempLine);
-                Point secondMousePos = e.GetPosition(DrawingCanvas);
-                tempLine.X2= secondMousePos.X;
+                System.Windows.Point secondMousePos = e.GetPosition(DrawingCanvas);
+                tempLine.X2 = secondMousePos.X;
                 tempLine.Y2 = secondMousePos.Y;
                 tempLine = null;
                 if (string.IsNullOrEmpty(tbWeight.Text))
@@ -264,19 +278,19 @@ namespace WpfLaba3Grafs
         {
             if (tempLine != null)
             {
-                Point currentPoint = e.GetPosition(DrawingCanvas);
+                System.Windows.Point currentPoint = e.GetPosition(DrawingCanvas);
                 tempLine.X2 = currentPoint.X;
                 tempLine.Y2 = currentPoint.Y;
             }
         }
-        
+
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             var checkedButton = sender as ToggleButton;
             ResetToggleButtons(colors1, checkedButton);
             ResetToggleButtons(colors2, checkedButton);
 
-            foreach(var child in (checkedButton.Parent as Panel).Children)
+            foreach (var child in (checkedButton.Parent as Panel).Children)
                 if (child is ToggleButton button && button != checkedButton)
                     button.IsChecked = false;
         }
@@ -287,10 +301,8 @@ namespace WpfLaba3Grafs
 
             if (checkedButton == null)
                 return;
-            ResetToggleButtons(DockPanel1,checkedButton);
-            //ResetToggleButtons(DockPanel2, checkedButton);
+            ResetToggleButtons(DockPanel1, checkedButton);
             ResetToggleButtons(DockPanel3, checkedButton);
-            //ResetToggleButtons(DockPanel4, checkedButton);
             ResetToggleButtons(DockPanel5, checkedButton);
             if (checkedButton == Pointer)
                 pointer = true;
@@ -308,7 +320,7 @@ namespace WpfLaba3Grafs
         {
             foreach (var child in panel.Children)
                 if (child is ToggleButton button && button != checkedButton)
-                    button.IsChecked = false; 
+                    button.IsChecked = false;
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -333,7 +345,7 @@ namespace WpfLaba3Grafs
                 for (int col = 0; col < arr.GetLength(1); col++)
                     tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
                 tb_graph.Text += '\n';
-            } 
+            }
         }
         public void BtnClick_GenerateAdjacencyMatrix(object sender, EventArgs e)
         {
@@ -345,7 +357,7 @@ namespace WpfLaba3Grafs
                 for (int col = 0; col < arr.GetLength(1); col++)
                     tb_graph.Text += arr[row, col].ToString().PadRight(arr.GetLength(0));
                 tb_graph.Text += '\n';
-                if (row != arr.GetLength(0)-1)
+                if (row != arr.GetLength(0) - 1)
                     tb_graph.Text += arr[0, row].ToString().PadRight(arr.GetLength(0));
             }
         }
@@ -363,8 +375,8 @@ namespace WpfLaba3Grafs
                 if (end == start)
                     return;
             }
-            
-            List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end); 
+
+            List<List<int>> allPaths = function.SearchPath(function.GenerateAdjacencyMatrix(graph), start, end);
             if (allPaths == null || allPaths.Count == 0)
             {
                 tb_graph.Text = "Граф не имеет путей из вершины " + start.ToString() + " в " + end.ToString();
@@ -391,7 +403,7 @@ namespace WpfLaba3Grafs
                         }
             }
         }
-        
+
         public void BtnClick_SearchMaximumFlowProblem(object sender, RoutedEventArgs e)
         {
             ResetColour(graph);
@@ -433,11 +445,11 @@ namespace WpfLaba3Grafs
                         }
             }
         }
-        public void BtnClick_SearchMBST(object sender, EventArgs e)
+        public void BtnClick_SearchMBST(object sender, RoutedEventArgs e)
         {
             ResetColour(graph);
             tb_graph.Clear();
-            
+
             List<Edge> mbstEdges = function.SearchMBST(graph);
             if (mbstEdges.Count == 0 || mbstEdges == null)
             {
@@ -451,7 +463,7 @@ namespace WpfLaba3Grafs
                     for (int edg = 0; edg < mbstEdges.Count; edg++)
                         if (function.IsPointOnLine(line, mbstEdges[edg].adjacentNode.position, 5))
                         {
-                            line.Fill = Brushes.Blue;
+                            line.Stroke = Brushes.Blue;
                             for (int v = 0; v < graph.Count; v++)
                                 if (graph.ElementAt(v).Value.edges.Contains(mbstEdges[edg]))
                                 {
@@ -460,7 +472,7 @@ namespace WpfLaba3Grafs
                                     graph.ElementAt(v).Value.edges.Add(mbstEdges[edg]);
                                 }
                                 else //if (graph.ElementAt(v).Value.parents.Values.Contains(mbstEdges[edg])) {
-                                    for (int i =0; i < graph.ElementAt(v).Value.parents.Count; i++)
+                                    for (int i = 0; i < graph.ElementAt(v).Value.parents.Count; i++)
                                         if (graph.ElementAt(v).Value.parents.ElementAt(i).Value == mbstEdges[edg])
                                             graph.ElementAt(v).Value.parents.ElementAt(i).Value.edgePic = new EdgePicture(mbstEdges[edg].edgePic.TbEdge, "Blue");
                         }
@@ -510,11 +522,19 @@ namespace WpfLaba3Grafs
         }
         private void BtnClick_SaveGraph(object sender, RoutedEventArgs e)
         {
-            string filepath = tb_save.Text;
-            UserSettings settings = new UserSettings();
             SettingsManager settingsManager = new SettingsManager();
-            settings.graph = graph.Values.ToList();
-            settingsManager.SaveSettings(settings, filepath);
+            List<NodeDTO> graphDTO = new List<NodeDTO>();
+
+            for (int i = 0; i < graph.Count; i++)
+                graphDTO.Add(new NodeDTO(graph.ElementAt(i).Value));
+            settingsManager.SaveSettings(graphDTO, tb_save.Text);
+            MessageBox.Show("Граф успешно сохранён.");
+        }
+        private void BtnClick_LoadGraph(object sender, RoutedEventArgs e)
+        {
+            SettingsManager settingsManager = new SettingsManager();
+            List<NodeDTO> graphDTO = settingsManager.LoadSettings(tb_save.Text);
+            //CreateGraph
         }
     }
 }
